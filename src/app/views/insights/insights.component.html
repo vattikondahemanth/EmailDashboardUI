@@ -1,0 +1,602 @@
+<!-- <div class="form-group row">
+  
+  <div class="col-md-3">
+    <label>Date Input From</label>
+    <input id="date-input" type="date" name="date-input" placeholder="date" class="form-control">
+    <span class="help-block">Please enter a valid date</span>
+  </div>
+  <div class="col-md-3">
+    <label>Date Input To</label>
+    <input id="date-input" type="date" name="date-input" placeholder="date" class="form-control">
+    <span class="help-block">Please enter a valid date</span>
+  </div>
+</div> -->
+<div class="animated fadeIn">
+ 
+    <!-- Nav tabs -->
+    <tabset>
+      <tab>
+        <ng-template tabHeading>
+          <!-- <i class="icon-calculator"></i>  -->
+          Actionable Emails
+        </ng-template>
+
+        <!-- 3cards code start-->
+        <div class="row">
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header" style="color: blue;text-align: center;">
+                Total Received
+              </div>
+              <div class="card-body">
+                <div class="chart-wrapper" style="text-align: center;">
+                  2 k
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header" style="color: green;text-align: center;">
+                Responses
+              </div>
+              <div class="card-body">
+                <div class="chart-wrapper" style="text-align: center;">
+                  278
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header" style="color: red;text-align: center;">
+                Avg Response Time
+              </div>
+              <div class="card-body">
+                <div class="chart-wrapper" style="text-align: center;">
+                  78 min
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 3cards code end -->
+
+
+        <!-- dropdown start -->
+        <div class="row">
+          <div class="form-group col-sm-2">
+            <!-- <label for="ccmonth">Month</label> -->
+            <select class="form-control" id="ccmonth">
+              <option>By Month</option>
+              <option>By Day</option>
+              <option>By Year</option>
+            </select>
+          </div>
+        </div>
+        <!-- dropdown end -->
+
+        <!-- chart code start -->
+        <div class="card-columns cols-2">
+          <div class="card">
+            <div class="card-header">
+              Line Chart
+              <!-- <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div> -->
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
+                [datasets]="lineChartData"
+                [labels]="lineChartLabels"
+                [options]="lineChartOptions"
+                [colors]="lineChartColours"
+                [legend]="lineChartLegend"
+                [chartType]="lineChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              Bar Chart
+              <!-- <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div> -->
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
+                [datasets]="barChartData"
+                [labels]="barChartLabels"
+                [options]="barChartOptions"
+                [legend]="barChartLegend"
+                [chartType]="barChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              Doughnut Chart
+              <!-- <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div> -->
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
+                [data]="doughnutChartData"
+                [labels]="doughnutChartLabels"
+                [chartType]="doughnutChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              Radar Chart
+              <!-- <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div> -->
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
+                [datasets]="radarChartData"
+                [labels]="radarChartLabels"
+                [chartType]="radarChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              Pie Chart
+              <!-- <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div> -->
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
+                [data]="pieChartData"
+                [labels]="pieChartLabels"
+                [chartType]="pieChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              Polar Area Chart
+              <!-- <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div> -->
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
+                [data]="polarAreaChartData"
+                [labels]="polarAreaChartLabels"
+                [legend]="polarAreaLegend"
+                [chartType]="polarAreaChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- chart code end -->
+
+      </tab>
+      <tab>
+        <ng-template tabHeading>
+          <!-- <i class="icon-basket-loaded"></i>  -->
+          Critical Client Emails
+        </ng-template>
+        <!-- 3cards code start-->
+        <div class="row">
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header" style="color: blue;text-align: center;">
+                Total Received
+              </div>
+              <div class="card-body">
+                <div class="chart-wrapper" style="text-align: center;">
+                  295
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header" style="color: green;text-align: center;">
+                Responses
+              </div>
+              <div class="card-body">
+                <div class="chart-wrapper" style="text-align: center;">
+                  278
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header" style="color: red;text-align: center;">
+                Avg Response Time
+              </div>
+              <div class="card-body">
+                <div class="chart-wrapper" style="text-align: center;">
+                  78 min
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 3cards code end -->
+
+        <!-- dropdown start -->
+        <div class="row">
+          <div class="form-group col-sm-2">
+            <!-- <label for="ccmonth">Month</label> -->
+            <select class="form-control" id="ccmonth">
+              <option>By Month</option>
+              <option>By Day</option>
+              <option>By Year</option>
+            </select>
+          </div>
+        </div>
+        <!-- dropdown end -->
+        <!-- chart code start -->
+        <div class="card-columns cols-2">
+          
+          <div class="card">
+            <div class="card-header">
+              Bar Chart
+              <!-- <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div> -->
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
+                [datasets]="barChartData"
+                [labels]="barChartLabels"
+                [options]="barChartOptions"
+                [legend]="barChartLegend"
+                [chartType]="barChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div>
+          
+          <!-- <div class="card">
+            <div class="card-header">
+              Doughnut Chart
+              <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
+                [data]="doughnutChartData"
+                [labels]="doughnutChartLabels"
+                [chartType]="doughnutChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div> -->
+          <!-- <div class="card">
+            <div class="card-header">
+              Radar Chart
+              <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
+                [datasets]="radarChartData"
+                [labels]="radarChartLabels"
+                [chartType]="radarChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div> -->
+          <div class="card">
+            <div class="card-header">
+              Line Chart
+              <!-- <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div> -->
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
+                [datasets]="lineChartData"
+                [labels]="lineChartLabels"
+                [options]="lineChartOptions"
+                [colors]="lineChartColours"
+                [legend]="lineChartLegend"
+                [chartType]="lineChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="card">
+            <div class="card-header">
+              Pie Chart
+              <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
+                [data]="pieChartData"
+                [labels]="pieChartLabels"
+                [chartType]="pieChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div> -->
+          <!-- <div class="card">
+            <div class="card-header">
+              Polar Area Chart
+              <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
+                [data]="polarAreaChartData"
+                [labels]="polarAreaChartLabels"
+                [legend]="polarAreaLegend"
+                [chartType]="polarAreaChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div> -->
+        </div>
+        <!-- chart code end -->
+        
+      </tab>
+      <tab>
+        <ng-template tabHeading>
+          <!-- <i class="icon-pie-chart"></i>  -->
+          Escalated Emails
+        </ng-template>
+
+        <!-- 3cards code start-->
+        <div class="row">
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header" style="color: blue;text-align: center;">
+                Total Received
+              </div>
+              <div class="card-body">
+                <div class="chart-wrapper" style="text-align: center;">
+                  295
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header" style="color: green;text-align: center;">
+                Responses
+              </div>
+              <div class="card-body">
+                <div class="chart-wrapper" style="text-align: center;">
+                  278
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header" style="color: red;text-align: center;">
+                Avg Response Time
+              </div>
+              <div class="card-body">
+                <div class="chart-wrapper" style="text-align: center;">
+                  78 min
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 3cards code end -->
+
+        <!-- dropdown start -->
+        <div class="row">
+          <div class="form-group col-sm-2">
+            <!-- <label for="ccmonth">Month</label> -->
+            <select class="form-control" id="ccmonth">
+              <option>By Month</option>
+              <option>By Day</option>
+              <option>By Year</option>
+            </select>
+          </div>
+        </div>
+        <!-- dropdown end -->
+        <!-- chart code start -->
+        <div class="card-columns cols-2">
+          
+          <div class="card">
+            <div class="card-header">
+              Bar Chart
+              <!-- <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div> -->
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
+                [datasets]="barChartData"
+                [labels]="barChartLabels"
+                [options]="barChartOptions"
+                [legend]="barChartLegend"
+                [chartType]="barChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div>
+          
+          <!-- <div class="card">
+            <div class="card-header">
+              Doughnut Chart
+              <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
+                [data]="doughnutChartData"
+                [labels]="doughnutChartLabels"
+                [chartType]="doughnutChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div> -->
+          <!-- <div class="card">
+            <div class="card-header">
+              Radar Chart
+              <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
+                [datasets]="radarChartData"
+                [labels]="radarChartLabels"
+                [chartType]="radarChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div> -->
+          <div class="card">
+            <div class="card-header">
+              Line Chart
+              <!-- <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div> -->
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
+                [datasets]="lineChartData"
+                [labels]="lineChartLabels"
+                [options]="lineChartOptions"
+                [colors]="lineChartColours"
+                [legend]="lineChartLegend"
+                [chartType]="lineChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="card">
+            <div class="card-header">
+              Pie Chart
+              <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
+                [data]="pieChartData"
+                [labels]="pieChartLabels"
+                [chartType]="pieChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div> -->
+          <!-- <div class="card">
+            <div class="card-header">
+              Polar Area Chart
+              <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
+                [data]="polarAreaChartData"
+                [labels]="polarAreaChartLabels"
+                [legend]="polarAreaLegend"
+                [chartType]="polarAreaChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div> -->
+        </div>
+        <!-- chart code end -->
+
+      </tab>
+    </tabset>
+  <!--/.col-->
+</div>
+
+  
+
+  
