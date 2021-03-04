@@ -23,6 +23,17 @@ import { P500Component } from './views/error/500.component';
 import { LoginComponent } from './views/login/login.component';
 import { RegisterComponent } from './views/register/register.component';
 
+
+import { HIGHCHARTS_MODULES, ChartModule } from 'angular-highcharts';
+import more from 'highcharts/highcharts-more.src';
+import exporting from 'highcharts/modules/exporting.src';
+import highmaps from 'highcharts/modules/map.src';
+
+export function highchartsModules() { 
+  // apply Highcharts Modules to this array
+  return [ more, exporting, highmaps];
+}
+
 const APP_CONTAINERS = [
   DefaultLayoutComponent
 ];
@@ -58,7 +69,7 @@ import { ChartsModule } from 'ng2-charts';
     TabsModule.forRoot(),
     ChartsModule,
     IconModule,
-    IconSetModule.forRoot(),
+    IconSetModule.forRoot()
   ],
   declarations: [
     AppComponent,
@@ -70,7 +81,8 @@ import { ChartsModule } from 'ng2-charts';
   ],
   providers: [
     {
-      provide: LocationStrategy,
+      provide: [LocationStrategy,HIGHCHARTS_MODULES],
+      useFactory: highchartsModules,
       useClass: HashLocationStrategy
     },
     IconSetService,

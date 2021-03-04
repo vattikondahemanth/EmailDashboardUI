@@ -24,14 +24,17 @@
               "node_modules/flag-icon-css/css/flag-icon.css",
               "node_modules/font-awesome/css/font-awesome.css",
               "node_modules/simple-line-icons/dist/styles/simple-line-icons.css",
-              "src/scss/style.scss"
+              "src/scss/style.scss",
+              "src/assets/css/style.css"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
                 "./node_modules"
               ]
             },
-            "scripts": [],
+            "scripts": [
+              "src/assets/js/utils.js"
+            ],
             "allowedCommonJsDependencies": [
               "chart.js",
               "classnames"
