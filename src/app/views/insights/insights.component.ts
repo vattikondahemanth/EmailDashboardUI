@@ -26,7 +26,11 @@ export class InsightsComponent {
 
   // lineChart
   public lineChartData: Array<any> = [
-    {data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A'},
+    {
+      data: [65, 59, 80, 81, 56, 55, 40],
+      label: 'Series A'
+    },
+    
     // {data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B'},
     // {data: [18, 48, 77, 9, 100, 27, 40], label: 'Series C'}
   ];
@@ -69,16 +73,63 @@ export class InsightsComponent {
   // barChart
   public barChartOptions: any = {
     scaleShowVerticalLines: false,
-    responsive: true
+    responsive: true,
+    scales: {
+      xAxes: [{
+          gridLines: {
+              // color: "rgba(0, 0, 0, 0)",
+              display: false,
+          }
+      }],
+      yAxes: [{
+          gridLines: {
+              // color: "rgba(0, 0, 0, 0)",
+              // display: false,
+          }   
+      }]
+    }
+
   };
-  //public barChartLabels: string[] = ['2005', '2007', '2008', '2009', '2010', '2011', '2012'];
-  public barChartLabels: string[] = ['2020-Augest', '2020-September', '2020-October', '2020-November', '2020-December'];
+  public barChartLabels: string[] = ['2005', '2007', '2008', '2009', '2010', '2011'];
+  //public barChartLabels: string[] = ['2020-Augest', '2020-September', '2020-October', '2020-November', '2020-December'];
   public barChartType = 'bar';
   public barChartLegend = true;
 
   public barChartData: any[] = [
-    {data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A'},
-    {data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B'}
+    {
+      data: [65, 59, 80, 81, 56, 55, 40],
+      label: 'Series A',
+      backgroundColor: '#202945',
+      borderColor: '#202945',
+      hoverBackgroundColor:'#202945',
+    },
+  ];
+
+  // barChart
+  public barChartDayOptions: any = {
+    scaleShowVerticalLines: false,
+    responsive: true,
+    scales: {
+      xAxes: [{
+          gridLines: {
+              color: "rgba(0, 0, 0, 0)",
+          }
+      }],
+    }
+  };
+  public barChartDayLabels: string[] = ['1:Monday', '2:Tuesday', '3:Wednesday', '4:Thusday', '5:Friday', '6:Saturday','7:Sunday'];
+  //public barChartLabels: string[] = ['2020-Augest', '2020-September', '2020-October', '2020-November', '2020-December'];
+  public barChartDayType = 'bar';
+  public barChartDayLegend = true;
+
+  public barChartDayData: any[] = [
+    {
+      data: [65, 59, 80, 81, 56, 55, 40,32],
+      label: 'Series A',
+      backgroundColor: '#364c8f',
+      borderColor: '#364c8f',
+      hoverBackgroundColor:'#364c8f',
+    },
   ];
 
   // Doughnut
@@ -97,8 +148,23 @@ export class InsightsComponent {
 
   // Pie
   public pieChartLabels: string[] = ['Internal', 'External'];
-  public pieChartData: number[] = [300, 500];
+  public pieChartData: number[] = [530, 300];
   public pieChartType = 'pie';
+  public pieChartColors = [
+    {
+      backgroundColor: ['rgba(30, 105, 148,0.8)', 'rgba(242, 110, 10,0.8)'],
+    },
+  ];
+
+  // Pie chart chaser
+  public pieChartChaserLabels: string[] = ['Internal', 'External'];
+  public pieChartChaserData: number[] = [150, 600];
+  public pieChartChaserType = 'pie';
+  public pieChartChaserColors = [
+    {
+      backgroundColor: ['rgba(30, 105, 148,0.8)', 'rgba(242, 110, 10,0.8)'],
+    },
+  ];
 
   // PolarArea
   public polarAreaChartLabels: string[] = ['Download Sales', 'In-Store Sales', 'Mail Sales', 'Telesales', 'Corporate Sales'];
@@ -228,9 +294,9 @@ export class InsightsComponent {
       dataLabels: {
         enabled: false
       },
-      title: {
-        text: "HeatMap Chart"
-      }
+      // title: {
+      //   text: "HeatMap Chart"
+      // }
     };
   }
 
@@ -250,6 +316,55 @@ export class InsightsComponent {
     }
     return series;
   }
+
+  //horizontal bar
+   public horizontalBarChartOptions: any = {
+    scaleShowVerticalLines: false,
+    responsive: true,
+    scales: {
+        xAxes: [{
+             ticks: {
+                beginAtZero: true, 
+            },
+            
+        }],
+        yAxes: [{
+            gridLines: {
+                // color: "rgba(0, 0, 0, 0)",
+                display: false
+            },
+            // scaleLabel : {
+            //   display : true,
+            //   labelString : "My Chart title",
+            //   //fontStyle : 'bold',
+            //   fontSize : 11
+            // }
+            
+            // title: "Axis Y with interval 20",
+        }]
+    }
+  };
+  //public barChartLabels: string[] = ['2005', '2007', '2008', '2009', '2010', '2011', '2012'];
+  public horizontalBarChartLabels: string[] = ['carval.com', 'ntrs.com', 'tyus.com', 'ntrs.com', 'abcd.com','ntss.com', 'syus.com', 'saars.com', 'aaabcd.com'];
+  public horizontalBarChartType = 'horizontalBar';
+  public horizontalBarChartLegend = true;
+  public horizontalBarLabel = 'Number of Emails';
+
+  public horizontalBarChartData: any[] = [
+    {
+      data: [584, 705, 964, 984, 1124, 1161, 1372, 1379, 1459, 1938], 
+      // data: [65, 59, 80, 81, 56, 55, 40,89,87,32], 
+      backgroundColor: '#435eab',
+      borderColor: '#435eab',
+      hoverBackgroundColor:'#435eab',
+      label: 'Series A',
+      barThickness: 15,
+      
+    },
+    
+    // {data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B'}
+  ];
+
 
 
 
