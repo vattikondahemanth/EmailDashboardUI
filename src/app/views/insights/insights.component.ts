@@ -96,8 +96,8 @@ export class InsightsComponent {
   public radarChartType = 'radar';
 
   // Pie
-  public pieChartLabels: string[] = ['Download Sales', 'In-Store Sales', 'Mail Sales'];
-  public pieChartData: number[] = [300, 500, 100];
+  public pieChartLabels: string[] = ['Internal', 'External'];
+  public pieChartData: number[] = [300, 500];
   public pieChartType = 'pie';
 
   // PolarArea

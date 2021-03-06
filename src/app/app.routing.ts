@@ -29,20 +29,20 @@ export const routes: Routes = [
       title: 'Page 500'
     }
   },
-  {
-    path: 'login',
-    component: LoginComponent,
-    data: {
-      title: 'Login Page'
-    }
-  },
-  {
-    path: 'register',
-    component: RegisterComponent,
-    data: {
-      title: 'Register Page'
-    }
-  },
+  // {
+  //   path: 'login',
+  //   component: LoginComponent,
+  //   data: {
+  //     title: 'Login Page'
+  //   }
+  // },
+  // {
+  //   path: 'register',
+  //   component: RegisterComponent,
+  //   data: {
+  //     title: 'Register Page'
+  //   }
+  // },
   {
     path: '',
     component: DefaultLayoutComponent,
