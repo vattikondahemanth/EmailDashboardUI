@@ -1,10 +1,17 @@
 <app-header
   [navbarBrandRouterLink]="['/dashboard']"
   [fixed]="true"
+  [navbarBrandFull]="{ width: 89, height: 25 }"
+  [navbarBrandMinimized]="{ width: 30, height: 30}"
+  [sidebarToggler]="'lg'"
+  [asideMenuToggler]="'lg'"> 
+<!-- <app-header
+  [navbarBrandRouterLink]="['/dashboard']"
+  [fixed]="true"
   [navbarBrandFull]="{src: 'assets/img/brand/logo.svg', width: 89, height: 25, alt: 'CoreUI Logo'}"
   [navbarBrandMinimized]="{src: 'assets/img/brand/sygnet.svg', width: 30, height: 30, alt: 'CoreUI Logo'}"
   [sidebarToggler]="'lg'"
-  [asideMenuToggler]="'lg'"> 
+  [asideMenuToggler]="'lg'">  -->
   <!-- <app-header [sidebarToggler]="'lg'" [asideMenuToggler]="'lg'"> -->
   <ul class="nav navbar-nav d-md-down-none">
     <!-- <li class="nav-item px-3">
@@ -85,7 +92,7 @@
     </div><!-- /.container-fluid -->
   </main>
   <app-aside [fixed]="true" [display]="false" [ngClass]="'test'">
-    <tabset>
+    <!-- <tabset>
       <tab>
         <ng-template tabHeading><i class="icon-list"></i></ng-template>
         <div class="list-group list-group-accent">
@@ -333,7 +340,7 @@
           <small class="text-muted">25GB/256GB</small>
         </div>
       </tab>
-    </tabset>
+    </tabset> -->
   </app-aside>
 </div>
 <app-footer>
