@@ -89,14 +89,22 @@
             </div>
             <div class="card-body">
               <div class="chart-wrapper">
-                <canvas baseChart class="chart"
+                <!-- <canvas baseChart class="chart"
                 [datasets]="barChartData"
                 [labels]="barChartLabels"
                 [options]="barChartOptions"
                 [legend]="barChartLegend"
                 [chartType]="barChartType"
                 (chartHover)="chartHovered($event)"
-                (chartClick)="chartClicked($event)"></canvas>
+                (chartClick)="chartClicked($event)"></canvas>-->
+                <canvas baseChart 
+                [datasets]="barChartData"
+                [labels]="barChartLabels"
+                [options]="barChartOptions"
+                [plugins]="barChartPlugins"
+                [legend]="barChartLegend"
+                [chartType]="barChartType">
+              </canvas>
               </div>
             </div>
           </div>

@@ -1,6 +1,10 @@
 import { Component, VERSION ,ViewChild,OnInit } from '@angular/core';
 import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
+import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
+import { Label } from 'ng2-charts';
+import { ActionableEmailService } from '../../services/actionable-email.service';
+
 
 import {ChartComponent,
   ApexAxisChartSeries,
@@ -9,8 +13,9 @@ import {ChartComponent,
   ApexChart,
   ApexPlotOptions
 } from "ng-apexcharts";
+import { from } from 'rxjs';
 
-export type ChartOptions = {
+export type ChartHeatOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
   dataLabels: ApexDataLabels;
@@ -22,10 +27,64 @@ export type ChartOptions = {
   templateUrl: 'dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent {
-   //heatmap
-   @ViewChild("chart") chart: ChartComponent;
-   public chartOptions: Partial<ChartOptions>;
+export class DashboardComponent implements OnInit {
+  constructor( public actionEmail:ActionableEmailService ){}
+  body ='';
+  //persons = '';
+  X_Array = [];
+  Y_Array = [];
+  text1_array = [];
+  text2_array = [];
+  data1 = '';
+  data2 = '';
+  barChartOptions: ChartOptions = {
+    responsive: true,
+    scales: { xAxes: [{ ticks: { stepSize: 5} }], yAxes: [{}] },
+  };
+  barChartLabels: Label[] = [];
+  barChartType: ChartType = 'bar';
+  barChartLegend = true;
+  barChartPlugins = [];
+  barChartData: ChartDataSets[] = [];
+
+  
+  stackBar(){
+    this.actionEmail.getActionEmails(this.body)
+       .then((data) => {
+        let X = data.data[0].x;
+        let Y = data.data[0].y
+        let text1 = data.data[0].text;
+        let text2 = data.data[1].text;
+        Object.keys(X).map((X_Index)=>{
+          var val = X[X_Index];
+          this.X_Array.push(val);
+        });
+        
+        Object.keys(text1).map((text1_Index)=>{
+          var val = text1[text1_Index];
+          this.text1_array.push(val);
+        });
+
+        Object.keys(text2).map((text2_Index)=>{
+          var val = text2[text2_Index];
+          this.text2_array.push(val);
+        });
+
+        this.barChartLabels = this.X_Array;
+        this.barChartData   = [{ data: this.text1_array, label: 'External', stack: 'a' },
+        { data: this.text2_array, label: 'Internal', stack: 'a', }];
+
+    }).catch((err) => {
+       console.log('catch');
+    });
+  }
+
+
+  //stacked bar//
+
+  //heatmap
+  @ViewChild("chart") chart: ChartComponent;
+  public chartHeatOptions: Partial<ChartHeatOptions>;
 
   // lineChart
   public lineChartData: Array<any> = [
@@ -69,47 +128,47 @@ export class DashboardComponent {
   public lineChartLegend = true;
   public lineChartType = 'line';
 
-  // barChart
-  public barChartOptions: any = {
-    scaleShowVerticalLines: false,
-    //scaleShowHorizontalLines: false,
-    responsive: true
-  };
-  //public barChartLabels: string[] = ['2005', '2007', '2008', '2009', '2010', '2011', '2012'];
-  public barChartLabels: string[] = ['2020-Augest', '2020-September', '2020-October', '2020-November', '2020-December'];
-  public barChartType = 'bar';
-  public barChartLegend = true;
+  // // barChart
+  // public barChartOptions: any = {
+  //   scaleShowVerticalLines: false,
+  //   //scaleShowHorizontalLines: false,
+  //   responsive: true
+  // };
+  // //public barChartLabels: string[] = ['2005', '2007', '2008', '2009', '2010', '2011', '2012'];
+  // public barChartLabels: string[] = ['2020-Augest', '2020-September', '2020-October', '2020-November', '2020-December'];
+  // public barChartType = 'bar';
+  // public barChartLegend = true;
 
-  public barChartData: any[] = [
-    {data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A'},
-    {data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B'}
-  ];
+  // public barChartData: any[] = [
+  //   {data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A'},
+  //   {data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B'}
+  // ];
 
-  // Doughnut
-  public doughnutChartLabels: string[] = ['Download Sales', 'In-Store Sales', 'Mail-Order Sales'];
-  public doughnutChartData: number[] = [350, 450, 100];
-  public doughnutChartType = 'doughnut';
+  // // Doughnut
+  // public doughnutChartLabels: string[] = ['Download Sales', 'In-Store Sales', 'Mail-Order Sales'];
+  // public doughnutChartData: number[] = [350, 450, 100];
+  // public doughnutChartType = 'doughnut';
 
-  // Radar
-  public radarChartLabels: string[] = ['Eating', 'Drinking', 'Sleeping', 'Designing', 'Coding', 'Cycling', 'Running'];
+  // // Radar
+  // public radarChartLabels: string[] = ['Eating', 'Drinking', 'Sleeping', 'Designing', 'Coding', 'Cycling', 'Running'];
 
-  public radarChartData: any = [
-    {data: [65, 59, 90, 81, 56, 55, 40], label: 'Series A'},
-    {data: [28, 48, 40, 19, 96, 27, 100], label: 'Series B'}
-  ];
-  public radarChartType = 'radar';
+  // public radarChartData: any = [
+  //   {data: [65, 59, 90, 81, 56, 55, 40], label: 'Series A'},
+  //   {data: [28, 48, 40, 19, 96, 27, 100], label: 'Series B'}
+  // ];
+  // public radarChartType = 'radar';
 
-  // Pie
-  public pieChartLabels: string[] = ['Download Sales', 'In-Store Sales', 'Mail Sales'];
-  public pieChartData: number[] = [300, 500, 100];
-  public pieChartType = 'pie';
+  // // Pie
+  // public pieChartLabels: string[] = ['Download Sales', 'In-Store Sales', 'Mail Sales'];
+  // public pieChartData: number[] = [300, 500, 100];
+  // public pieChartType = 'pie';
 
-  // PolarArea
-  public polarAreaChartLabels: string[] = ['Download Sales', 'In-Store Sales', 'Mail Sales', 'Telesales', 'Corporate Sales'];
-  public polarAreaChartData: number[] = [300, 500, 100, 40, 120];
-  public polarAreaLegend = true;
+  // // PolarArea
+  // public polarAreaChartLabels: string[] = ['Download Sales', 'In-Store Sales', 'Mail Sales', 'Telesales', 'Corporate Sales'];
+  // public polarAreaChartData: number[] = [300, 500, 100, 40, 120];
+  // public polarAreaLegend = true;
 
-  public polarAreaChartType = 'polarArea';
+  // public polarAreaChartType = 'polarArea';
 
   // events
   public chartClicked(e: any): void {
@@ -122,7 +181,8 @@ export class DashboardComponent {
 
   //heatmap
   ngOnInit(){
-    this.chartOptions = {
+    this.stackBar();
+    this.chartHeatOptions = {
       series: [
         {
           name: "Jan",

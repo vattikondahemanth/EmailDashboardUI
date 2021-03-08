@@ -9,6 +9,7 @@ import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 
 import { IconModule, IconSetModule, IconSetService } from '@coreui/icons-angular';
 
+
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
 };
@@ -28,6 +29,9 @@ import { HIGHCHARTS_MODULES, ChartModule } from 'angular-highcharts';
 import more from 'highcharts/highcharts-more.src';
 import exporting from 'highcharts/modules/exporting.src';
 import highmaps from 'highcharts/modules/map.src';
+
+
+import { HttpClientModule } from '@angular/common/http';
 
 export function highchartsModules() { 
   // apply Highcharts Modules to this array
@@ -69,7 +73,8 @@ import { ChartsModule } from 'ng2-charts';
     TabsModule.forRoot(),
     ChartsModule,
     IconModule,
-    IconSetModule.forRoot()
+    IconSetModule.forRoot(),
+    HttpClientModule
   ],
   declarations: [
     AppComponent,
