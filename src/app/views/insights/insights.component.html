@@ -2,17 +2,15 @@
         <!-- Pie chart code start -->
         <div class="card-columns cols-2">
           <div class="card">
-            <!-- <div class="card-header">
+            <div class="card-header">
               Emails Directed to users
-            </div> -->
+            </div>
             <div class="card-body">
               <div class="chart-wrapper">
-                <h6 style="text-align:center"> Emails directed to users </h6>
                 <canvas baseChart class="chart"
                 [data]="pieChartData"
                 [labels]="pieChartLabels"
                 [chartType]="pieChartType"
-                [colors]="pieChartColors"
                 (chartHover)="chartHovered($event)"
                 (chartClick)="chartClicked($event)"></canvas>
               </div>
@@ -20,17 +18,15 @@
           </div>
 
           <div class="card">
-            <!-- <div class="card-header">
+            <div class="card-header">
                 Chaser Emails
-            </div> -->
+            </div>
             <div class="card-body">
               <div class="chart-wrapper">
-                <h6 style="text-align:center"> Chaser Emails </h6>
                 <canvas baseChart class="chart"
-                [data]="pieChartChaserData"
-                [labels]="pieChartChaserLabels"
-                [chartType]="pieChartChaserType"
-                [colors]="pieChartColors"
+                [data]="pieChartData"
+                [labels]="pieChartLabels"
+                [chartType]="pieChartType"
                 (chartHover)="chartHovered($event)"
                 (chartClick)="chartClicked($event)"></canvas>
               </div>
@@ -45,13 +41,13 @@
           <div class="col-md-12">
 
             <div class="card">
-              <!-- <div class="card-header">
+              <div class="card-header">
                 HeatMap Chart
-              </div> -->
+              </div>
               <div class="card-body">
                 <div class="chart-wrapper">
                   <!-- https://www.eduforbetterment.com/heat-map-chart-in-angular-using-apexchart/ -->
-                  <!-- <h1 style="text-align:center">Temprature </h1> -->
+                  <h1 style="text-align:center">Temprature </h1>
                   <div id="chart">
                     <apx-chart
                       [series]="chartOptions.series"
@@ -70,21 +66,18 @@
         </div>
         <!-- Heatmap chart end -->
 
-        <!-- Pie chart code start -->
+                <!-- Pie chart code start -->
         <div class="card-columns cols-2">
           <div class="card">
-            <!-- <div class="card-header">
-              Total emails received by user
-            </div> -->
+            <div class="card-header">
+              Emails Directed to users
+            </div>
             <div class="card-body">
               <div class="chart-wrapper">
-                <h6 style="text-align:center"> Total emails received by user </h6>
                 <canvas baseChart class="chart"
-                [datasets]="barChartData"
-                [labels]="barChartLabels"
-                [options]="barChartOptions"
-                [legend]="barChartLegend"
-                [chartType]="barChartType"
+                [data]="pieChartData"
+                [labels]="pieChartLabels"
+                [chartType]="pieChartType"
                 (chartHover)="chartHovered($event)"
                 (chartClick)="chartClicked($event)"></canvas>
               </div>
@@ -92,18 +85,15 @@
           </div>
 
           <div class="card">
-            <!-- <div class="card-header">
-                Volume by day of week
-            </div> -->
+            <div class="card-header">
+                Chaser Emails
+            </div>
             <div class="card-body">
               <div class="chart-wrapper">
-                <h6 style="text-align:center"> Volume by day of week </h6>
                 <canvas baseChart class="chart"
-                [datasets]="barChartDayData"
-                [labels]="barChartDayLabels"
-                [options]="barChartDayOptions"
-                [legend]="barChartDayLegend"
-                [chartType]="barChartDayType"
+                [data]="pieChartData"
+                [labels]="pieChartLabels"
+                [chartType]="pieChartType"
                 (chartHover)="chartHovered($event)"
                 (chartClick)="chartClicked($event)"></canvas>
               </div>
@@ -112,44 +102,6 @@
 
         </div>
         <!-- Pie chart code end -->
-
-        <div class="row">
-          <div class="col-md-12">
-
-            <div class="card">
-              <!-- <div class="card-header">
-                Top 10 External Senders
-              </div> -->
-              <div class="card-body">
-                <div class="chart-wrapper">
-                  <h6 style="text-align:center"> Top 10 External Senders </h6>
-                  <!-- <div id="chart">
-                    <apx-chart
-                      [series]="chartOptions.series"
-                      [chart]="chartOptions.chart"
-                      [dataLabels]="chartOptions.dataLabels"
-                      [plotOptions]="chartOptions.plotOptions"
-                      [title]=""
-                    ></apx-chart>
-                  </div> -->
-
-                  <canvas baseChart class="chart"
-                  [datasets]="horizontalBarChartData"
-                  [labels]="horizontalBarChartLabels"
-                  [options]="horizontalBarChartOptions"
-                  [legend]="horizontalBarChartLegend"
-                  [chartType]="horizontalBarChartType"
-                  (chartHover)="chartHovered($event)"
-                  (chartClick)="chartClicked($event)"></canvas>
-                  <h6 style="text-align:center">Number of emails</h6>
-                
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-        <!--  -->
   </div>
 
   

@@ -71,7 +71,6 @@
               <option>By Month</option>
               <option>By Day</option>
               <option>By Year</option>
-              <option>By Hour</option>
             </select>
           </div>
         </div>
@@ -80,17 +79,16 @@
         <!-- chart code start -->
         <div class="card-columns cols-2">
           <div class="card">
-            <!-- <div class="card-header">
+            <div class="card-header">
               Bar Chart
-              <div class="card-header-actions">
+              <!-- <div class="card-header-actions">
                 <a href="http://www.chartjs.org">
                   <small class="text-muted">docs</small>
                 </a>
-              </div>
-            </div> -->
+              </div> -->
+            </div>
             <div class="card-body">
               <div class="chart-wrapper">
-                <h6 style="text-align: center;">Emails by user (Bar)</h6>
                 <canvas baseChart class="chart"
                 [datasets]="barChartData"
                 [labels]="barChartLabels"
@@ -103,17 +101,17 @@
             </div>
           </div>
           <div class="card">
-            <!-- <div class="card-header">
+            <div class="card-header">
               Line Chart
-              <div class="card-header-actions">
+              <!-- <div class="card-header-actions">
                 <a href="http://www.chartjs.org">
                   <small class="text-muted">docs</small>
                 </a>
-              </div>
-            </div> -->
+              </div> -->
+            </div>
             <div class="card-body">
               <div class="chart-wrapper">
-                <h6 style="text-align:center">Workload by user(bar) </h6>
+                <!-- <h1 style="text-align:center">Temprature </h1> -->
                   <!-- <div id="chart">
                     <apx-chart
                       [series]="chartOptions.series"
@@ -123,19 +121,101 @@
                       [title]="chartOptions.title"
                     ></apx-chart>
                   </div> -->
-                    <apx-chart
-                      [series]="chartOptions.series"
-                      [chart]="chartOptions.chart"
-                      [dataLabels]="chartOptions.dataLabels"
-                      [plotOptions]="chartOptions.plotOptions"
-                      [title]="chartOptions.title"
-                    ></apx-chart>
+
+                    <canvas baseChart class="chart"
+                    [datasets]="lineChart2Data"
+                    [labels]="lineChart2Labels"
+                    [options]="lineChart2Options"
+                    [colors]="lineChart2Colours"
+                    [legend]="lineChart2Legend"
+                    [chartType]="lineChart2Type">
+                    </canvas>
 
               </div>
             </div>
           </div>
           
-          
+          <!-- <div class="card">
+            <div class="card-header">
+              Doughnut Chart
+              <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
+                [data]="doughnutChartData"
+                [labels]="doughnutChartLabels"
+                [chartType]="doughnutChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div> -->
+          <!-- <div class="card">
+            <div class="card-header">
+              Radar Chart
+              <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
+                [datasets]="radarChartData"
+                [labels]="radarChartLabels"
+                [chartType]="radarChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div> -->
+          <!-- <div class="card">
+            <div class="card-header">
+              Pie Chart
+              <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
+                [data]="pieChartData"
+                [labels]="pieChartLabels"
+                [chartType]="pieChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div> -->
+          <!-- <div class="card">
+            <div class="card-header">
+              Polar Area Chart
+              <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
+                [data]="polarAreaChartData"
+                [labels]="polarAreaChartLabels"
+                [legend]="polarAreaLegend"
+                [chartType]="polarAreaChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div> -->
         </div>
         <!-- chart code end -->
 
@@ -262,7 +342,6 @@
               <option>By Month</option>
               <option>By Day</option>
               <option>By Year</option>
-              <option>By Hour</option>
             </select>
           </div>
         </div>
@@ -271,17 +350,16 @@
         <div class="card-columns cols-2">
           
           <div class="card">
-            <!-- <div class="card-header">
+            <div class="card-header">
               Bar Chart
-              <div class="card-header-actions">
+              <!-- <div class="card-header-actions">
                 <a href="http://www.chartjs.org">
                   <small class="text-muted">docs</small>
                 </a>
-              </div>
-            </div> -->
+              </div> -->
+            </div>
             <div class="card-body">
               <div class="chart-wrapper">
-                <h6 style="text-align: center;">Emails Receive/Response by Week</h6>
                 <canvas baseChart class="chart"
                 [datasets]="barChartData"
                 [labels]="barChartLabels"
@@ -294,28 +372,58 @@
             </div>
           </div>
           
-         
-          <div class="card">
-            <!-- <div class="card-header">
-              Line Chart
+          <!-- <div class="card">
+            <div class="card-header">
+              Doughnut Chart
               <div class="card-header-actions">
                 <a href="http://www.chartjs.org">
                   <small class="text-muted">docs</small>
                 </a>
               </div>
-            </div> -->
+            </div>
             <div class="card-body">
               <div class="chart-wrapper">
-                <h6 style="text-align: center;">Emails Receive/Response by Week</h6>
                 <canvas baseChart class="chart"
-                    [datasets]="lineChart2Data"
-                    [labels]="lineChart2Labels"
-                    [options]="lineChart2Options"
-                    [colors]="lineChart2Colours"
-                    [legend]="lineChart2Legend"
-                    [chartType]="lineChart2Type">
-                    </canvas>
-                <!-- <canvas baseChart class="chart"
+                [data]="doughnutChartData"
+                [labels]="doughnutChartLabels"
+                [chartType]="doughnutChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div> -->
+          <!-- <div class="card">
+            <div class="card-header">
+              Radar Chart
+              <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
+                [datasets]="radarChartData"
+                [labels]="radarChartLabels"
+                [chartType]="radarChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div> -->
+          <div class="card">
+            <div class="card-header">
+              Line Chart
+              <!-- <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div> -->
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
                 [datasets]="lineChartData"
                 [labels]="lineChartLabels"
                 [options]="lineChartOptions"
@@ -323,11 +431,51 @@
                 [legend]="lineChartLegend"
                 [chartType]="lineChartType"
                 (chartHover)="chartHovered($event)"
-                (chartClick)="chartClicked($event)"></canvas> -->
+                (chartClick)="chartClicked($event)"></canvas>
               </div>
             </div>
           </div>
-          
+          <!-- <div class="card">
+            <div class="card-header">
+              Pie Chart
+              <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
+                [data]="pieChartData"
+                [labels]="pieChartLabels"
+                [chartType]="pieChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div> -->
+          <!-- <div class="card">
+            <div class="card-header">
+              Polar Area Chart
+              <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
+                [data]="polarAreaChartData"
+                [labels]="polarAreaChartLabels"
+                [legend]="polarAreaLegend"
+                [chartType]="polarAreaChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div> -->
         </div>
         <!-- chart code end -->
 
@@ -456,7 +604,6 @@
               <option>By Month</option>
               <option>By Day</option>
               <option>By Year</option>
-              <option>By Hour</option>
             </select>
           </div>
         </div>
@@ -465,52 +612,78 @@
         <div class="card-columns cols-2">
           
           <div class="card">
-            <!-- <div class="card-header">
+            <div class="card-header">
               Bar Chart
-              <div class="card-header-actions">
+              <!-- <div class="card-header-actions">
                 <a href="http://www.chartjs.org">
                   <small class="text-muted">docs</small>
                 </a>
-              </div>
-            </div> -->
+              </div> -->
+            </div>
             <div class="card-body">
               <div class="chart-wrapper">
-                <h6 style="text-align: center;">Top keywords in chaser</h6>
                 <canvas baseChart class="chart"
-                [datasets]="barChartEscalatedData"
-                [labels]="barChartEscalatedLabels"
-                [options]="barChartEscalatedOptions"
-                [legend]="barChartEscalatedLegend"
-                [chartType]="barChartEscalatedType"
+                [datasets]="barChartData"
+                [labels]="barChartLabels"
+                [options]="barChartOptions"
+                [legend]="barChartLegend"
+                [chartType]="barChartType"
                 (chartHover)="chartHovered($event)"
                 (chartClick)="chartClicked($event)"></canvas>
               </div>
             </div>
           </div>
           
-          
-          <div class="card">
-            <!-- <div class="card-header">
-              Line Chart
-               <div class="card-header-actions">
+          <!-- <div class="card">
+            <div class="card-header">
+              Doughnut Chart
+              <div class="card-header-actions">
                 <a href="http://www.chartjs.org">
                   <small class="text-muted">docs</small>
                 </a>
-              </div> 
-            </div> -->
-            <div class="card-body">
-              <div class="chart-wrapper">
-                <h6 style="text-align:center">Workload by user(bar) </h6>
-                    <apx-chart
-                      [series]="chartOptions.series"
-                      [chart]="chartOptions.chart"
-                      [dataLabels]="chartOptions.dataLabels"
-                      [plotOptions]="chartOptions.plotOptions"
-                      [title]="chartOptions.title"
-                    ></apx-chart>
               </div>
             </div>
-            <!-- <div class="card-body">
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
+                [data]="doughnutChartData"
+                [labels]="doughnutChartLabels"
+                [chartType]="doughnutChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div> -->
+          <!-- <div class="card">
+            <div class="card-header">
+              Radar Chart
+              <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="chart-wrapper">
+                <canvas baseChart class="chart"
+                [datasets]="radarChartData"
+                [labels]="radarChartLabels"
+                [chartType]="radarChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div> -->
+          <div class="card">
+            <div class="card-header">
+              Line Chart
+              <!-- <div class="card-header-actions">
+                <a href="http://www.chartjs.org">
+                  <small class="text-muted">docs</small>
+                </a>
+              </div> -->
+            </div>
+            <div class="card-body">
               <div class="chart-wrapper">
                 <canvas baseChart class="chart"
                 [datasets]="lineChartData"
@@ -522,7 +695,7 @@
                 (chartHover)="chartHovered($event)"
                 (chartClick)="chartClicked($event)"></canvas>
               </div>
-            </div> -->
+            </div>
           </div>
           <!-- <div class="card">
             <div class="card-header">
