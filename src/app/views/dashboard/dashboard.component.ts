@@ -86,9 +86,12 @@ export class DashboardComponent implements OnInit {
   @ViewChild("chart") chart: ChartComponent;
   public chartHeatOptions: Partial<ChartHeatOptions>;
 
-  // lineChart
+:  // lineChart
   public lineChartData: Array<any> = [
-    {data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A'},
+    {
+      data: [65, 59, 80, 81, 56, 55, 40], 
+      label: 'Series A'
+    },
     // {data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B'},
     // {data: [18, 48, 77, 9, 100, 27, 40], label: 'Series C'}
   ];
@@ -97,7 +100,16 @@ export class DashboardComponent implements OnInit {
 
   public lineChartOptions: any = {
     animation: false,
-    responsive: true
+    responsive: true,
+    scales: {
+      xAxes: [{
+
+      }],
+      yAxes: [{
+        
+        
+      }],
+    },
   };
   public lineChartColours: Array<any> = [
     { // grey
@@ -128,21 +140,37 @@ export class DashboardComponent implements OnInit {
   public lineChartLegend = true;
   public lineChartType = 'line';
 
-  // // barChart
-  // public barChartOptions: any = {
-  //   scaleShowVerticalLines: false,
-  //   //scaleShowHorizontalLines: false,
-  //   responsive: true
-  // };
-  // //public barChartLabels: string[] = ['2005', '2007', '2008', '2009', '2010', '2011', '2012'];
-  // public barChartLabels: string[] = ['2020-Augest', '2020-September', '2020-October', '2020-November', '2020-December'];
-  // public barChartType = 'bar';
-  // public barChartLegend = true;
+  // barChart
+  public barChartOptions: any = {
+    scaleShowVerticalLines: false,
+    //scaleShowHorizontalLines: false,
+    responsive: true
+  };
+  public barChartLabels: string[] = ['2020-Augest', '2020-September', '2020-October', '2020-November', '2020-December'];
+  public barChartType = 'bar';
+  public barChartLegend = true;
 
-  // public barChartData: any[] = [
-  //   {data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A'},
-  //   {data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B'}
-  // ];
+  public barChartData: any[] = [
+    {
+      data: [65, 59, 80, 81, 56, 55, 40],
+      label: 'External',
+      backgroundColor: '#435eab',
+      borderColor: '#435eab',
+      hoverBackgroundColor:'#435eab',
+      barThickness: 15,
+  
+    },
+    { 
+      data: [28, 48, 40, 19, 86, 27, 90],
+      label: 'Internal',
+      backgroundColor: '#435eeb',
+      borderColor: '#435eeb',
+      hoverBackgroundColor:'#435eeb',
+      barThickness: 20,
+    
+  },
+    
+  ];
 
   // // Doughnut
   // public doughnutChartLabels: string[] = ['Download Sales', 'In-Store Sales', 'Mail-Order Sales'];
@@ -317,15 +345,14 @@ export class DashboardComponent implements OnInit {
     return series;
   }
 
-  // ========================================
   // lineChart2
   public lineChart2Data: Array<any> = [
     {
-      data: [1, 18, 9, 17, 34, 22, 11],
-      label: 'Series A'
+      data: [74, 81, 99, 10, 74, 71,85,78,35,61,63,18,17, 11],
+      // label: 'Series A'
     }
   ];
-  public lineChart2Labels: Array<any> = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+  public lineChart2Labels: Array<any> = ['July-19', 'August-02', 'August-16', 'August-30', 'September-13', 'September-13', 'October-11','October-25','November-08','November-22'];
   public lineChart2Options: any = {
     tooltips: {
       enabled: false,
@@ -334,23 +361,24 @@ export class DashboardComponent implements OnInit {
     // maintainAspectRatio: false,
     scales: {
       xAxes: [{
-        gridLines: {
-          color: 'transparent',
-          zeroLineColor: 'transparent'
-        },
-        ticks: {
-          fontSize: 2,
-          fontColor: 'transparent',
-        }
+        // gridLines: {
+        //   color: 'transparent',
+        //   zeroLineColor: 'transparent'
+        // },
+        // ticks: {
+        //   fontSize: 2,
+        //   fontColor: 'transparent',
+        // }
 
       }],
       yAxes: [{
-        display: false,
-        ticks: {
-          display: false,
-          min: 1 - 5,
-          max: 34 + 5,
-        }
+        
+        //display: false,
+        //ticks: {
+          //display: false,
+          //min: 1 - 5,
+          //max: 34 + 5,
+       // }
       }],
     },
     elements: {
@@ -370,14 +398,66 @@ export class DashboardComponent implements OnInit {
   };
   public lineChart2Colours: Array<any> = [
     { // grey
-      backgroundColor: getStyle('--info'),
-      // borderColor: 'rgba(255,255,255,.55)'
+      // backgroundColor: getStyle('--info'),
+      //  borderColor: 'rgba(255,255,255,.55)'
+        borderColor: 'rgba(7, 11, 230,.55)'
     }
   ];
   public lineChart2Legend = false;
   public lineChart2Type = 'line';
 
+  // barChart Escalated
+  public barChartEscalatedOptions: any = {
+    scaleShowVerticalLines: false,
+    //scaleShowHorizontalLines: false,
+    responsive: true,
+    scales: {
+      xAxes: [{
+      }],
+      yAxes: [{
+            scaleLabel : {
+              display : true,
+              labelString : "Number of Emails",
+              //fontStyle : 'bold',
+              fontSize : 11
+            }
+        
+        //display: false,
+        //ticks: {
+          //display: false,
+          //min: 1 - 5,
+          //max: 34 + 5,
+       // }
+      }],
+    },
 
+  };
+  public barChartEscalatedLabels: string[] = ['please send', 'soon possible', 'not received', 'received mentioned', 'send-soon','not intended','original message','business day','csv not','within one','one business'];
+  public barChartEscalatedType = 'bar';
+  public barChartEscalatedLegend = true;
+
+  public barChartEscalatedData: any[] = [
+    {
+      data: [65, 59, 80, 81, 56, 55, 40,45,57,78],
+      label: 'External',
+      backgroundColor: '#435eab',
+      borderColor: '#435eab',
+      hoverBackgroundColor:'#435eab',
+      barThickness: 15,
+  
+    },
+    { 
+      data: [28, 48, 40, 19, 86, 27, 90],
+      label: 'Internal',
+      backgroundColor: '#435eeb',
+      borderColor: '#435eeb',
+      hoverBackgroundColor:'#435eeb',
+      barThickness: 20,
+    
+  },    
+  ];
+
+  
 
 
 }
