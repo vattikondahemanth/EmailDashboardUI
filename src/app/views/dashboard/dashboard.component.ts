@@ -4,6 +4,7 @@ import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import { Label } from 'ng2-charts';
 import { ActionableEmailService } from '../../services/actionable-email.service';
+import { CriticalClientEmailService } from '../../services/critical-client-email.service';
 
 
 import {ChartComponent,
@@ -13,6 +14,7 @@ import {ChartComponent,
   ApexChart,
   ApexPlotOptions
 } from "ng-apexcharts";
+
 import { from } from 'rxjs';
 
 export type ChartHeatOptions = {
@@ -28,15 +30,16 @@ export type ChartHeatOptions = {
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  constructor( public actionEmail:ActionableEmailService ){}
-  body ='';
-  //persons = '';
-  X_Array = [];
-  Y_Array = [];
-  text1_array = [];
-  text2_array = [];
-  data1 = '';
-  data2 = '';
+  constructor( 
+    public actionEmail:ActionableEmailService,
+    public criticalEmail:CriticalClientEmailService
+    ){}
+start_date = '2020-03-08';
+end_date   = '2021-03-08';
+frequency  = 'W-MON';
+  
+//STACK BAR START//
+
   barChartOptions: ChartOptions = {
     responsive: true,
     scales: { xAxes: [{ ticks: { stepSize: 5} }], yAxes: [{}] },
@@ -46,10 +49,23 @@ export class DashboardComponent implements OnInit {
   barChartLegend = true;
   barChartPlugins = [];
   barChartData: ChartDataSets[] = [];
-
   
-  stackBar(){
-    this.actionEmail.getActionEmails(this.body)
+
+
+  emailUserStackBar(){
+    let X_Array = [];
+    let Y_Array = [];
+    let text1_array = [];
+    let text2_array = [];
+    let body = {
+      "filters": {
+        "start_date": "2020-03-08T19:04:38.060922",
+        "end_date": "2021-03-08T19:04:38.060975",
+        "frequency": "W-MON"
+      }
+    }; 
+    console.log(body);
+    this.actionEmail.getUserEmails(body)
        .then((data) => {
         let X = data.data[0].x;
         let Y = data.data[0].y
@@ -57,146 +73,224 @@ export class DashboardComponent implements OnInit {
         let text2 = data.data[1].text;
         Object.keys(X).map((X_Index)=>{
           var val = X[X_Index];
-          this.X_Array.push(val);
+          X_Array.push(val);
         });
         
         Object.keys(text1).map((text1_Index)=>{
           var val = text1[text1_Index];
-          this.text1_array.push(val);
+          text1_array.push(val);
         });
 
         Object.keys(text2).map((text2_Index)=>{
           var val = text2[text2_Index];
-          this.text2_array.push(val);
+          text2_array.push(val);
         });
 
-        this.barChartLabels = this.X_Array;
-        this.barChartData   = [{ data: this.text1_array, label: 'External', stack: 'a' },
-        { data: this.text2_array, label: 'Internal', stack: 'a', }];
+        this.barChartLabels = X_Array;
+        this.barChartData   = [{ 
+        data: text1_array, label: 'External', 
+        stack: 'a',backgroundColor: '#435eab',
+        borderColor: '#435eab',
+        hoverBackgroundColor:'#435eab',
+        barThickness: 20, },
+        {
+        data: text2_array, 
+        label: 'Internal', 
+        stack: 'a',
+        backgroundColor: '#435eeb',
+        borderColor: '#435eeb',
+        hoverBackgroundColor:'#435eeb',
+        barThickness: 20,
+       }];
 
     }).catch((err) => {
        console.log('catch');
     });
   }
+//STACK BAR END//
 
 
-  //stacked bar//
 
-  //heatmap
-  @ViewChild("chart") chart: ChartComponent;
-  public chartHeatOptions: Partial<ChartHeatOptions>;
 
-:  // lineChart
-  public lineChartData: Array<any> = [
-    {
-      data: [65, 59, 80, 81, 56, 55, 40], 
-      label: 'Series A'
-    },
-    // {data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B'},
-    // {data: [18, 48, 77, 9, 100, 27, 40], label: 'Series C'}
-  ];
-  public lineChartLabels: Array<any> = ['2020-Augest', '2020-September', '2020-October', '2020-November', '2020-December'];
-  // public lineChartLabels: Array<any> = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+//BAR CHART ESCALATED START//
+// onDateChange(){
+//   console.log(this.end_date);
+//   console.log(this.start_date);
+// }
+startDateChange(date){
+  this.start_date = date;
+}
 
-  public lineChartOptions: any = {
-    animation: false,
+endDateChange(date){
+  this.end_date = date;
+  console.log(this.start_date);
+  console.log(this.end_date);
+  this.emailReceiveBarChart();
+  this.emailReceiveLineChart();
+  
+}
+
+criticalEmailChange(value:any){
+  this.frequency = value;
+  this.emailReceiveBarChart();
+  this.emailReceiveLineChart();
+}
+
+  barChartEscalatedOptions: any = {
+    scaleShowVerticalLines: false,
     responsive: true,
+    scales: {
+      xAxes: [{
+      }],
+      yAxes: [{
+            scaleLabel : {
+              display : true,
+              labelString : "Number of Emails",
+              fontSize : 11
+            }
+      }],
+    },
+  };
+
+  barChartEscalatedLabels: any[] = [];
+  public barChartEscalatedType = 'bar';
+  public barChartEscalatedLegend = true;
+  public barChartEscalatedData: any[] = [];
+
+  emailReceiveBarChart(){
+    let X_Array = [];
+    let Y_Array = [];
+    let text1_array = [];
+    let text2_array = [];
+    this.barChartEscalatedLabels = [];
+    let body = {
+      "filters": {
+        "start_date": this.start_date+"T19:04:38.060922",
+        "end_date":   this.end_date+"T19:04:38.060975",
+        "frequency":  this.frequency,
+      }
+    }; 
+    console.log(body);
+    this.criticalEmail.getEmailCount(body)
+    .then((data) => {
+     let X = data.data[0].x;
+     let Y = data.data[0].y;
+     let text1 = data.data[0].text;
+     let text2 = data.data[1].text;
+     Object.keys(X).map((X_Index)=>{
+       var val = X[X_Index];
+       X_Array.push(val);
+     });
+     
+     Object.keys(text1).map((text1_Index)=>{
+       var val = text1[text1_Index];
+       text1_array.push(val);
+     });
+
+     Object.keys(text2).map((text2_Index)=>{
+       var val = text2[text2_Index];
+       text2_array.push(val);
+     });
+
+     this.barChartEscalatedLabels = X_Array;
+     console.log(X_Array);
+     console.log(text1_array);
+     console.log(text2_array)
+     this.barChartEscalatedData = [{
+        data: text1_array,
+        label: 'Received',
+        backgroundColor: '#435eeb',
+        borderColor: '#435eeb',
+        hoverBackgroundColor:'#435eeb',
+        barThickness: 15,
+    
+      },
+      { 
+        data: text2_array,
+        label: 'Responded',
+        backgroundColor: '#435eab',
+        borderColor: '#435eab',
+        hoverBackgroundColor:'#435eab',
+        barThickness: 15,
+      }]
+   });
+}
+ //BAR CHART ESCALATED END//
+  
+
+
+
+//LINE CHART START//
+  public lineChart2Data: Array<any> = [];
+  public lineChart2Labels: Array<any> = [];
+  public lineChart2Options: any = {
+    tooltips: {
+      enabled: false,
+      custom: CustomTooltips
+    },
     scales: {
       xAxes: [{
 
       }],
       yAxes: [{
         
-        
       }],
     },
-  };
-  public lineChartColours: Array<any> = [
-    { // grey
-      backgroundColor: 'rgba(148,159,177,0.2)',
-      borderColor: 'rgba(148,159,177,1)',
-      pointBackgroundColor: 'rgba(148,159,177,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+    elements: {
+      line: {
+        tension: 0.00001,
+        borderWidth: 1
+      },
+      point: {
+        radius: 4,
+        hitRadius: 10,
+        hoverRadius: 4,
+      },
     },
-    { // dark grey
-      backgroundColor: 'rgba(77,83,96,0.2)',
-      borderColor: 'rgba(77,83,96,1)',
-      pointBackgroundColor: 'rgba(77,83,96,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(77,83,96,1)'
-    },
-    { // grey
-      backgroundColor: 'rgba(148,159,177,0.2)',
-      borderColor: 'rgba(148,159,177,1)',
-      pointBackgroundColor: 'rgba(148,159,177,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+    legend: {
+      display: false
     }
-  ];
-  public lineChartLegend = true;
-  public lineChartType = 'line';
-
-  // barChart
-  public barChartOptions: any = {
-    scaleShowVerticalLines: false,
-    //scaleShowHorizontalLines: false,
-    responsive: true
   };
-  public barChartLabels: string[] = ['2020-Augest', '2020-September', '2020-October', '2020-November', '2020-December'];
-  public barChartType = 'bar';
-  public barChartLegend = true;
+  public lineChart2Colours: Array<any> = [{ 
+        borderColor: 'rgba(7, 11, 230,.55)'
+  }];
+  public lineChart2Legend = false;
+  public lineChart2Type = 'line';
 
-  public barChartData: any[] = [
-    {
-      data: [65, 59, 80, 81, 56, 55, 40],
-      label: 'External',
-      backgroundColor: '#435eab',
-      borderColor: '#435eab',
-      hoverBackgroundColor:'#435eab',
-      barThickness: 15,
-  
-    },
-    { 
-      data: [28, 48, 40, 19, 86, 27, 90],
-      label: 'Internal',
-      backgroundColor: '#435eeb',
-      borderColor: '#435eeb',
-      hoverBackgroundColor:'#435eeb',
-      barThickness: 20,
-    
-  },
-    
-  ];
+  emailReceiveLineChart(){
+    let X_Array = [];
+    let Y_Array = [];
+    let body = {
+      "filters": {
+        "start_date": "2020-03-08T19:04:38.060922",
+        "end_date": "2021-03-08T19:04:38.060975",
+        "frequency": this.frequency
+      }
+    };
 
-  // // Doughnut
-  // public doughnutChartLabels: string[] = ['Download Sales', 'In-Store Sales', 'Mail-Order Sales'];
-  // public doughnutChartData: number[] = [350, 450, 100];
-  // public doughnutChartType = 'doughnut';
+    this.criticalEmail.getEmailResponse(body)
+    .then((data) => {
+     let X = data.data[0].x;
+     let Y = data.data[0].y;
 
-  // // Radar
-  // public radarChartLabels: string[] = ['Eating', 'Drinking', 'Sleeping', 'Designing', 'Coding', 'Cycling', 'Running'];
+     Object.keys(X).map((X_Index)=>{
+       var val = X[X_Index];
+       X_Array.push(val);
+     });
 
-  // public radarChartData: any = [
-  //   {data: [65, 59, 90, 81, 56, 55, 40], label: 'Series A'},
-  //   {data: [28, 48, 40, 19, 96, 27, 100], label: 'Series B'}
-  // ];
-  // public radarChartType = 'radar';
+     Object.keys(Y).map((Y_Index)=>{
+      var val = Y[Y_Index];
+      Y_Array.push(val);
+     });
+     
+      this.lineChart2Labels = X_Array;
+      this.lineChart2Data = [{
+        data: Y_Array
+      }];
+    });
+  }
+  //LINE CHART END//
 
-  // // Pie
-  // public pieChartLabels: string[] = ['Download Sales', 'In-Store Sales', 'Mail Sales'];
-  // public pieChartData: number[] = [300, 500, 100];
-  // public pieChartType = 'pie';
-
-  // // PolarArea
-  // public polarAreaChartLabels: string[] = ['Download Sales', 'In-Store Sales', 'Mail Sales', 'Telesales', 'Corporate Sales'];
-  // public polarAreaChartData: number[] = [300, 500, 100, 40, 120];
-  // public polarAreaLegend = true;
-
-  // public polarAreaChartType = 'polarArea';
 
   // events
   public chartClicked(e: any): void {
@@ -207,9 +301,15 @@ export class DashboardComponent implements OnInit {
     console.log(e);
   }
 
-  //heatmap
+
+//HEATMAP STARTED//
+@ViewChild("chart") chart: ChartComponent;
+public chartHeatOptions: Partial<ChartHeatOptions>;
   ngOnInit(){
-    this.stackBar();
+    this.emailUserStackBar();
+    this.emailReceiveBarChart();
+    this.emailReceiveLineChart();
+    
     this.chartHeatOptions = {
       series: [
         {
@@ -345,119 +445,10 @@ export class DashboardComponent implements OnInit {
     return series;
   }
 
-  // lineChart2
-  public lineChart2Data: Array<any> = [
-    {
-      data: [74, 81, 99, 10, 74, 71,85,78,35,61,63,18,17, 11],
-      // label: 'Series A'
-    }
-  ];
-  public lineChart2Labels: Array<any> = ['July-19', 'August-02', 'August-16', 'August-30', 'September-13', 'September-13', 'October-11','October-25','November-08','November-22'];
-  public lineChart2Options: any = {
-    tooltips: {
-      enabled: false,
-      custom: CustomTooltips
-    },
-    // maintainAspectRatio: false,
-    scales: {
-      xAxes: [{
-        // gridLines: {
-        //   color: 'transparent',
-        //   zeroLineColor: 'transparent'
-        // },
-        // ticks: {
-        //   fontSize: 2,
-        //   fontColor: 'transparent',
-        // }
+//HEATMAP END//
 
-      }],
-      yAxes: [{
-        
-        //display: false,
-        //ticks: {
-          //display: false,
-          //min: 1 - 5,
-          //max: 34 + 5,
-       // }
-      }],
-    },
-    elements: {
-      line: {
-        tension: 0.00001,
-        borderWidth: 1
-      },
-      point: {
-        radius: 4,
-        hitRadius: 10,
-        hoverRadius: 4,
-      },
-    },
-    legend: {
-      display: false
-    }
-  };
-  public lineChart2Colours: Array<any> = [
-    { // grey
-      // backgroundColor: getStyle('--info'),
-      //  borderColor: 'rgba(255,255,255,.55)'
-        borderColor: 'rgba(7, 11, 230,.55)'
-    }
-  ];
-  public lineChart2Legend = false;
-  public lineChart2Type = 'line';
 
-  // barChart Escalated
-  public barChartEscalatedOptions: any = {
-    scaleShowVerticalLines: false,
-    //scaleShowHorizontalLines: false,
-    responsive: true,
-    scales: {
-      xAxes: [{
-      }],
-      yAxes: [{
-            scaleLabel : {
-              display : true,
-              labelString : "Number of Emails",
-              //fontStyle : 'bold',
-              fontSize : 11
-            }
-        
-        //display: false,
-        //ticks: {
-          //display: false,
-          //min: 1 - 5,
-          //max: 34 + 5,
-       // }
-      }],
-    },
 
-  };
-  public barChartEscalatedLabels: string[] = ['please send', 'soon possible', 'not received', 'received mentioned', 'send-soon','not intended','original message','business day','csv not','within one','one business'];
-  public barChartEscalatedType = 'bar';
-  public barChartEscalatedLegend = true;
-
-  public barChartEscalatedData: any[] = [
-    {
-      data: [65, 59, 80, 81, 56, 55, 40,45,57,78],
-      label: 'External',
-      backgroundColor: '#435eab',
-      borderColor: '#435eab',
-      hoverBackgroundColor:'#435eab',
-      barThickness: 15,
-  
-    },
-    { 
-      data: [28, 48, 40, 19, 86, 27, 90],
-      label: 'Internal',
-      backgroundColor: '#435eeb',
-      borderColor: '#435eeb',
-      hoverBackgroundColor:'#435eeb',
-      barThickness: 20,
-    
-  },    
-  ];
-
-  
 
 
 }
