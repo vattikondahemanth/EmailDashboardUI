@@ -30,7 +30,7 @@
               </div>
               <div class="card-body">
                 <div class="chart-wrapper" style="text-align: center;">
-                  2 k
+                  {{ actionTotalReceived }}
                 </div>
               </div>
             </div>
@@ -42,7 +42,7 @@
               </div>
               <div class="card-body">
                 <div class="chart-wrapper" style="text-align: center;">
-                  278
+                 {{ actionTotalResponse }}
                 </div>
               </div>
             </div>
@@ -54,7 +54,7 @@
               </div>
               <div class="card-body">
                 <div class="chart-wrapper" style="text-align: center;">
-                  78 min
+                  {{ actionResponseTime }}
                 </div>
               </div>
             </div>
@@ -67,11 +67,11 @@
         <div class="row">
           <div class="form-group col-sm-2">
             <!-- <label for="ccmonth">Month</label> -->
-            <select class="form-control" id="ccmonth">
-              <option>By Month</option>
-              <option>By Day</option>
-              <option>By Year</option>
-              <option>By Hour</option>
+            <select class="form-control" id="ccmonth" #ccmonth (change)="actionEmailChange(ccmonth .value)">
+              <option value="W-MON">By Weekly</option>
+              <option value="D">By Daily</option>
+              <option value="H">By Hourly</option>
+              <option value="M">By Monthly</option>
             </select>
           </div>
         </div>
@@ -222,7 +222,7 @@
               </div>
               <div class="card-body">
                 <div class="chart-wrapper" style="text-align: center;">
-                  295
+                  {{ criticalTotalReceived }}
                 </div>
               </div>
             </div>
@@ -234,7 +234,7 @@
               </div>
               <div class="card-body">
                 <div class="chart-wrapper" style="text-align: center;">
-                  278
+                  {{ criticalTotalResponse }}
                 </div>
               </div>
             </div>
@@ -246,7 +246,7 @@
               </div>
               <div class="card-body">
                 <div class="chart-wrapper" style="text-align: center;">
-                  78 min
+                  {{ criticalResponseTime }}
                 </div>
               </div>
             </div>

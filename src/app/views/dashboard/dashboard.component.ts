@@ -38,9 +38,66 @@ export class DashboardComponent implements OnInit {
     ){}
 start_date = '2020-03-08';
 end_date   = '2021-03-08';
-frequency  = 'W-MON';
+action_frequency    = 'W-MON';
+critical_frequency  = 'W-MON';
+escalated_frequency = 'W-MON';
+
+//Action
+actionResponseTime:any  = '';
+actionTotalReceived:any = '';
+actionTotalResponse:any = '';
+
+//Critical
+criticalResponseTime:any  = '';
+criticalTotalReceived:any = '';
+criticalTotalResponse:any = '';
+
+//Escalated
+escalatedResponseTime:any  = '';
+escalatedTotalReceived:any = '';
+escalatedTotalResponse:any = '';
+
+
+startDateChange(date){
+  this.start_date = date;
+}
+
+endDateChange(date){
+  this.end_date = date;
+  this.emailUserStackBar();
+  this.emailReceiveBarChart();
+  this.emailReceiveLineChart();
+  this.actionEmailCount();
+  this.criticalEmailCount();
   
-//STACK BAR START//
+}
+  
+//*****************************************ACTION EMAIL START******************************************************* */
+  actionEmailChange(value:any){
+    this.action_frequency  = value;
+    this.actionEmailCount();
+    this.emailUserStackBar();
+  }
+
+  actionEmailCount(){
+    let body = {
+      "filters": {
+        "start_date": this.start_date+"T19:04:38.060922",
+        "end_date":   this.end_date+"T19:04:38.060975",
+        "frequency":  this.action_frequency,
+      }
+    }; 
+    this.actionEmail.getActionEmailCount(body)
+    .then((data) => {
+       this.actionResponseTime  = data.data[0].response_time
+       this.actionTotalReceived = data.data[0].total_received
+       this.actionTotalResponse = data.data[0].total_responses
+       console.log(data);
+
+     }).catch((err) => {
+        console.log('catch');
+     });
+  }
 
 barChartOptions: ChartOptions = {
   responsive: true,
@@ -56,15 +113,13 @@ barChartOptions: ChartOptions = {
 };
 
   
-
+  //STACK BAR START//
   barChartLabels: Label[] = [];
   barChartType: ChartType = 'bar';
   barChartLegend = true;
   barChartPlugins = [];
   barChartData: ChartDataSets[] = [];
   
-
-
   emailUserStackBar(){
     let X_Array = [];
     let Y_Array = [];
@@ -72,9 +127,9 @@ barChartOptions: ChartOptions = {
     let text2_array = [];
     let body = {
       "filters": {
-        "start_date": "2020-03-08T19:04:38.060922",
-        "end_date": "2021-03-08T19:04:38.060975",
-        "frequency": "W-MON"
+        "start_date": this.start_date+"T19:04:38.060922",
+        "end_date":   this.end_date+"T19:04:38.060975",
+        "frequency":  this.action_frequency,
       }
     }; 
     console.log(body);
@@ -121,32 +176,22 @@ barChartOptions: ChartOptions = {
     });
   }
 //STACK BAR END//
+//*****************************************ACTION EMAIL END******************************************************* */
+
 
 
 
 //BAR CHART Critical START//
-// onDateChange(){
-//   console.log(this.end_date);
-//   console.log(this.start_date);
-// }
-startDateChange(date){
-  this.start_date = date;
-}
 
-endDateChange(date){
-  this.end_date = date;
-  console.log(this.start_date);
-  console.log(this.end_date);
-  this.emailReceiveBarChart();
-  this.emailReceiveLineChart();
-  
-}
+//*****************************************CRITICAL EMAIL START******************************************************* */
+
 
 criticalEmailChange(value:any){
-  this.frequency = value;
+  this.critical_frequency  = value;
   this.emailReceiveBarChart();
   this.emailReceiveLineChart();
 }
+
 
 barChartCriticalOptions: any = {
   scaleShowVerticalLines: false,
@@ -182,7 +227,7 @@ barChartCriticalOptions: any = {
       "filters": {
         "start_date": this.start_date+"T19:04:38.060922",
         "end_date":   this.end_date+"T19:04:38.060975",
-        "frequency":  this.frequency,
+        "frequency":  this.critical_frequency,
       }
     }; 
     console.log(body);
@@ -232,131 +277,26 @@ barChartCriticalOptions: any = {
 }
  //BAR CHART Critical END//
 
+criticalEmailCount(){
+  let body = {
+    "filters": {
+      "start_date": this.start_date+"T19:04:38.060922",
+      "end_date":   this.end_date+"T19:04:38.060975",
+      "frequency":  this.critical_frequency,
+    }
+  }; 
+  this.criticalEmail.criticalEmailCount(body)
+  .then((data) => {
+    console.log(data);
+     this.criticalResponseTime  = data.data[0].response_time
+     this.criticalTotalReceived = data.data[0].total_received
+     this.criticalTotalResponse = data.data[0].total_responses
+     console.log(data);
 
-
-//BAR CHART ESCALATED START//
-// onDateChange(){
-//   console.log(this.end_date);
-//   console.log(this.start_date);
-// }
-// startDateChange(date){
-//   this.start_date = date;
-// }
-
-// endDateChange(date){
-//   this.end_date = date;
-//   console.log(this.start_date);
-//   console.log(this.end_date);
-//   this.emailReceiveBarChart();
-//   this.emailReceiveLineChart();
-  
-// }
-
-// criticalEmailChange(value:any){
-//   this.frequency = value;
-//   this.emailReceiveBarChart();
-//   this.emailReceiveLineChart();
-// }
-
-  barChartEscalatedOptions: any = {
-    scaleShowVerticalLines: false,
-    responsive: true,
-    legend:{
-      display:false
-    },
-    scales: {
-      xAxes: [{
-        scaleLabel : {
-          display : true,
-          labelString : "Top Keywords in Chasers",
-          fontSize : 11,
-        },
-        gridLines: {
-          display: false,
-        },
-      }],
-      yAxes: [{
-            scaleLabel : {
-              display : true,
-              labelString : "Number of Emails",
-              fontSize : 11
-            },
-            
-      }],
-    },
-  };
-
-  barChartEscalatedLabels: any[] = [];
-  public barChartEscalatedType = 'bar';
-  public barChartEscalatedLegend = true;
-  public barChartEscalatedData: any[] = [];
-
-  emailReceiveBarChartEscalated(){
-    let X_Array = [];
-    let Y_Array = [];
-    let text1_array = [];
-    let text2_array = [];
-    this.barChartEscalatedLabels = [];
-    let body = {
-      "filters": {
-        "start_date": this.start_date+"T19:04:38.060922",
-        "end_date":   this.end_date+"T19:04:38.060975",
-        "frequency":  this.frequency,
-      }
-    }; 
-    console.log(body);
-    this.escalatedEmail.getEscalatedKeywords(body)
-    .then((data) => {
-      
-     let X = data.data[0].data[0].x;
-     let Y = data.data[0].data[0].y;
-     
-     let text1 = data.data[0].data[0].text;
-     let text2 = Y;
-       
-     Object.keys(X).map((X_Index)=>{
-       var val = X[X_Index];
-       X_Array.push(val);
-     });
-     
-     Object.keys(text1).map((text1_Index)=>{
-       var val = text1[text1_Index];
-       text1_array.push(val);
-     });
-
-     Object.keys(text2).map((text2_Index)=>{
-       var val = text2[text2_Index];
-       text2_array.push(val);
-     });
-
-     this.barChartEscalatedLabels = X_Array;
-     console.log(X_Array);
-     console.log(text1_array);
-    //  console.log(text2_array)
-     this.barChartEscalatedData = [
-      //  {
-      //   data: text1_array,
-      //   // label: 'Received',
-      //   backgroundColor: '#435eeb',
-      //   borderColor: '#435eeb',
-      //   hoverBackgroundColor:'#435eeb',
-      //   barThickness: 15,
-    
-      // },
-      { 
-        data: text2_array,
-        label: 'Responded',
-        backgroundColor: '#435eab',
-        borderColor: '#435eab',
-        hoverBackgroundColor:'#435eab',
-        barThickness: 15,
-        
-      }]
+   }).catch((err) => {
+      console.log('catch');
    });
 }
- //BAR CHART ESCALATED END//
-  
-
 
 
 //LINE CHART START//
@@ -403,7 +343,7 @@ barChartCriticalOptions: any = {
       "filters": {
         "start_date": "2020-03-08T19:04:38.060922",
         "end_date": "2021-03-08T19:04:38.060975",
-        "frequency": this.frequency
+        "frequency": this.critical_frequency
       }
     };
 
@@ -430,15 +370,121 @@ barChartCriticalOptions: any = {
   }
   //LINE CHART END//
 
+//*****************************************CRITICAL EMAIL END******************************************************* */
 
-  // events
-  public chartClicked(e: any): void {
-    console.log(e);
-  }
+//*****************************************ESCALATED EMAIL START********************************************************* */
 
-  public chartHovered(e: any): void {
-    console.log(e);
-  }
+//BAR CHART ESCALATED START//
+
+barChartEscalatedOptions: any = {
+  scaleShowVerticalLines: false,
+  responsive: true,
+  legend:{
+    display:false
+  },
+  scales: {
+    xAxes: [{
+      scaleLabel : {
+        display : true,
+        labelString : "Top Keywords in Chasers",
+        fontSize : 11,
+      },
+      gridLines: {
+        display: false,
+      },
+    }],
+    yAxes: [{
+          scaleLabel : {
+            display : true,
+            labelString : "Number of Emails",
+            fontSize : 11
+          },
+          
+    }],
+  },
+};
+
+barChartEscalatedLabels: any[] = [];
+public barChartEscalatedType = 'bar';
+public barChartEscalatedLegend = true;
+public barChartEscalatedData: any[] = [];
+
+emailReceiveBarChartEscalated(){
+  let X_Array = [];
+  let Y_Array = [];
+  let text1_array = [];
+  let text2_array = [];
+  this.barChartEscalatedLabels = [];
+  let body = {
+    "filters": {
+      "start_date": this.start_date+"T19:04:38.060922",
+      "end_date":   this.end_date+"T19:04:38.060975",
+      "frequency":  this.critical_frequency,
+    }
+  }; 
+  console.log(body);
+  this.escalatedEmail.getEscalatedKeywords(body)
+  .then((data) => {
+    
+   let X = data.data[0].data[0].x;
+   let Y = data.data[0].data[0].y;
+   
+   let text1 = data.data[0].data[0].text;
+   let text2 = Y;
+     
+   Object.keys(X).map((X_Index)=>{
+     var val = X[X_Index];
+     X_Array.push(val);
+   });
+   
+   Object.keys(text1).map((text1_Index)=>{
+     var val = text1[text1_Index];
+     text1_array.push(val);
+   });
+
+   Object.keys(text2).map((text2_Index)=>{
+     var val = text2[text2_Index];
+     text2_array.push(val);
+   });
+
+   this.barChartEscalatedLabels = X_Array;
+   console.log(X_Array);
+   console.log(text1_array);
+  //  console.log(text2_array)
+   this.barChartEscalatedData = [
+    //  {
+    //   data: text1_array,
+    //   // label: 'Received',
+    //   backgroundColor: '#435eeb',
+    //   borderColor: '#435eeb',
+    //   hoverBackgroundColor:'#435eeb',
+    //   barThickness: 15,
+  
+    // },
+    { 
+      data: text2_array,
+      label: 'Responded',
+      backgroundColor: '#435eab',
+      borderColor: '#435eab',
+      hoverBackgroundColor:'#435eab',
+      barThickness: 15,
+      
+    }]
+ });
+}
+//BAR CHART ESCALATED END//
+
+
+//*****************************************ESCALATED EMAIL START********************************************************* */
+
+ // events
+ public chartClicked(e: any): void {
+  console.log(e);
+}
+
+public chartHovered(e: any): void {
+  console.log(e);
+}
 
 
 //HEATMAP STARTED//
@@ -449,6 +495,8 @@ public chartHeatOptions: Partial<ChartHeatOptions>;
     this.emailReceiveBarChart();
     this.emailReceiveLineChart();
     this.emailReceiveBarChartEscalated();
+    this.actionEmailCount();
+    this.criticalEmailCount();
     
     this.chartHeatOptions = {
       series: [
