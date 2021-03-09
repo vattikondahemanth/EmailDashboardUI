@@ -7,5 +7,6 @@ export const CommonURL = {
     escalatedKeywords : environment.baseURL + 'api/escalated/keywords',
     actionEmailCount : environment.baseURL + 'api/actionable/count',
     criticalEmailCount : environment.baseURL + 'api/critical/emailcount',
+    escalatedEmailCount : environment.baseURL + 'api/escalated/emailcount',
 
 }

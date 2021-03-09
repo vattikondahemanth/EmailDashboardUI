@@ -67,8 +67,10 @@ endDateChange(date){
   this.emailUserStackBar();
   this.emailReceiveBarChart();
   this.emailReceiveLineChart();
+  this.emailReceiveBarChartEscalated();
   this.actionEmailCount();
   this.criticalEmailCount();
+  this.escalatedEmailCount();
   
 }
   
@@ -181,17 +183,38 @@ barChartOptions: ChartOptions = {
 
 
 
-//BAR CHART Critical START//
+
 
 //*****************************************CRITICAL EMAIL START******************************************************* */
 
-
+//BAR CHART Critical START//
 criticalEmailChange(value:any){
   this.critical_frequency  = value;
   this.emailReceiveBarChart();
   this.emailReceiveLineChart();
+  this.criticalEmailCount();
 }
 
+criticalEmailCount(){
+  let body = {
+    "filters": {
+      "start_date": this.start_date+"T19:04:38.060922",
+      "end_date":   this.end_date+"T19:04:38.060975",
+      "frequency":  this.critical_frequency,
+    }
+  }; 
+  this.criticalEmail.criticalEmailCount(body)
+  .then((data) => {
+    console.log(data);
+     this.criticalResponseTime  = data.data[0].response_time
+     this.criticalTotalReceived = data.data[0].total_received
+     this.criticalTotalResponse = data.data[0].total_responses
+     console.log(data);
+
+   }).catch((err) => {
+      console.log('catch');
+   });
+}
 
 barChartCriticalOptions: any = {
   scaleShowVerticalLines: false,
@@ -277,28 +300,6 @@ barChartCriticalOptions: any = {
 }
  //BAR CHART Critical END//
 
-criticalEmailCount(){
-  let body = {
-    "filters": {
-      "start_date": this.start_date+"T19:04:38.060922",
-      "end_date":   this.end_date+"T19:04:38.060975",
-      "frequency":  this.critical_frequency,
-    }
-  }; 
-  this.criticalEmail.criticalEmailCount(body)
-  .then((data) => {
-    console.log(data);
-     this.criticalResponseTime  = data.data[0].response_time
-     this.criticalTotalReceived = data.data[0].total_received
-     this.criticalTotalResponse = data.data[0].total_responses
-     console.log(data);
-
-   }).catch((err) => {
-      console.log('catch');
-   });
-}
-
-
 //LINE CHART START//
   public lineChart2Data: Array<any> = [];
   public lineChart2Labels: Array<any> = [];
@@ -373,9 +374,33 @@ criticalEmailCount(){
 //*****************************************CRITICAL EMAIL END******************************************************* */
 
 //*****************************************ESCALATED EMAIL START********************************************************* */
+escalatedEmailChange(value:any){
+  this.escalated_frequency  = value;
+  this.emailReceiveBarChartEscalated();
+  this.escalatedEmailCount();
+}
 
+escalatedEmailCount(){
+  let body = {
+    "filters": {
+      "start_date": this.start_date+"T19:04:38.060922",
+      "end_date":   this.end_date+"T19:04:38.060975",
+      "frequency":  this.escalated_frequency,
+    }
+  }; 
+  this.escalatedEmail.escalatedEmailCount(body)
+  .then((data) => {
+    console.log(data);
+     this.escalatedResponseTime  = data.data[0].response_time
+     this.escalatedTotalReceived = data.data[0].total_received
+     this.escalatedTotalResponse = data.data[0].total_responses
+     console.log(data);
+
+   }).catch((err) => {
+      console.log('catch');
+   });
+}
 //BAR CHART ESCALATED START//
-
 barChartEscalatedOptions: any = {
   scaleShowVerticalLines: false,
   responsive: true,
@@ -419,7 +444,7 @@ emailReceiveBarChartEscalated(){
     "filters": {
       "start_date": this.start_date+"T19:04:38.060922",
       "end_date":   this.end_date+"T19:04:38.060975",
-      "frequency":  this.critical_frequency,
+      "frequency":  this.escalated_frequency,
     }
   }; 
   console.log(body);
@@ -497,6 +522,7 @@ public chartHeatOptions: Partial<ChartHeatOptions>;
     this.emailReceiveBarChartEscalated();
     this.actionEmailCount();
     this.criticalEmailCount();
+    this.escalatedEmailCount();
     
     this.chartHeatOptions = {
       series: [
