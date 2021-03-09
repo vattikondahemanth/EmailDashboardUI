@@ -283,11 +283,11 @@
               <div class="chart-wrapper">
                 <h6 style="text-align: center;">Emails Receive/Response by Week</h6>
                 <canvas baseChart class="chart"
-                [datasets]="barChartEscalatedData"
-                [labels]="barChartEscalatedLabels"
-                [options]="barChartEscalatedOptions"
-                [legend]="barChartEscalatedLegend"
-                [chartType]="barChartEscalatedType"
+                [datasets]="barChartCriticalData"
+                [labels]="barChartCriticalLabels"
+                [options]="barChartCriticalOptions"
+                [legend]="barChartCriticalLegend"
+                [chartType]="barChartCriticalType"
                 (chartHover)="chartHovered($event)"
                 (chartClick)="chartClicked($event)"></canvas>
               </div>
