@@ -42,10 +42,21 @@ frequency  = 'W-MON';
   
 //STACK BAR START//
 
-  barChartOptions: ChartOptions = {
-    responsive: true,
-    scales: { xAxes: [{ ticks: { stepSize: 5} }], yAxes: [{}] },
-  };
+barChartOptions: ChartOptions = {
+  responsive: true,
+  scales: { 
+    xAxes: [{ 
+       ticks: { stepSize: 5} ,
+       gridLines: {
+          display: false,
+        },
+    }], 
+  yAxes: [{}] 
+  },
+};
+
+  
+
   barChartLabels: Label[] = [];
   barChartType: ChartType = 'bar';
   barChartLegend = true;
@@ -137,21 +148,24 @@ criticalEmailChange(value:any){
   this.emailReceiveLineChart();
 }
 
-  barChartCriticalOptions: any = {
-    scaleShowVerticalLines: false,
-    responsive: true,
-    scales: {
-      xAxes: [{
-      }],
-      yAxes: [{
-            scaleLabel : {
-              display : true,
-              labelString : "Number of Emails",
-              fontSize : 11
-            }
-      }],
-    },
-  };
+barChartCriticalOptions: any = {
+  scaleShowVerticalLines: false,
+  responsive: true,
+  scales: {
+    xAxes: [{
+      gridLines: {
+        display: false,
+      },
+    }],
+    yAxes: [{
+          scaleLabel : {
+            display : true,
+            labelString : "Number of Emails",
+            fontSize : 11
+          }
+    }],
+  },
+};
 
   barChartCriticalLabels: any[] = [];
   public barChartCriticalType = 'bar';
@@ -256,7 +270,9 @@ criticalEmailChange(value:any){
           display : true,
           labelString : "Top Keywords in Chasers",
           fontSize : 11,
-          
+        },
+        gridLines: {
+          display: false,
         },
       }],
       yAxes: [{
@@ -264,7 +280,8 @@ criticalEmailChange(value:any){
               display : true,
               labelString : "Number of Emails",
               fontSize : 11
-            }
+            },
+            
       }],
     },
   };
