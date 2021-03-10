@@ -1,12 +1,12 @@
 <div class="form-group row">
   <div class="col-md-3">
     <label>Date Input From</label>
-    <input id="date-input" #start_date type="date" name="date-input"  placeholder="date" class="form-control" (change)="startDateChange(start_date.value);">
+    <input id="date-input" [value] = start_date_n #start_date type="date" name="date-input"  placeholder="date" class="form-control" (change)="startDateChange(start_date.value);">
     <!-- <span class="help-block">Please enter a valid date</span> -->
   </div>
   <div class="col-md-3">
     <label>Date Input To</label>
-    <input id="date-input" #end_date type="date" name="date-input" placeholder="date" class="form-control" (change)="endDateChange(end_date.value);">
+    <input id="date-input" [value] = end_date_n #end_date type="date" name="date-input" placeholder="date" class="form-control" (change)="endDateChange(end_date.value);">
     <!-- <span class="help-block">Please enter a valid date</span> -->
   </div>
 </div>
@@ -66,8 +66,7 @@
         <!-- dropdown start -->
         <div class="row">
           <div class="form-group col-sm-2">
-            <!-- <label for="ccmonth">Month</label> -->
-            <select class="form-control" id="ccmonth" #ccmonth (change)="actionEmailChange(ccmonth .value)">
+            <select class="form-control" #ccmonth1 (change)="actionEmailChange(ccmonth1 .value)">
               <option value="W-MON">By Weekly</option>
               <option value="D">By Daily</option>
               <option value="H">By Hourly</option>
@@ -257,8 +256,7 @@
         <!-- dropdown start -->
         <div class="row">
           <div class="form-group col-sm-2">
-            <!-- <label for="ccmonth">Month</label> -->
-            <select class="form-control" id="ccmonth" #ccmonth (change)="criticalEmailChange(ccmonth .value)">
+            <select class="form-control"  #ccmonth2 (change)="criticalEmailChange(ccmonth2 .value)">
               <option value="W-MON">By Weekly</option>
               <option value="D">By Daily</option>
               <option value="H">By Hourly</option>
@@ -451,8 +449,7 @@
         <!-- dropdown start -->
         <div class="row">
           <div class="form-group col-sm-2">
-            <!-- <label for="ccmonth">Month</label> -->
-            <select class="form-control" id="ccmonth" #ccmonth (change)="escalatedEmailChange(ccmonth .value)">
+            <select class="form-control" #ccmonth3 (change)="escalatedEmailChange(ccmonth3 .value)">
               <option value="W-MON">By Weekly</option>
               <option value="D">By Daily</option>
               <option value="H">By Hourly</option>

@@ -8,19 +8,6 @@ import { CommonURL }  from './commonurl';
 export class EscalatedEmailService {
 
   constructor(private http: HttpClient) { }
-  val = {
-    "success": true,
-    "message": "Success",
-    "data": [
-      {
-        "total_received": "12 K",
-        "response_time": "40",
-        "total_responses": "2 K min"
-      }
-    ],
-    "total": 1,
-    "status_code": 200
-  }
 
   getEscalatedKeywords(dt):any {
     return new Promise((resolve, reject) => {
@@ -40,7 +27,7 @@ export class EscalatedEmailService {
       this.http.post(CommonURL.escalatedEmailCount, dt)
           .subscribe(
               (data) => {
-                resolve(this.val);
+                resolve(data);
               },
               (error) => {
                   console.log(error);

@@ -8,19 +8,6 @@ import { CommonURL }  from './commonurl';
 
 export class CriticalClientEmailService {
   constructor(private http: HttpClient) { }
-  val = {
-    "success": true,
-    "message": "Success",
-    "data": [
-      {
-        "total_received": "12 K",
-        "response_time": "40",
-        "total_responses": "2 K min"
-      }
-    ],
-    "total": 1,
-    "status_code": 200
-  }
 
   getEmailCount(dt):any {
     return new Promise((resolve, reject) => {
@@ -54,7 +41,7 @@ export class CriticalClientEmailService {
       this.http.post(CommonURL.criticalEmailCount, dt)
           .subscribe(
               (data) => {
-                resolve(this.val);
+                resolve(data);
               },
               (error) => {
                   console.log(error);

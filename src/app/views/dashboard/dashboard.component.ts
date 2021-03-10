@@ -6,6 +6,7 @@ import { Label } from 'ng2-charts';
 import { ActionableEmailService } from '../../services/actionable-email.service';
 import { CriticalClientEmailService } from '../../services/critical-client-email.service';
 import { EscalatedEmailService } from '../../services/escalated-email.service';
+import { DatePipe } from '@angular/common';
 
 
 import {ChartComponent,
@@ -28,16 +29,30 @@ export type ChartHeatOptions = {
 
 @Component({
   templateUrl: 'dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  styleUrls: ['./dashboard.component.css'],
+  providers: [DatePipe]
 })
 export class DashboardComponent implements OnInit {
+  start_date :any  =  new Date();
+  year             = this.start_date.getFullYear();
+  month            = this.start_date.getMonth();
+  day              =   this.start_date.getDate();
+  end_date :any    = new Date(this.year - 1, this.month, this.day);
+
   constructor( 
     public actionEmail:ActionableEmailService,
     public criticalEmail:CriticalClientEmailService,
-    public escalatedEmail:EscalatedEmailService
-    ){}
-start_date = '2020-03-08';
-end_date   = '2021-03-08';
+    public escalatedEmail:EscalatedEmailService,
+    public datePipe: DatePipe
+    ){
+      this.start_date  = this.datePipe.transform(this.start_date ,'yyyy-MM-dd');
+      this.end_date     = this.datePipe.transform(this.end_date ,'yyyy-MM-dd');
+      console.log(this.start_date);
+      console.log(this.end_date);
+    }
+
+start_date_n = this.start_date
+end_date_n   = this.end_date
 action_frequency    = 'W-MON';
 critical_frequency  = 'W-MON';
 escalated_frequency = 'W-MON';
@@ -84,8 +99,8 @@ endDateChange(date){
   actionEmailCount(){
     let body = {
       "filters": {
-        "start_date": this.start_date+"T19:04:38.060922",
-        "end_date":   this.end_date+"T19:04:38.060975",
+        "start_date": this.start_date+"T00:00:00.000000",
+        "end_date":   this.end_date+"T00:00:00.000000",
         "frequency":  this.action_frequency,
       }
     }; 
@@ -94,7 +109,6 @@ endDateChange(date){
        this.actionResponseTime  = data.data[0].response_time
        this.actionTotalReceived = data.data[0].total_received
        this.actionTotalResponse = data.data[0].total_responses
-       console.log(data);
 
      }).catch((err) => {
         console.log('catch');
@@ -129,18 +143,31 @@ barChartOptions: ChartOptions = {
     let text2_array = [];
     let body = {
       "filters": {
-        "start_date": this.start_date+"T19:04:38.060922",
-        "end_date":   this.end_date+"T19:04:38.060975",
+        "start_date": this.start_date+"T00:00:00.000000",
+        "end_date":   this.end_date+"T00:00:00.000000",
         "frequency":  this.action_frequency,
       }
     }; 
     console.log(body);
     this.actionEmail.getUserEmails(body)
        .then((data) => {
-        let X = data.data[0].x;
-        let Y = data.data[0].y
-        let text1 = data.data[0].text;
-        let text2 = data.data[1].text;
+        let X = "";
+        let Y = "";
+        let text1 = "";
+        let text2 = "";
+        if (data.data[0].hasOwnProperty("x")){
+             X = data.data[0].x;
+        }
+        if (data.data[0].hasOwnProperty("y")){
+             Y = data.data[0].y
+        }
+        if (data.data[0].hasOwnProperty("text")){
+            text1 = data.data[0].text;
+        }
+        if (data.data[1].hasOwnProperty("text")){
+            text2 = data.data[1].text;
+        }
+
         Object.keys(X).map((X_Index)=>{
           var val = X[X_Index];
           X_Array.push(val);
@@ -198,18 +225,16 @@ criticalEmailChange(value:any){
 criticalEmailCount(){
   let body = {
     "filters": {
-      "start_date": this.start_date+"T19:04:38.060922",
-      "end_date":   this.end_date+"T19:04:38.060975",
+      "start_date": this.start_date+"T00:00:00.000000",
+      "end_date":   this.end_date+"T00:00:00.000000",
       "frequency":  this.critical_frequency,
     }
   }; 
   this.criticalEmail.criticalEmailCount(body)
   .then((data) => {
-    console.log(data);
      this.criticalResponseTime  = data.data[0].response_time
      this.criticalTotalReceived = data.data[0].total_received
      this.criticalTotalResponse = data.data[0].total_responses
-     console.log(data);
 
    }).catch((err) => {
       console.log('catch');
@@ -245,40 +270,50 @@ barChartCriticalOptions: any = {
     let Y_Array = [];
     let text1_array = [];
     let text2_array = [];
-    // this.barChartCriticalLabels = [];
+   
     let body = {
       "filters": {
-        "start_date": this.start_date+"T19:04:38.060922",
-        "end_date":   this.end_date+"T19:04:38.060975",
+        "start_date": this.start_date+"T00:00:00.000000",
+        "end_date":   this.end_date+"T00:00:00.000000",
         "frequency":  this.critical_frequency,
       }
     }; 
-    console.log(body);
+
     this.criticalEmail.getEmailCount(body)
     .then((data) => {
-     let X = data.data[0].x;
-     let Y = data.data[0].y;
-     let text1 = data.data[0].text;
-     let text2 = data.data[1].text;
-     Object.keys(X).map((X_Index)=>{
-       var val = X[X_Index];
-       X_Array.push(val);
-     });
-     
-     Object.keys(text1).map((text1_Index)=>{
-       var val = text1[text1_Index];
-       text1_array.push(val);
-     });
+      let X = "";
+      let Y = "";
+      let text1 = "";
+      let text2 = "";
+      if (data.data[0].hasOwnProperty("x")){
+           X = data.data[0].x;
+      }
+      if (data.data[0].hasOwnProperty("y")){
+           Y = data.data[0].y
+      }
+      if (data.data[0].hasOwnProperty("text")){
+          text1 = data.data[0].text;
+      }
+      if (data.data[1].hasOwnProperty("text")){
+        text2 = data.data[1].text;
+      }
 
-     Object.keys(text2).map((text2_Index)=>{
-       var val = text2[text2_Index];
-       text2_array.push(val);
-     });
+      Object.keys(X).map((X_Index)=>{
+        var val = X[X_Index];
+        X_Array.push(val);
+      });
+     
+      Object.keys(text1).map((text1_Index)=>{
+        var val = text1[text1_Index];
+        text1_array.push(val);
+      });
+
+      Object.keys(text2).map((text2_Index)=>{
+        var val = text2[text2_Index];
+        text2_array.push(val);
+      });
 
      this.barChartCriticalLabels = X_Array;
-     console.log(X_Array);
-     console.log(text1_array);
-     console.log(text2_array)
      this.barChartCriticalData = [{
         data: text1_array,
         label: 'Received',
@@ -342,16 +377,22 @@ barChartCriticalOptions: any = {
     let Y_Array = [];
     let body = {
       "filters": {
-        "start_date": "2020-03-08T19:04:38.060922",
-        "end_date": "2021-03-08T19:04:38.060975",
-        "frequency": this.critical_frequency
+        "start_date": this.start_date+"T00:00:00.000000",
+        "end_date":   this.end_date+"T00:00:00.000000",
+        "frequency":  this.critical_frequency,
       }
     };
 
     this.criticalEmail.getEmailResponse(body)
     .then((data) => {
-     let X = data.data[0].x;
-     let Y = data.data[0].y;
+      let X = "";
+      let Y = "";
+      if (data.data[0].hasOwnProperty("x")){
+           X = data.data[0].x;
+      }
+      if (data.data[0].hasOwnProperty("y")){
+           Y = data.data[0].y
+      }
 
      Object.keys(X).map((X_Index)=>{
        var val = X[X_Index];
@@ -383,18 +424,16 @@ escalatedEmailChange(value:any){
 escalatedEmailCount(){
   let body = {
     "filters": {
-      "start_date": this.start_date+"T19:04:38.060922",
-      "end_date":   this.end_date+"T19:04:38.060975",
+      "start_date": this.start_date+"T00:00:00.000000",
+      "end_date":   this.end_date+"T00:00:00.000000",
       "frequency":  this.escalated_frequency,
     }
   }; 
   this.escalatedEmail.escalatedEmailCount(body)
   .then((data) => {
-    console.log(data);
      this.escalatedResponseTime  = data.data[0].response_time
      this.escalatedTotalReceived = data.data[0].total_received
      this.escalatedTotalResponse = data.data[0].total_responses
-     console.log(data);
 
    }).catch((err) => {
       console.log('catch');
@@ -442,20 +481,31 @@ emailReceiveBarChartEscalated(){
   this.barChartEscalatedLabels = [];
   let body = {
     "filters": {
-      "start_date": this.start_date+"T19:04:38.060922",
-      "end_date":   this.end_date+"T19:04:38.060975",
+      "start_date": this.start_date+"T00:00:00.000000",
+      "end_date":   this.end_date+"T00:00:00.000000",
       "frequency":  this.escalated_frequency,
     }
   }; 
-  console.log(body);
+
   this.escalatedEmail.getEscalatedKeywords(body)
   .then((data) => {
+    console.log(data);
     
-   let X = data.data[0].data[0].x;
-   let Y = data.data[0].data[0].y;
-   
-   let text1 = data.data[0].data[0].text;
-   let text2 = Y;
+    let X = "";
+    let Y = "";
+    if (data.data[0].data[0].hasOwnProperty("x")){
+         X = data.data[0].data[0].x;
+    }
+    if (data.data[0].data[0].hasOwnProperty("y")){
+         Y = data.data[0].data[0].y
+    }
+  
+    let text1 = "";
+    if (data.data[0].hasOwnProperty("text")){
+        text1 = data.data[0].data[0].text;
+    }
+
+    let text2 = Y;
      
    Object.keys(X).map((X_Index)=>{
      var val = X[X_Index];
@@ -473,9 +523,6 @@ emailReceiveBarChartEscalated(){
    });
 
    this.barChartEscalatedLabels = X_Array;
-   console.log(X_Array);
-   console.log(text1_array);
-  //  console.log(text2_array)
    this.barChartEscalatedData = [
     //  {
     //   data: text1_array,
@@ -500,7 +547,7 @@ emailReceiveBarChartEscalated(){
 //BAR CHART ESCALATED END//
 
 
-//*****************************************ESCALATED EMAIL START********************************************************* */
+//*****************************************ESCALATED EMAIL END********************************************************* */
 
  // events
  public chartClicked(e: any): void {
