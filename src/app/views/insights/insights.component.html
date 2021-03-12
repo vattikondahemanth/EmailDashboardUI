@@ -9,12 +9,13 @@
               <div class="chart-wrapper">
                 <h6 style="text-align:center"> Emails directed to users </h6>
                 <canvas baseChart class="chart"
-                [data]="pieChartData"
-                [labels]="pieChartLabels"
-                [chartType]="pieChartType"
-                [colors]="pieChartColors"
-                (chartHover)="chartHovered($event)"
-                (chartClick)="chartClicked($event)"></canvas>
+                    [data]="pieChartData"
+                    [labels]="pieChartLabels"
+                    [chartType]="pieChartType"
+                    [colors]="pieChartColors"
+                    (chartHover)="chartHovered($event)"
+                    (chartClick)="chartClicked($event)">
+                </canvas>
               </div>
             </div>
           </div>
@@ -27,12 +28,13 @@
               <div class="chart-wrapper">
                 <h6 style="text-align:center"> Chaser Emails </h6>
                 <canvas baseChart class="chart"
-                [data]="pieChartChaserData"
-                [labels]="pieChartChaserLabels"
-                [chartType]="pieChartChaserType"
-                [colors]="pieChartColors"
-                (chartHover)="chartHovered($event)"
-                (chartClick)="chartClicked($event)"></canvas>
+                    [data]="pieChartChaserData"
+                    [labels]="pieChartChaserLabels"
+                    [chartType]="pieChartChaserType"
+                    [colors]="pieChartColors"
+                    (chartHover)="chartHovered($event)"
+                    (chartClick)="chartClicked($event)">
+                </canvas>
               </div>
             </div>
           </div>
@@ -80,13 +82,14 @@
               <div class="chart-wrapper">
                 <h6 style="text-align:center"> Total emails received by user </h6>
                 <canvas baseChart class="chart"
-                [datasets]="barChartData"
-                [labels]="barChartLabels"
-                [options]="barChartOptions"
-                [legend]="barChartLegend"
-                [chartType]="barChartType"
-                (chartHover)="chartHovered($event)"
-                (chartClick)="chartClicked($event)"></canvas>
+                    [datasets]="barChartData"
+                    [labels]="barChartLabels"
+                    [options]="barChartOptions"
+                    [legend]="barChartLegend"
+                    [chartType]="barChartType"
+                    (chartHover)="chartHovered($event)"
+                    (chartClick)="chartClicked($event)">
+                </canvas>
               </div>
             </div>
           </div>
@@ -133,7 +136,7 @@
                     ></apx-chart>
                   </div> -->
 
-                  <canvas baseChart class="chart"
+                  <canvas width="100" height="30" baseChart class="chart"
                   [datasets]="horizontalBarChartData"
                   [labels]="horizontalBarChartLabels"
                   [options]="horizontalBarChartOptions"

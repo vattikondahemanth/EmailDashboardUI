@@ -1,4 +1,6 @@
 import { Component, VERSION ,ViewChild,OnInit } from '@angular/core';
+import { InsightsService } from '../../services/insights.service';
+import { DatePipe } from '@angular/common';
 
 import {ChartComponent,
   ApexAxisChartSeries,
@@ -17,60 +19,135 @@ export type ChartOptions = {
 };
 
 @Component({
-  templateUrl: 'insights.component.html'
+  templateUrl: 'insights.component.html',
+  providers: [DatePipe]
 })
 export class InsightsComponent {
+  start_date :any  = new Date();
+  year             = this.start_date.getFullYear();
+  month            = this.start_date.getMonth();
+  day              = this.start_date.getDate();
+  end_date :any    = new Date(this.year - 1, this.month, this.day);
+  frequency        = 'W-MON';
+
+  constructor(
+    public insights:InsightsService,
+    public datePipe: DatePipe){
+    this.start_date  = this.datePipe.transform(this.start_date ,'yyyy-MM-dd');
+    this.end_date    = this.datePipe.transform(this.end_date ,'yyyy-MM-dd');
+  }
   //heatmap
   @ViewChild("chart") chart: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
 
-  // lineChart
-  public lineChartData: Array<any> = [
-    {
-      data: [65, 59, 80, 81, 56, 55, 40],
-      label: 'Series A'
-    },
-    
-    // {data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B'},
-    // {data: [18, 48, 77, 9, 100, 27, 40], label: 'Series C'}
-  ];
-  public lineChartLabels: Array<any> = ['2020-Augest', '2020-September', '2020-October', '2020-November', '2020-December'];
-  // public lineChartLabels: Array<any> = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
 
-  public lineChartOptions: any = {
-    animation: false,
-    responsive: true
-  };
-  public lineChartColours: Array<any> = [
-    { // grey
-      backgroundColor: 'rgba(148,159,177,0.2)',
-      borderColor: 'rgba(148,159,177,1)',
-      pointBackgroundColor: 'rgba(148,159,177,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-    },
-    { // dark grey
-      backgroundColor: 'rgba(77,83,96,0.2)',
-      borderColor: 'rgba(77,83,96,1)',
-      pointBackgroundColor: 'rgba(77,83,96,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(77,83,96,1)'
-    },
-    { // grey
-      backgroundColor: 'rgba(148,159,177,0.2)',
-      borderColor: 'rgba(148,159,177,1)',
-      pointBackgroundColor: 'rgba(148,159,177,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+  //******************PIE CHART 1 START**********************//
+  public pieChartLabels: any[] = [];
+  public pieChartData: any[] = [];
+  public pieChartType = 'pie';
+  public pieChartColors = [{
+      backgroundColor: ['rgba(30, 105, 148,0.8)', 'rgba(242, 110, 10,0.8)'],
+    }];
+  
+  getUserEmail(){
+    let Labels_Array = [];
+    let Values_Array = [];
+    let body = {
+      "filters": {
+        "start_date": this.start_date+"T00:00:00.000000",
+        "end_date":   this.end_date+"T00:00:00.000000",
+        "frequency":  this.frequency,
+      }
+    }; 
+
+    this.insights.getUserEmail(body)
+    .then((data) => {
+      let Labels = "";
+      let Values = "";
+
+      if (data.data[0].hasOwnProperty("labels")){
+         Labels = data.data[0].labels;
+      }
+
+      if (data.data[0].hasOwnProperty("values")){
+          Values = data.data[0].values;
+      }
+
+      Object.keys(Labels).map((Label_Index)=>{
+          var val = Labels[Label_Index];
+          Labels_Array.push(val);
+      });
+
+      Object.keys(Values).map((Values_Index)=>{
+          var val = Values[Values_Index];
+          Values_Array.push(val);
+      });
+
+      this.pieChartLabels = Labels_Array;
+      this.pieChartData   = Values_Array;
+
+     }).catch((err) => {
+        console.log('catch');
+     });
+  }
+//************************PIE CHART 1 END*********************//
+
+
+//******************PIE CHART 2 START**********************//
+    public pieChartChaserLabels: any[] = [];
+    public pieChartChaserData: any[] = [];
+    public pieChartChaserType = 'pie';
+    public pieChartChaserColors = [
+      {
+        backgroundColor: ['rgba(30, 105, 148,0.8)', 'rgba(242, 110, 10,0.8)'],
+      },
+    ];
+
+    getChaserEmail(){
+      let Labels_Array = [];
+      let Values_Array = [];
+      let body = {
+        "filters": {
+          "start_date": this.start_date+"T00:00:00.000000",
+          "end_date":   this.end_date+"T00:00:00.000000",
+          "frequency":  this.frequency,
+        }
+      }; 
+  
+      this.insights.getChaserEmail(body)
+      .then((data) => {
+        let Labels = "";
+        let Values = "";
+  
+        if (data.data[0].hasOwnProperty("labels")){
+           Labels = data.data[0].labels;
+        }
+  
+        if (data.data[0].hasOwnProperty("values")){
+            Values = data.data[0].values;
+        }
+  
+        Object.keys(Labels).map((Label_Index)=>{
+            var val = Labels[Label_Index];
+            Labels_Array.push(val);
+        });
+  
+        Object.keys(Values).map((Values_Index)=>{
+            var val = Values[Values_Index];
+            Values_Array.push(val);
+        });
+  
+        this.pieChartChaserLabels = Labels_Array;
+        this.pieChartChaserData   = Values_Array;
+  
+       }).catch((err) => {
+          console.log('catch');
+       });
     }
-  ];
-  public lineChartLegend = true;
-  public lineChartType = 'line';
+//************************PIE CHART 2 END*********************//
 
-  // barChart
+//***********************BAR CHART START******************************/
+
   public barChartOptions: any = {
     scaleShowVerticalLines: false,
     responsive: true,
@@ -85,27 +162,66 @@ export class InsightsComponent {
           gridLines: {
               // color: "rgba(0, 0, 0, 0)",
               // display: false,
-          }   
+          }, 
+          ticks: {
+            beginAtZero: true, 
+         }   
       }]
     }
-
   };
-  public barChartLabels: string[] = ['2005', '2007', '2008', '2009', '2010', '2011'];
-  //public barChartLabels: string[] = ['2020-Augest', '2020-September', '2020-October', '2020-November', '2020-December'];
+  public barChartLabels: any[] = [];
   public barChartType = 'bar';
   public barChartLegend = true;
+  public barChartData: any[] = [];
 
-  public barChartData: any[] = [
-    {
-      data: [65, 59, 80, 81, 56, 55, 40],
-      label: 'Series A',
-      backgroundColor: '#202945',
-      borderColor: '#202945',
-      hoverBackgroundColor:'#202945',
-    },
-  ];
+  getEmailByUser(){
+    let X_Array = [];
+    let Y_Array = [];
+    let X = "";
+    let Y = "";
+    let body = {
+      "filters": {
+        "start_date": this.start_date+"T00:00:00.000000",
+        "end_date":   this.end_date+"T00:00:00.000000",
+        "frequency":  this.frequency,
+      }
+    }; 
 
-  // barChart
+    this.insights.getEmailByUser(body)
+    .then((data) => {
+
+      if (data.data[0].hasOwnProperty("x")){
+         X = data.data[0].x;
+      }
+
+      if (data.data[0].hasOwnProperty("y")){
+          Y = data.data[0].y;
+      }
+      console.log(data);
+
+      Object.keys(X).map((X_Index)=>{
+          var val = X[X_Index];
+          X_Array.push(val);
+      });
+
+      Object.keys(Y).map((Y_Index)=>{
+          var val = Y[Y_Index];
+          Y_Array.push(val);
+      });
+
+      this.barChartLabels = X_Array;
+      this.barChartData   = [{
+        data: Y_Array,
+        label: 'Series A',
+        backgroundColor: '#202945',
+        borderColor: '#202945',
+        hoverBackgroundColor:'#202945',
+     }];
+    });
+  }
+//***********************BAR CHART END******************************/
+
+//*************************BAR CHART DAY START***********************/
   public barChartDayOptions: any = {
     scaleShowVerticalLines: false,
     responsive: true,
@@ -113,24 +229,200 @@ export class InsightsComponent {
       xAxes: [{
           gridLines: {
               color: "rgba(0, 0, 0, 0)",
+          },
+          ticks:{
+            
           }
       }],
+      yAxes: [{
+        ticks: {
+          beginAtZero: true, 
+       }   
+    }]
     }
   };
-  public barChartDayLabels: string[] = ['1:Monday', '2:Tuesday', '3:Wednesday', '4:Thusday', '5:Friday', '6:Saturday','7:Sunday'];
-  //public barChartLabels: string[] = ['2020-Augest', '2020-September', '2020-October', '2020-November', '2020-December'];
+  public barChartDayLabels: any[] = [];
   public barChartDayType = 'bar';
   public barChartDayLegend = true;
+  public barChartDayData: any[] = []
+  
+  getVolumeDay(){
+      let X_Array = [];
+      let Y_Array = [];
+      let X = "";
+      let Y = "";
+      let body = {
+        "filters": {
+          "start_date": this.start_date+"T00:00:00.000000",
+          "end_date":   this.end_date+"T00:00:00.000000",
+          "frequency":  this.frequency,
+        }
+      }; 
 
-  public barChartDayData: any[] = [
-    {
-      data: [65, 59, 80, 81, 56, 55, 40,32],
-      label: 'Series A',
-      backgroundColor: '#364c8f',
-      borderColor: '#364c8f',
-      hoverBackgroundColor:'#364c8f',
-    },
-  ];
+      this.insights.getVolumeDay(body)
+      .then((data) => {
+
+        if (data.data[0].hasOwnProperty("x")){
+          X = data.data[0].x;
+        }
+
+        if (data.data[0].hasOwnProperty("y")){
+            Y = data.data[0].y;
+        }
+        console.log(data);
+
+        Object.keys(X).map((X_Index)=>{
+            var val = X[X_Index];
+            X_Array.push(val);
+        });
+
+        Object.keys(Y).map((Y_Index)=>{
+            var val = Y[Y_Index];
+            Y_Array.push(val);
+        });
+
+        this.barChartDayLabels = X_Array;
+        this.barChartDayData   = [{
+          data: Y_Array,
+          label: 'Series A',
+          backgroundColor: '#364c8f',
+          borderColor: '#364c8f',
+          hoverBackgroundColor:'#364c8f',
+        }];
+      });
+  }
+
+//*************************BAR CHART DAY END*************************/
+
+
+  // // lineChart
+  // public lineChartData: Array<any> = []; 
+  // public lineChartLabels: Array<any> = [];
+  // public lineChartOptions: any = {
+  //   animation: false,
+  //   responsive: true
+  // };
+
+  // public lineChartColours: Array<any> = [
+  //   { // grey
+  //     backgroundColor: 'rgba(148,159,177,0.2)',
+  //     borderColor: 'rgba(148,159,177,1)',
+  //     pointBackgroundColor: 'rgba(148,159,177,1)',
+  //     pointBorderColor: '#fff',
+  //     pointHoverBackgroundColor: '#fff',
+  //     pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+  //   },
+  //   { // dark grey
+  //     backgroundColor: 'rgba(77,83,96,0.2)',
+  //     borderColor: 'rgba(77,83,96,1)',
+  //     pointBackgroundColor: 'rgba(77,83,96,1)',
+  //     pointBorderColor: '#fff',
+  //     pointHoverBackgroundColor: '#fff',
+  //     pointHoverBorderColor: 'rgba(77,83,96,1)'
+  //   },
+  //   { // grey
+  //     backgroundColor: 'rgba(148,159,177,0.2)',
+  //     borderColor: 'rgba(148,159,177,1)',
+  //     pointBackgroundColor: 'rgba(148,159,177,1)',
+  //     pointBorderColor: '#fff',
+  //     pointHoverBackgroundColor: '#fff',
+  //     pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+  //   }
+  // ];
+  // public lineChartLegend = true;
+  // public lineChartType = 'line';
+
+    //horizontal bar
+    public horizontalBarChartOptions: any = {
+      scaleShowVerticalLines: false,
+      responsive: true,
+      scales: {
+          xAxes: [{
+               ticks: {
+                  beginAtZero: true, 
+              },
+              
+          }],
+          yAxes: [{
+              gridLines: {
+                  // color: "rgba(0, 0, 0, 0)",
+                  display: false
+              },
+              // scaleLabel : {
+              //   display : true,
+              //   labelString : "My Chart title",
+              //   //fontStyle : 'bold',
+              //   fontSize : 11
+              // }
+              
+              // title: "Axis Y with interval 20",
+          }]
+      }
+    };
+    //public barChartLabels: string[] = ['2005', '2007', '2008', '2009', '2010', '2011', '2012'];
+    public horizontalBarChartLabels: string[] = [];
+    public horizontalBarChartType = 'horizontalBar';
+    //public horizontalBarChartLegend = true;
+    public horizontalBarLabel = 'Number of Emails';
+  
+    public horizontalBarChartData: any[] = [];
+
+
+  TopSenders(){
+    let X_Array = [];
+    let Y_Array = [];
+    let X = "";
+    let Y = "";
+    let body = {
+      "filters": {
+        "start_date": this.start_date+"T00:00:00.000000",
+        "end_date":   this.end_date+"T00:00:00.000000",
+        "frequency":  this.frequency,
+      }
+    }; 
+
+    this.insights.TopSenders(body)
+    .then((data) => {
+          if (data.data[0].hasOwnProperty("x")){
+            X = data.data[0].x;
+          }
+
+          if (data.data[0].hasOwnProperty("y")){
+              Y = data.data[0].y;
+          }
+
+          Object.keys(X).map((X_Index)=>{
+              var val = X[X_Index];
+              X_Array.push(val);
+          });
+
+          Object.keys(Y).map((Y_Index)=>{
+              var val = Y[Y_Index];
+              Y_Array.push(val);
+          });
+        
+          this.horizontalBarChartData = [
+            {
+              data: X_Array, 
+              backgroundColor: '#435eab',
+              borderColor: '#435eab',
+              hoverBackgroundColor:'#435eab',
+              label: 'Series A',
+              barThickness: 20,
+              
+            }]
+          this.horizontalBarChartLabels = Y_Array;
+    });
+  }
+
+
+
+
+
+
+
+
+
 
   // Doughnut
   public doughnutChartLabels: string[] = ['Download Sales', 'In-Store Sales', 'Mail-Order Sales'];
@@ -146,25 +438,6 @@ export class InsightsComponent {
   ];
   public radarChartType = 'radar';
 
-  // Pie
-  public pieChartLabels: string[] = ['Internal', 'External'];
-  public pieChartData: number[] = [530, 300];
-  public pieChartType = 'pie';
-  public pieChartColors = [
-    {
-      backgroundColor: ['rgba(30, 105, 148,0.8)', 'rgba(242, 110, 10,0.8)'],
-    },
-  ];
-
-  // Pie chart chaser
-  public pieChartChaserLabels: string[] = ['Internal', 'External'];
-  public pieChartChaserData: number[] = [150, 600];
-  public pieChartChaserType = 'pie';
-  public pieChartChaserColors = [
-    {
-      backgroundColor: ['rgba(30, 105, 148,0.8)', 'rgba(242, 110, 10,0.8)'],
-    },
-  ];
 
   // PolarArea
   public polarAreaChartLabels: string[] = ['Download Sales', 'In-Store Sales', 'Mail Sales', 'Telesales', 'Corporate Sales'];
@@ -184,6 +457,12 @@ export class InsightsComponent {
    
   //heatmap
   ngOnInit(){
+    this.getUserEmail();
+    this.getChaserEmail();
+    this.getEmailByUser();
+    this.getVolumeDay();
+    this.TopSenders();
+
     this.chartOptions = {
       series: [
         {
@@ -317,53 +596,7 @@ export class InsightsComponent {
     return series;
   }
 
-  //horizontal bar
-   public horizontalBarChartOptions: any = {
-    scaleShowVerticalLines: false,
-    responsive: true,
-    scales: {
-        xAxes: [{
-             ticks: {
-                beginAtZero: true, 
-            },
-            
-        }],
-        yAxes: [{
-            gridLines: {
-                // color: "rgba(0, 0, 0, 0)",
-                display: false
-            },
-            // scaleLabel : {
-            //   display : true,
-            //   labelString : "My Chart title",
-            //   //fontStyle : 'bold',
-            //   fontSize : 11
-            // }
-            
-            // title: "Axis Y with interval 20",
-        }]
-    }
-  };
-  //public barChartLabels: string[] = ['2005', '2007', '2008', '2009', '2010', '2011', '2012'];
-  public horizontalBarChartLabels: string[] = ['carval.com', 'ntrs.com', 'tyus.com', 'ntrs.com', 'abcd.com','ntss.com', 'syus.com', 'saars.com', 'aaabcd.com'];
-  public horizontalBarChartType = 'horizontalBar';
-  public horizontalBarChartLegend = true;
-  public horizontalBarLabel = 'Number of Emails';
 
-  public horizontalBarChartData: any[] = [
-    {
-      data: [584, 705, 964, 984, 1124, 1161, 1372, 1379, 1459, 1938], 
-      // data: [65, 59, 80, 81, 56, 55, 40,89,87,32], 
-      backgroundColor: '#435eab',
-      borderColor: '#435eab',
-      hoverBackgroundColor:'#435eab',
-      label: 'Series A',
-      barThickness: 15,
-      
-    },
-    
-    // {data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B'}
-  ];
 
 
 
