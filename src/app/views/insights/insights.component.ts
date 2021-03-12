@@ -42,6 +42,9 @@ export class InsightsComponent {
 
 
   //******************PIE CHART 1 START**********************//
+  // For percentage show use like below
+  //https://stackoverflow.com/questions/52044013/chartjs-datalabels-show-percentage-value-in-pie-piece
+  // https://jsfiddle.net/a1Lvn4eb/55/
   public pieChartLabels: any[] = [];
   public pieChartData: any[] = [];
   public pieChartType = 'pie';
@@ -151,6 +154,9 @@ export class InsightsComponent {
   public barChartOptions: any = {
     scaleShowVerticalLines: false,
     responsive: true,
+    legend:{
+      display:false
+    },
     scales: {
       xAxes: [{
           gridLines: {
@@ -225,6 +231,33 @@ export class InsightsComponent {
   public barChartDayOptions: any = {
     scaleShowVerticalLines: false,
     responsive: true,
+    legend:{
+      display:false
+    },
+    hover: {
+      "animationDuration": 0
+    },
+    animation: {
+      "duration": 1,
+      "onComplete": function() {
+            let chartInstance = this.chart,
+              ctx = chartInstance.ctx;
+              // referance link below
+              //https://bramantox.wordpress.com/2019/10/06/how-to-show-values-on-top-of-bars-in-chart-js/
+            //ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+            // ctx.fillStyle = 'white';
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'bottom';
+
+              this.data.datasets.forEach(function(dataset, i) {
+                let meta = chartInstance.controller.getDatasetMeta(i);
+                meta.data.forEach(function(bar, index) {
+                  let data = dataset.data[index];
+                  ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                });
+              });
+      }
+    },
     scales: {
       xAxes: [{
           gridLines: {
@@ -336,6 +369,32 @@ export class InsightsComponent {
     public horizontalBarChartOptions: any = {
       scaleShowVerticalLines: false,
       responsive: true,
+      legend:{
+        display:false
+      },
+      hover: {
+        "animationDuration": 0
+      },
+      animation: { //animation code is for numbers show only
+        "duration": 1,
+        "onComplete": function() {
+              let chartInstance = this.chart,
+                ctx = chartInstance.ctx;
+              // referance link below
+              //https://bramantox.wordpress.com/2019/10/06/how-to-show-values-on-top-of-bars-in-chart-js/
+              //ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+              ctx.fillStyle = 'white';
+              ctx.textAlign = 'right';
+              ctx.textBaseline = 'top';
+              this.data.datasets.forEach(function(dataset, i) {
+                  let meta = chartInstance.controller.getDatasetMeta(i);
+                  meta.data.forEach(function(bar, index) {
+                    let data = dataset.data[index];
+                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                  });
+              });
+        }
+      },
       scales: {
           xAxes: [{
                ticks: {
@@ -345,19 +404,13 @@ export class InsightsComponent {
           }],
           yAxes: [{
               gridLines: {
-                  // color: "rgba(0, 0, 0, 0)",
                   display: false
               },
-              // scaleLabel : {
-              //   display : true,
-              //   labelString : "My Chart title",
-              //   //fontStyle : 'bold',
-              //   fontSize : 11
-              // }
               
-              // title: "Axis Y with interval 20",
           }]
-      }
+      },
+      
+
     };
     //public barChartLabels: string[] = ['2005', '2007', '2008', '2009', '2010', '2011', '2012'];
     public horizontalBarChartLabels: string[] = [];
