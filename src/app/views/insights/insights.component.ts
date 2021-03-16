@@ -36,9 +36,7 @@ export class InsightsComponent {
     this.start_date  = this.datePipe.transform(this.start_date ,'yyyy-MM-dd');
     this.end_date    = this.datePipe.transform(this.end_date ,'yyyy-MM-dd');
   }
-  //heatmap
-  @ViewChild("chart") chart: ChartComponent;
-  public chartOptions: Partial<ChartOptions>;
+
 
 
   //******************PIE CHART 1 START**********************//
@@ -468,6 +466,168 @@ export class InsightsComponent {
     });
   }
 
+  //heatmap
+  @ViewChild("chart") chart: ChartComponent;
+  public chartOptions: Partial<ChartOptions>;
+
+  peakHours(){
+  let X_Array = [];
+  let Y_Array = [];
+  let Z_Array = [];
+  let X = "";
+  let Y = "";
+  let Z = "";
+  let body = {
+    "filters": {
+      "start_date": this.start_date+"T00:00:00.000000",
+      "end_date":   this.end_date+"T00:00:00.000000",
+      "frequency":  this.frequency,
+    }
+  }; 
+
+  this.insights.peakHours(body)
+  .then((data) => {
+        if (data.data[0].hasOwnProperty("x")){
+          X = data.data[0].x;
+        }
+
+        if (data.data[0].hasOwnProperty("y")){
+            Y = data.data[0].y;
+        }
+
+        if (data.data[0].hasOwnProperty("z")){
+            Z = data.data[0].z;
+        }
+
+        Object.keys(X).map((X_Index)=>{
+            var val = X[X_Index];
+            X_Array.push(val);
+        });
+
+        Object.keys(Y).map((Y_Index)=>{
+            var val = Y[Y_Index];
+            Y_Array.push(val);
+        });
+
+        Object.keys(Z).map((Z_Index)=>{
+            var val = Z[Z_Index];
+            Z_Array.push(val);
+        });
+
+        // console.log(X_Array);
+        // console.log(Y_Array);
+        //console.log(Z_Array);
+
+        let Series:any = [];
+        for(let index in Y_Array){
+           var series_val = {
+                name: Y_Array[index],
+                // data: this.generateData(20, {
+                //   min: 0,
+                //   max: 1017
+                // }),
+                data: this.generateData(index,X_Array,Z_Array),
+              }
+          Series.push(series_val);
+        }
+
+         this.chartOptions = { 
+          series: Series,
+          chart: {
+            height: 350,
+            type: "heatmap"
+          },
+          plotOptions: {
+            heatmap: {
+              shadeIntensity: 0.5,
+              colorScale: {
+                ranges: [
+                  {
+                    from: 0,
+                    to: 200,
+                    name: "0-200",
+                    color: "#7ef293"
+                    // color: "#00A100"
+                  },
+                  {
+                    from: 200,
+                    to: 400,
+                    name: "200-400",
+                    color: "#64f57f"
+                    // color: "#128FD9"
+                  },
+                  {
+                    from: 400,
+                    to: 600,
+                    name: "400-600",
+                    color: "#51db6a"
+                    // color: "#FFB200"
+                  },
+                  {
+                    from: 600,
+                    to: 800,
+                    name: "600-800",
+                    color: "#33d651"
+                    // color: "#FF0000"
+                  },              {
+                  from: 800,
+                    to: 1200,
+                    name: "800-1200",
+                    color: "#00d427"
+                    // color: "#FF0000"
+                  }
+                ]
+              }
+            }
+          },
+          dataLabels: {
+            enabled: true,
+            style: {
+              colors: ["#000"]
+            }    
+          }
+          // title: {
+          //   text: "HeatMap Chart"
+          // }
+        }; 
+      });
+  }
+
+  public generateData(index,X_Array:any,Z_Array:any){
+    // console.log(X_Array);
+    console.log(Z_Array[index]);
+    // console.log(Z_Array.length);
+    // console.log(Z_Array);
+
+    // for(let i=0;i<X_Array.length;i++){
+      var series_data = [];
+      for(let key in Z_Array[index]){
+          series_data.push({
+              x: X_Array[key],
+              y: Z_Array[index][key]
+          });
+      }
+      console.log(series_data);
+    // }
+
+    
+    // var i = 0;
+    // var series_data = [];
+    // while (i < count) {
+    //   var x = "W" + (i + 1).toString();
+    //   var y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
+      
+    //   // console.log(x);
+    //   // console.log(y);
+
+    //   series_data.push({
+    //     x: x,
+    //     y: y
+    //   });
+    //   i++;
+    // }
+    return series_data;
+  }
 
 
 
@@ -477,27 +637,7 @@ export class InsightsComponent {
 
 
 
-  // Doughnut
-  public doughnutChartLabels: string[] = ['Download Sales', 'In-Store Sales', 'Mail-Order Sales'];
-  public doughnutChartData: number[] = [350, 450, 100];
-  public doughnutChartType = 'doughnut';
 
-  // Radar
-  public radarChartLabels: string[] = ['Eating', 'Drinking', 'Sleeping', 'Designing', 'Coding', 'Cycling', 'Running'];
-
-  public radarChartData: any = [
-    {data: [65, 59, 90, 81, 56, 55, 40], label: 'Series A'},
-    {data: [28, 48, 40, 19, 96, 27, 100], label: 'Series B'}
-  ];
-  public radarChartType = 'radar';
-
-
-  // PolarArea
-  public polarAreaChartLabels: string[] = ['Download Sales', 'In-Store Sales', 'Mail Sales', 'Telesales', 'Corporate Sales'];
-  public polarAreaChartData: number[] = [300, 500, 100, 40, 120];
-  public polarAreaLegend = true;
-
-  public polarAreaChartType = 'polarArea';
 
   // events
   public chartClicked(e: any): void {
@@ -508,146 +648,20 @@ export class InsightsComponent {
     console.log(e);
   }
    
-  //heatmap
+ 
+
   ngOnInit(){
     this.getUserEmail();
     this.getChaserEmail();
     this.getEmailByUser();
     this.getVolumeDay();
     this.TopSenders();
+    this.peakHours();
 
-    this.chartOptions = {
-      series: [
-        {
-          name: "Jan",
-          data: this.generateData(20, {
-            min: -30,
-            max: 55
-          })
-        },
-        {
-          name: "Feb",
-          data: this.generateData(20, {
-            min: -30,
-            max: 55
-          })
-        },
-        {
-          name: "Mar",
-          data: this.generateData(20, {
-            min: -30,
-            max: 55
-          })
-        },
-        {
-          name: "Apr",
-          data: this.generateData(20, {
-            min: -30,
-            max: 55
-          })
-        },
-        {
-          name: "May",
-          data: this.generateData(20, {
-            min: -30,
-            max: 55
-          })
-        },
-        {
-          name: "Jun",
-          data: this.generateData(20, {
-            min: -30,
-            max: 55
-          })
-        },
-        {
-          name: "Jul",
-          data: this.generateData(20, {
-            min: -30,
-            max: 55
-          })
-        },
-        {
-          name: "Aug",
-          data: this.generateData(20, {
-            min: -30,
-            max: 55
-          })
-        },
-        {
-          name: "Sep",
-          data: this.generateData(20, {
-            min: -30,
-            max: 55
-          })
-        }
-      ],
-      chart: {
-        height: 350,
-        type: "heatmap"
-      },
-      plotOptions: {
-        heatmap: {
-          shadeIntensity: 0.5,
-          colorScale: {
-            ranges: [
-              {
-                from: -30,
-                to: 5,
-                name: "low",
-                color: "#c5ebc9"
-                // color: "#00A100"
-              },
-              {
-                from: 6,
-                to: 20,
-                name: "medium",
-                color: "#7fd488"
-                // color: "#128FD9"
-              },
-              {
-                from: 21,
-                to: 45,
-                name: "high",
-                color: "#43a84e"
-                // color: "#FFB200"
-              },
-              {
-                from: 46,
-                to: 55,
-                name: "extreme",
-                color: "#05b018"
-                // color: "#FF0000"
-              }
-            ]
-          }
-        }
-      },
-      dataLabels: {
-        enabled: false
-      },
-      // title: {
-      //   text: "HeatMap Chart"
-      // }
-    };
+
   }
 
-  public generateData(count, yrange) {
-    var i = 0;
-    var series = [];
-    while (i < count) {
-      var x = "W" + (i + 1).toString();
-      var y =
-        Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
 
-      series.push({
-        x: x,
-        y: y
-      });
-      i++;
-    }
-    return series;
-  }
 
 
 

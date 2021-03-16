@@ -680,7 +680,7 @@ public chartHeatOptions: Partial<ChartHeatOptions>;
         }
       },
       dataLabels: {
-        enabled: false
+        enabled: true
       },
       // title: {
       //   text: "HeatMap Chart"

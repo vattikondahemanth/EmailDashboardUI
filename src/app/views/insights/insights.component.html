@@ -55,13 +55,7 @@
                   <!-- https://www.eduforbetterment.com/heat-map-chart-in-angular-using-apexchart/ -->
                   <!-- <h1 style="text-align:center">Temprature </h1> -->
                   <div id="chart">
-                    <apx-chart
-                      [series]="chartOptions.series"
-                      [chart]="chartOptions.chart"
-                      [dataLabels]="chartOptions.dataLabels"
-                      [plotOptions]="chartOptions.plotOptions"
-                      [title]="chartOptions.title"
-                    ></apx-chart>
+                    
                   </div>
                 
                 </div>
@@ -126,7 +120,7 @@
               <div class="card-body">
                 <div class="chart-wrapper">
                   <h6 style="text-align:center"> Top 10 External Senders </h6>
-                  <!-- <div id="chart">
+                  <div id="chart">
                     <apx-chart
                       [series]="chartOptions.series"
                       [chart]="chartOptions.chart"
@@ -134,7 +128,7 @@
                       [plotOptions]="chartOptions.plotOptions"
                       [title]=""
                     ></apx-chart>
-                  </div> -->
+                  </div>
 
                   <canvas width="100" height="30" baseChart class="chart"
                   [datasets]="horizontalBarChartData"

@@ -13,4 +13,5 @@ export const CommonURL = {
     insightsEmailByUser : environment.baseURL + 'api/insights/emails_by_user',
     insightsVolumeDay   : environment.baseURL + 'api/insights/volume_by_day',
     insightsTopSenders  : environment.baseURL + 'api/insights/top_external_senders',
+    insightsPeakHours   : environment.baseURL + 'api/insights/peak_hours',
 }

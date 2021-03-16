@@ -73,5 +73,18 @@ export class InsightsService {
     });
   }
 
+  peakHours(dt):any{
+    return new Promise((resolve, reject) => {
+      this.http.post(CommonURL.insightsPeakHours, dt)
+          .subscribe(
+              (data) => {
+                  resolve(data);
+              },
+              (error) => {
+                  reject(error);
+          });
+    });
+  }
+
 
 }
