@@ -1,12 +1,12 @@
 <div class="form-group row">
   <div class="col-md-3">
     <label>Date Input From</label>
-    <input id="date-input" [value] = start_date_n #start_date type="date" name="date-input"  placeholder="date" class="form-control" (change)="startDateChange(start_date.value);">
+    <input id="date-input" [value] = "start_date"  type="date" name="date-input"  placeholder="date" class="form-control" (change)="startDateChange($event);">
     <!-- <span class="help-block">Please enter a valid date</span> -->
   </div>
   <div class="col-md-3">
     <label>Date Input To</label>
-    <input id="date-input" [value] = end_date_n #end_date type="date" name="date-input" placeholder="date" class="form-control" (change)="endDateChange(end_date.value);">
+    <input id="date-input" [value] = "end_date" type="date" name="date-input" placeholder="date" class="form-control" (change)="endDateChange($event);">
     <!-- <span class="help-block">Please enter a valid date</span> -->
   </div>
 </div>

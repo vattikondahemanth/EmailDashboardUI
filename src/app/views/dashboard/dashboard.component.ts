@@ -33,12 +33,31 @@ export type ChartHeatOptions = {
   providers: [DatePipe]
 })
 export class DashboardComponent implements OnInit {
-  start_date :any  =  new Date();
-  year             = this.start_date.getFullYear();
-  month            = this.start_date.getMonth();
-  day              =   this.start_date.getDate();
-  end_date :any    = new Date(this.year - 1, this.month, this.day);
+  // start_date :any  =  new Date();
+  // year             = this.start_date.getFullYear();
+  // month            = this.start_date.getMonth();
+  // day              =   this.start_date.getDate();
+  // end_date :any    = new Date(this.year - 1, this.month, this.day);
 
+  end_date :any  =  new Date();
+  end_date_n = new Date().toISOString().slice(0,16);
+  year             = this.end_date.getFullYear();
+  month            = this.end_date.getMonth();
+  day              =   this.end_date.getDate();
+  start_date :any    = new Date(this.year - 1, this.month, this.day);
+  start_date_n = new Date(this.year - 1, this.month, this.day).toISOString().slice(0, 16);
+
+  // constructor( 
+  //   public actionEmail:ActionableEmailService,
+  //   public criticalEmail:CriticalClientEmailService,
+  //   public escalatedEmail:EscalatedEmailService,
+  //   public datePipe: DatePipe
+  //   ){
+  //     this.start_date  = this.datePipe.transform(this.start_date ,'yyyy-MM-dd');
+  //     this.end_date     = this.datePipe.transform(this.end_date ,'yyyy-MM-dd');
+  //     console.log(this.start_date);
+  //     console.log(this.end_date);
+  //   }
   constructor( 
     public actionEmail:ActionableEmailService,
     public criticalEmail:CriticalClientEmailService,
@@ -51,8 +70,9 @@ export class DashboardComponent implements OnInit {
       console.log(this.end_date);
     }
 
-start_date_n = this.start_date
-end_date_n   = this.end_date
+
+// start_date_n = this.start_date
+// end_date_n   = this.end_date
 action_frequency    = 'W-MON';
 critical_frequency  = 'W-MON';
 escalated_frequency = 'W-MON';
@@ -73,12 +93,12 @@ escalatedTotalReceived:any = '';
 escalatedTotalResponse:any = '';
 
 
-startDateChange(date){
-  this.start_date = date;
+startDateChange(event){
+  this.start_date = event.target.value;
 }
 
-endDateChange(date){
-  this.end_date = date;
+endDateChange(event){
+  this.end_date = event.target.value;
   this.emailUserStackBar();
   this.emailReceiveBarChart();
   this.emailReceiveLineChart();
@@ -106,6 +126,10 @@ endDateChange(date){
     }; 
     this.actionEmail.getActionEmailCount(body)
     .then((data) => {
+      data = data.replace("Total Received",'total_received');
+      data = data.replace("Total Responses",'total_responses');
+      data = data.replace("Response Time",'response_time');
+      data = JSON.parse(data);
        this.actionResponseTime  = data.data[0].response_time
        this.actionTotalReceived = data.data[0].total_received
        this.actionTotalResponse = data.data[0].total_responses
@@ -232,6 +256,11 @@ criticalEmailCount(){
   }; 
   this.criticalEmail.criticalEmailCount(body)
   .then((data) => {
+      console.log(data);
+      data = data.replace("Total Received",'total_received');
+      data = data.replace("Total Responses",'total_responses');
+      data = data.replace("Response Time",'response_time');
+      data = JSON.parse(data);
      this.criticalResponseTime  = data.data[0].response_time
      this.criticalTotalReceived = data.data[0].total_received
      this.criticalTotalResponse = data.data[0].total_responses
@@ -431,6 +460,10 @@ escalatedEmailCount(){
   }; 
   this.escalatedEmail.escalatedEmailCount(body)
   .then((data) => {
+      data = data.replace("Total Received",'total_received');
+      data = data.replace("Total Responses",'total_responses');
+      data = data.replace("Response Time",'response_time');
+      data = JSON.parse(data);
      this.escalatedResponseTime  = data.data[0].response_time
      this.escalatedTotalReceived = data.data[0].total_received
      this.escalatedTotalResponse = data.data[0].total_responses

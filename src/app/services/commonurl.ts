@@ -6,7 +6,7 @@ export const CommonURL = {
     emailResponse       : environment.baseURL + 'api/critical/emailresponse',
     escalatedKeywords   : environment.baseURL + 'api/escalated/keywords',
     actionEmailCount    : environment.baseURL + 'api/actionable/count',
-    criticalEmailCount  : environment.baseURL + 'api/critical/emailcount',
+    criticalEmailCount  : environment.baseURL + 'api/critical/count',
     escalatedEmailCount : environment.baseURL + 'api/escalated/count',
     insightsUserEmail   : environment.baseURL + 'api/insights/user_emails',
     insightsChaserEmail : environment.baseURL + 'api/insights/chaser_emails',
