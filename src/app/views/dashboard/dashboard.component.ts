@@ -81,17 +81,19 @@ escalated_frequency = 'W-MON';
 actionResponseTime:any  = '';
 actionTotalReceived:any = '';
 actionTotalResponse:any = '';
+actionEmails:any = [];
 
 //Critical
 criticalResponseTime:any  = '';
 criticalTotalReceived:any = '';
 criticalTotalResponse:any = '';
+criticalEmails:any = [];
 
 //Escalated
 escalatedResponseTime:any  = '';
 escalatedTotalReceived:any = '';
 escalatedTotalResponse:any = '';
-
+escalatedEmails:any = [];
 
 startDateChange(event){
   this.start_date = event.target.value;
@@ -109,6 +111,7 @@ endDateChange(event){
   
 }
   
+
 //*****************************************ACTION EMAIL START******************************************************* */
   actionEmailChange(value:any){
     this.action_frequency  = value;
@@ -228,6 +231,32 @@ barChartOptions: ChartOptions = {
        console.log('catch');
     });
   }
+
+  getEmailsTable(){
+    let body = {
+      "filters": {
+        "start_date": this.start_date+"T00:00:00.000000",
+        "end_date":   this.end_date+"T00:00:00.000000",
+        "frequency":  this.action_frequency,
+      }
+    }; 
+  
+    this.actionEmail.getEmailsTable(body)
+       .then((data) => {
+          data = data.data[0];
+          var val =  data['DateTime_Received'];
+           Object.keys(val).map((val_Index)=>{
+             this.actionEmails.push({
+               'DateTime_Received':data['DateTime_Received'][val_Index],
+               'Sender_Name'      :data['Sender_Name'][val_Index],
+               'Subject'          :data['Subject'][val_Index],
+               'To'               :data['To'][val_Index],
+               'Cc'               :data['Cc'][val_Index]
+              })
+           })
+    });
+  }
+
 //STACK BAR END//
 //*****************************************ACTION EMAIL END******************************************************* */
 
@@ -439,6 +468,32 @@ barChartCriticalOptions: any = {
       }];
     });
   }
+
+  getActionEmailsTable(){
+    let body = {
+      "filters": {
+        "start_date": this.start_date+"T00:00:00.000000",
+        "end_date":   this.end_date+"T00:00:00.000000",
+        "frequency":  this.action_frequency,
+      }
+    }; 
+  
+    this.criticalEmail.getActionEmailsTable(body)
+       .then((data) => {
+          data = data.data[0];
+          var val =  data['DateTime_Received'];
+           Object.keys(val).map((val_Index)=>{
+             this.criticalEmails.push({
+               'DateTime_Received':data['DateTime_Received'][val_Index],
+               'Sender_Name'      :data['Sender_Name'][val_Index],
+               'Subject'          :data['Subject'][val_Index],
+               'To'               :data['To'][val_Index],
+               'Cc'               :data['Cc'][val_Index]
+              })
+           })
+           console.log(this.criticalEmails);
+    });
+  }
   //LINE CHART END//
 
 //*****************************************CRITICAL EMAIL END******************************************************* */
@@ -603,6 +658,9 @@ public chartHeatOptions: Partial<ChartHeatOptions>;
     this.actionEmailCount();
     this.criticalEmailCount();
     this.escalatedEmailCount();
+    this.getEmailsTable();
+    this.getActionEmailsTable();
+    this.getEscalatedEmailsTable();
     
     this.chartHeatOptions = {
       series: [
@@ -741,7 +799,31 @@ public chartHeatOptions: Partial<ChartHeatOptions>;
 
 //HEATMAP END//
 
+getEscalatedEmailsTable(){
+  let body = {
+    "filters": {
+      "start_date": this.start_date+"T00:00:00.000000",
+      "end_date":   this.end_date+"T00:00:00.000000",
+      "frequency":  this.action_frequency,
+    }
+  }; 
 
+  this.escalatedEmail.getEscalatedEmailsTable(body)
+     .then((data) => {
+        data = data.data[0];
+        var val =  data['DateTime_Received'];
+         Object.keys(val).map((val_Index)=>{
+           this.escalatedEmails.push({
+             'DateTime_Received':data['DateTime_Received'][val_Index],
+             'Sender_Name'      :data['Sender_Name'][val_Index],
+             'Subject'          :data['Subject'][val_Index],
+             'To'               :data['To'][val_Index],
+             'Cc'               :data['Cc'][val_Index]
+            })
+         })
+         console.log(this.escalatedEmails);
+  });
+}
 
 
 

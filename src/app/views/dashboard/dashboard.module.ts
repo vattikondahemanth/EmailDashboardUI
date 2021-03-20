@@ -8,13 +8,15 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { TabsComponent } from '../base/tabs.component';
 import { NgApexchartsModule } from "ng-apexcharts";
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   imports: [
     DashboardRoutingModule,
     ChartsModule,
+    CommonModule,
     TabsModule,
-    NgApexchartsModule,
+    NgApexchartsModule
   ],
   declarations: [ DashboardComponent,TabsComponent ]
 })

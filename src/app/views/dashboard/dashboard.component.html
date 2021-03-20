@@ -156,40 +156,13 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>2012/01/01</td>
-                  <td>Pompeius Rene</td>
-                  <td>Connectivity</td>
-                  <td>member@gmail.com</td>
-                  <td>
-                    <!-- <span class="badge badge-success"> -->
-                      abc@gmail.com
-                    <!-- </span> -->
-                  </td>
-                </tr>
-                <tr>
-                  <td>2012/01/02</td>
-                  <td>Pompeius Rene</td>
-                  <td>Connectivity</td>
-                  <td>member@gmail.com</td>
-                  <td>
-                    <!-- <span class="badge badge-success"> -->
-                      abc@gmail.com
-                    <!-- </span> -->
-                  </td>
-                </tr>
-                <tr>
-                  <td>2012/01/03</td>
-                  <td>Manasi Rene</td>
-                  <td>Connectivity</td>
-                  <td>member@gmail.com</td>
-                  <td>
-                    <!-- <span class="badge badge-success"> -->
-                      abc@gmail.com
-                    <!-- </span> -->
-                  </td>
-                </tr>
-                
+                <tr *ngFor="let actionData of actionEmails">
+                  <td>{{ actionData.DateTime_Received }}</td>
+                  <td>{{ actionData.Sender_Name }}</td>
+                  <td>{{ actionData.Subject }}</td>
+                  <td>{{ actionData.To }}</td>
+                  <td>{{ actionData.Cc }}</td>
+                </tr>  
               </tbody>
             </table>
             <ul class="pagination">
@@ -347,40 +320,13 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>2012/01/01</td>
-                  <td>Pompeius Rene</td>
-                  <td>Connectivity</td>
-                  <td>member@gmail.com</td>
-                  <td>
-                    <!-- <span class="badge badge-success"> -->
-                      abc@gmail.com
-                    <!-- </span> -->
-                  </td>
+                <tr *ngFor="let criticalData of criticalEmails">
+                  <td>{{ criticalData.DateTime_Received }}</td>
+                  <td>{{ criticalData.Sender_Name }}</td>
+                  <td>{{ criticalData.Subject }}</td>
+                  <td>{{ criticalData.To }}</td>
+                  <td>{{ criticalData.Cc }}</td>
                 </tr>
-                <tr>
-                  <td>2012/01/02</td>
-                  <td>Pompeius Rene</td>
-                  <td>Connectivity</td>
-                  <td>member@gmail.com</td>
-                  <td>
-                    <!-- <span class="badge badge-success"> -->
-                      abc@gmail.com
-                    <!-- </span> -->
-                  </td>
-                </tr>
-                <tr>
-                  <td>2012/01/03</td>
-                  <td>Manasi Rene</td>
-                  <td>Connectivity</td>
-                  <td>member@gmail.com</td>
-                  <td>
-                    <!-- <span class="badge badge-success"> -->
-                      abc@gmail.com
-                    <!-- </span> -->
-                  </td>
-                </tr>
-                
               </tbody>
             </table>
             <ul class="pagination">
@@ -584,40 +530,13 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>2012/01/01</td>
-                  <td>Pompeius Rene</td>
-                  <td>Connectivity</td>
-                  <td>member@gmail.com</td>
-                  <td>
-                    <!-- <span class="badge badge-success"> -->
-                      abc@gmail.com
-                    <!-- </span> -->
-                  </td>
+                <tr *ngFor="let escalatedData of escalatedEmails">
+                  <td>{{ escalatedData.DateTime_Received }}</td>
+                  <td>{{ escalatedData.Sender_Name }}</td>
+                  <td>{{ escalatedData.Subject }}</td>
+                  <td>{{ escalatedData.To }}</td>
+                  <td>{{ escalatedData.Cc }}</td>
                 </tr>
-                <tr>
-                  <td>2012/01/02</td>
-                  <td>Pompeius Rene</td>
-                  <td>Connectivity</td>
-                  <td>member@gmail.com</td>
-                  <td>
-                    <!-- <span class="badge badge-success"> -->
-                      abc@gmail.com
-                    <!-- </span> -->
-                  </td>
-                </tr>
-                <tr>
-                  <td>2012/01/03</td>
-                  <td>Manasi Rene</td>
-                  <td>Connectivity</td>
-                  <td>member@gmail.com</td>
-                  <td>
-                    <!-- <span class="badge badge-success"> -->
-                      abc@gmail.com
-                    <!-- </span> -->
-                  </td>
-                </tr>
-                
               </tbody>
             </table>
             <ul class="pagination">

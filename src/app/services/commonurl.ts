@@ -14,4 +14,7 @@ export const CommonURL = {
     insightsVolumeDay   : environment.baseURL + 'api/insights/volume_by_day',
     insightsTopSenders  : environment.baseURL + 'api/insights/top_external_senders',
     insightsPeakHours   : environment.baseURL + 'api/insights/peak_hours',
+    actionEmailTable    : environment.baseURL + 'api/actionable/emails_table',
+    criticalEmailTable  : environment.baseURL + 'api/critical/emails_table',
+    escalatedEmailTable : environment.baseURL + 'api/escalated/emails_table',
 }

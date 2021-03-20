@@ -29,6 +29,7 @@ import { HIGHCHARTS_MODULES, ChartModule } from 'angular-highcharts';
 import more from 'highcharts/highcharts-more.src';
 import exporting from 'highcharts/modules/exporting.src';
 import highmaps from 'highcharts/modules/map.src';
+import { CommonModule } from '@angular/common';
 
 
 import { HttpClientModule } from '@angular/common/http';
@@ -74,7 +75,8 @@ import { ChartsModule } from 'ng2-charts';
     ChartsModule,
     IconModule,
     IconSetModule.forRoot(),
-    HttpClientModule
+    HttpClientModule,
+    CommonModule
   ],
   declarations: [
     AppComponent,
