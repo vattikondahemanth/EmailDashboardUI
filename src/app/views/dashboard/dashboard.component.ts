@@ -1,4 +1,4 @@
-import { Component, VERSION ,ViewChild,OnInit } from '@angular/core';
+import { Component, VERSION, ViewChild, OnInit, AfterContentInit } from '@angular/core';
 import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
@@ -11,7 +11,8 @@ import { from } from 'rxjs';
 import { IDatasource, IGetRowsParams, GridOptions, GridApi } from 'ag-grid-community';
 
 
-import {ChartComponent,
+import {
+  ChartComponent,
   ApexAxisChartSeries,
   ApexTitleSubtitle,
   ApexDataLabels,
@@ -33,219 +34,221 @@ export type ChartHeatOptions = {
   styleUrls: ['./dashboard.component.css'],
   providers: [DatePipe]
 })
-export class DashboardComponent implements OnInit{
-  end_date :any  =  new Date();
-  end_date_n = new Date().toISOString().slice(0,16);
-  year             = this.end_date.getFullYear();
-  month            = this.end_date.getMonth();
-  day              =   this.end_date.getDate();
-  start_date :any    = new Date(this.year - 1, this.month, this.day);
+export class DashboardComponent implements OnInit, AfterContentInit {
+  end_date: any = new Date();
+  end_date_n = new Date().toISOString().slice(0, 16);
+  year = this.end_date.getFullYear();
+  month = this.end_date.getMonth();
+  day = this.end_date.getDate();
+  start_date: any = new Date(this.year - 1, this.month, this.day);
   start_date_n = new Date(this.year - 1, this.month, this.day).toISOString().slice(0, 16);
+  escalatedEmailsList: any = [];
 
-  constructor( 
-    public actionEmail:ActionableEmailService,
-    public criticalEmail:CriticalClientEmailService,
-    public escalatedEmail:EscalatedEmailService,
+  constructor(
+    public actionEmail: ActionableEmailService,
+    public criticalEmail: CriticalClientEmailService,
+    public escalatedEmail: EscalatedEmailService,
     public datePipe: DatePipe
-    ){
-      this.start_date  = this.datePipe.transform(this.start_date ,'yyyy-MM-dd');
-      this.end_date     = this.datePipe.transform(this.end_date ,'yyyy-MM-dd');
-    }
+  ) {
+    this.start_date = this.datePipe.transform(this.start_date, 'yyyy-MM-dd');
+    this.end_date = this.datePipe.transform(this.end_date, 'yyyy-MM-dd');
+  }
 
-action_frequency    = 'W-MON';
-critical_frequency  = 'W-MON';
-escalated_frequency = 'W-MON';
+  action_frequency = 'W-MON';
+  critical_frequency = 'W-MON';
+  escalated_frequency = 'W-MON';
 
-//Action
-actionResponseTime:any  = '';
-actionTotalReceived:any = '';
-actionTotalResponse:any = '';
-actionEmails:Array<any> = [];
-Series:any = [];
+  //Action
+  actionResponseTime: any = '';
+  actionTotalReceived: any = '';
+  actionTotalResponse: any = '';
+  actionEmails: Array<any> = [];
+  Series: any = [];
 
-//Critical
-criticalResponseTime:any  = '';
-criticalTotalReceived:any = '';
-criticalTotalResponse:any = '';
-criticalEmails:any = [];
+  //Critical
+  criticalResponseTime: any = '';
+  criticalTotalReceived: any = '';
+  criticalTotalResponse: any = '';
+  criticalEmails: any = [];
 
-//Escalated
-escalatedResponseTime:any  = '';
-escalatedTotalReceived:any = '';
-escalatedTotalResponse:any = '';
-escalatedEmails:any = [];
+  //Escalated
+  escalatedResponseTime: any = '';
+  escalatedTotalReceived: any = '';
+  escalatedTotalResponse: any = '';
+  escalatedEmails: any = [];
 
 
-startDateChange(event){
-  this.start_date = event.target.value;
-}
+  startDateChange(event) {
+    this.start_date = event.target.value;
+  }
 
-endDateChange(event){
-  this.end_date = event.target.value;
-  this.emailUserStackBar();
-  this.emailReceiveBarChart();
-  this.emailReceiveLineChart();
-  this.emailReceiveBarChartEscalated();
-  this.actionEmailCount();
-  this.criticalEmailCount();
-  this.escalatedEmailCount();
-  this.userWorkload();
-  this.escalatedUserWorkload();
-  
-}
-  
+  endDateChange(event) {
+    this.end_date = event.target.value;
+    this.emailUserStackBar();
+    this.emailReceiveBarChart();
+    this.emailReceiveLineChart();
+    this.emailReceiveBarChartEscalated();
+    this.actionEmailCount();
+    this.criticalEmailCount();
+    this.escalatedEmailCount();
+    this.userWorkload();
+    this.escalatedUserWorkload();
 
-//*****************************************ACTION EMAIL START******************************************************* */
-  actionEmailChange(value:any){
-    this.action_frequency  = value;
+  }
+
+
+  //*****************************************ACTION EMAIL START******************************************************* */
+  actionEmailChange(value: any) {
+    this.action_frequency = value;
     this.actionEmailCount();
     this.emailUserStackBar();
     this.userWorkload();
   }
 
-  actionEmailCount(){
+  actionEmailCount() {
     let body = {
       "filters": {
-        "start_date": this.start_date+"T00:00:00.000000",
-        "end_date":   this.end_date+"T00:00:00.000000",
-        "frequency":  this.action_frequency,
+        "start_date": this.start_date + "T00:00:00.000000",
+        "end_date": this.end_date + "T00:00:00.000000",
+        "frequency": this.action_frequency,
       }
-    }; 
+    };
     this.actionEmail.getActionEmailCount(body)
-    .then((data) => {
-      data = data.replace("Total Received",'total_received');
-      data = data.replace("Total Responses",'total_responses');
-      data = data.replace("Response Time",'response_time');
-      data = JSON.parse(data);
-       this.actionResponseTime  = data.data[0].response_time
-       this.actionTotalReceived = data.data[0].total_received
-       this.actionTotalResponse = data.data[0].total_responses
+      .then((data) => {
+        data = data.replace("Total Received", 'total_received');
+        data = data.replace("Total Responses", 'total_responses');
+        data = data.replace("Response Time", 'response_time');
+        data = JSON.parse(data);
+        this.actionResponseTime = data.data[0].response_time
+        this.actionTotalReceived = data.data[0].total_received
+        this.actionTotalResponse = data.data[0].total_responses
 
-     }).catch((err) => {
+      }).catch((err) => {
         //console.log('catch');
-     });
+      });
   }
 
-barChartOptions: ChartOptions = {
-  responsive: true,
-  scales: { 
-    xAxes: [{ 
-       ticks: { stepSize: 5} ,
-       gridLines: {
+  barChartOptions: ChartOptions = {
+    responsive: true,
+    scales: {
+      xAxes: [{
+        ticks: { stepSize: 5 },
+        gridLines: {
           display: false,
         },
-    }], 
-  yAxes: [{}] 
-  },
-};
+      }],
+      yAxes: [{}]
+    },
+  };
 
-  
+
   //STACK BAR START//
   barChartLabels: Label[] = [];
   barChartType: ChartType = 'bar';
   barChartLegend = true;
   barChartPlugins = [];
   barChartData: ChartDataSets[] = [];
-  
-  emailUserStackBar(){
+
+  emailUserStackBar() {
     let X_Array = [];
     let Y_Array = [];
     let text1_array = [];
     let text2_array = [];
     let body = {
       "filters": {
-        "start_date": this.start_date+"T00:00:00.000000",
-        "end_date":   this.end_date+"T00:00:00.000000",
-        "frequency":  this.action_frequency,
+        "start_date": this.start_date + "T00:00:00.000000",
+        "end_date": this.end_date + "T00:00:00.000000",
+        "frequency": this.action_frequency,
       }
-    }; 
-   
+    };
+
     this.actionEmail.getUserEmails(body)
-       .then((data) => {
+      .then((data) => {
         let X = "";
         let Y = "";
         let text1 = "";
         let text2 = "";
-        if (data.data[0].hasOwnProperty("x")){
-             X = data.data[0].x;
+        if (data.data[0].hasOwnProperty("x")) {
+          X = data.data[0].x;
         }
-        if (data.data[0].hasOwnProperty("y")){
-             Y = data.data[0].y
+        if (data.data[0].hasOwnProperty("y")) {
+          Y = data.data[0].y
         }
-        if (data.data[0].hasOwnProperty("text")){
-            text1 = data.data[0].text;
+        if (data.data[0].hasOwnProperty("text")) {
+          text1 = data.data[0].text;
         }
-        if (data.data[1].hasOwnProperty("text")){
-            text2 = data.data[1].text;
+        if (data.data[1].hasOwnProperty("text")) {
+          text2 = data.data[1].text;
         }
 
-        Object.keys(X).map((X_Index)=>{
+        Object.keys(X).map((X_Index) => {
           var val = X[X_Index];
           X_Array.push(val);
         });
-        
-        Object.keys(text1).map((text1_Index)=>{
+
+        Object.keys(text1).map((text1_Index) => {
           var val = text1[text1_Index];
           text1_array.push(val);
         });
 
-        Object.keys(text2).map((text2_Index)=>{
+        Object.keys(text2).map((text2_Index) => {
           var val = text2[text2_Index];
           text2_array.push(val);
         });
 
         this.barChartLabels = X_Array;
-        this.barChartData   = [{ 
-        data: text1_array, label: 'External', 
-        stack: 'a',backgroundColor: '#435eab',
-        borderColor: '#435eab',
-        hoverBackgroundColor:'#435eab',
-        barThickness: 20, },
+        this.barChartData = [{
+          data: text1_array, label: 'External',
+          stack: 'a', backgroundColor: '#435eab',
+          borderColor: '#435eab',
+          hoverBackgroundColor: '#435eab',
+          barThickness: 20,
+        },
         {
-        data: text2_array, 
-        label: 'Internal', 
-        stack: 'a',
-        backgroundColor: '#435eeb',
-        borderColor: '#435eeb',
-        hoverBackgroundColor:'#435eeb',
-        barThickness: 20,
-       }];
+          data: text2_array,
+          label: 'Internal',
+          stack: 'a',
+          backgroundColor: '#435eeb',
+          borderColor: '#435eeb',
+          hoverBackgroundColor: '#435eeb',
+          barThickness: 20,
+        }];
 
-    }).catch((err) => {
-       //console.log('catch');
-    });
+      }).catch((err) => {
+        //console.log('catch');
+      });
   }
 
-  getEmailsTable(){
+  getEmailsTable() {
     let body = {
       "filters": {
-        "start_date": this.start_date+"T00:00:00.000000",
-        "end_date":   this.end_date+"T00:00:00.000000",
-        "frequency":  this.action_frequency,
+        "start_date": this.start_date + "T00:00:00.000000",
+        "end_date": this.end_date + "T00:00:00.000000",
+        "frequency": this.action_frequency,
       }
-    }; 
-  
+    };
+
     this.actionEmail.getEmailsTable(body)
-       .then((data) => {
-          data = data.data[0];
-          var val =  data['DateTime_Received'];
-           Object.keys(val).map((val_Index)=>{
-             this.actionEmails.push({
-               'DateTime_Received':data['DateTime_Received'][val_Index],
-               'Sender_Name'      :data['Sender_Name'][val_Index],
-               'Subject'          :data['Subject'][val_Index],
-               'To'               :data['To'][val_Index],
-               'Cc'               :data['Cc'][val_Index]
-              })
-           })
-    });
+      .then((data) => {
+        data = data.data[0];
+        var val = data['DateTime_Received'];
+        Object.keys(val).map((val_Index) => {
+          this.actionEmails.push({
+            'DateTime_Received': data['DateTime_Received'][val_Index],
+            'Sender_Name': data['Sender_Name'][val_Index],
+            'Subject': data['Subject'][val_Index],
+            'To': data['To'][val_Index],
+            'Cc': data['Cc'][val_Index]
+          })
+        })
+      });
   }
 
   //heatmap
   @ViewChild("chart") chart: ChartComponent;
   public chartHeatOptions: Partial<ChartHeatOptions>;
-  
-  userWorkload(){
+
+  userWorkload() {
     let X_Array = [];
     let Y_Array = [];
     let Z_Array = [];
@@ -254,251 +257,251 @@ barChartOptions: ChartOptions = {
     let Z = "";
     let body = {
       "filters": {
-        "start_date": this.start_date+"T00:00:00.000000",
-        "end_date":   this.end_date+"T00:00:00.000000",
-        "frequency":  this.action_frequency,
+        "start_date": this.start_date + "T00:00:00.000000",
+        "end_date": this.end_date + "T00:00:00.000000",
+        "frequency": this.action_frequency,
       }
-    }; 
-  
+    };
+
     this.actionEmail.userWorkload(body)
-    .then((data) => {
-          if (data.data[0].hasOwnProperty("x")){
-            X = data.data[0].x;
-          }
-  
-          if (data.data[0].hasOwnProperty("y")){
-              Y = data.data[0].y;
-          }
-  
-          if (data.data[0].hasOwnProperty("z")){
-              Z = data.data[0].z;
-          }
-  
-          Object.keys(X).map((X_Index)=>{
-              var val = X[X_Index];
-              X_Array.push(val);
-          });
-  
-          Object.keys(Y).map((Y_Index)=>{
-              var val = Y[Y_Index];
-              Y_Array.push(val);
-          });
-  
-          Object.keys(Z).map((Z_Index)=>{
-              var val = Z[Z_Index];
-              Z_Array.push(val);
-          });
-  
-          let Series:any = [];
-          for(let index in Y_Array){
-             var series_val = {
-                  name: Y_Array[index],
-                  data: this.generateData(index,X_Array,Z_Array),
-                }
-                Series.push(series_val);
-          }
-
-           this.chartHeatOptions = { 
-            series: Series,
-            chart: {
-              height: 350,
-              type: "heatmap"
-            },
-            plotOptions: {
-              heatmap: {
-                shadeIntensity: 0.5,
-                colorScale: {
-                  ranges: [
-                    {
-                      from: 0,
-                      to: 200,
-                      name: "0-200",
-                      color: "#7ef293"
-                    },
-                    {
-                      from: 200,
-                      to: 400,
-                      name: "200-400",
-                      color: "#64f57f"
-                    },
-                    {
-                      from: 400,
-                      to: 600,
-                      name: "400-600",
-                      color: "#51db6a"
-                    },
-                    {
-                      from: 600,
-                      to: 800,
-                      name: "600-800",
-                      color: "#33d651"
-                    },              {
-                    from: 800,
-                      to: 1200,
-                      name: "800-1200",
-                      color: "#00d427"
-                    }
-                  ]
-                }
-              }
-            },
-            dataLabels: {
-              enabled: true,
-              style: {
-                colors: ["#000"]
-              }    
-            }
-          }; 
-        });
-    }
-  
-    public generateData(index,X_Array:any,Z_Array:any){
-        var series_data = [];
-        for(let key in Z_Array[index]){
-            series_data.push({
-                x: X_Array[key],
-                y: Z_Array[index][key]
-            });
+      .then((data) => {
+        if (data.data[0].hasOwnProperty("x")) {
+          X = data.data[0].x;
         }
-      return series_data;
-    }
 
-//STACK BAR END//
-//*****************************************ACTION EMAIL END******************************************************* */
+        if (data.data[0].hasOwnProperty("y")) {
+          Y = data.data[0].y;
+        }
 
+        if (data.data[0].hasOwnProperty("z")) {
+          Z = data.data[0].z;
+        }
 
+        Object.keys(X).map((X_Index) => {
+          var val = X[X_Index];
+          X_Array.push(val);
+        });
 
+        Object.keys(Y).map((Y_Index) => {
+          var val = Y[Y_Index];
+          Y_Array.push(val);
+        });
 
+        Object.keys(Z).map((Z_Index) => {
+          var val = Z[Z_Index];
+          Z_Array.push(val);
+        });
 
-
-//*****************************************CRITICAL EMAIL START******************************************************* */
-
-//BAR CHART Critical START//
-criticalEmailChange(value:any){
-  this.critical_frequency  = value;
-  this.emailReceiveBarChart();
-  this.emailReceiveLineChart();
-  this.criticalEmailCount();
-}
-
-criticalEmailCount(){
-  let body = {
-    "filters": {
-      "start_date": this.start_date+"T00:00:00.000000",
-      "end_date":   this.end_date+"T00:00:00.000000",
-      "frequency":  this.critical_frequency,
-    }
-  }; 
-  this.criticalEmail.criticalEmailCount(body)
-  .then((data) => {
-      data = data.replace("Total Received",'total_received');
-      data = data.replace("Total Responses",'total_responses');
-      data = data.replace("Response Time",'response_time');
-      data = JSON.parse(data);
-     this.criticalResponseTime  = data.data[0].response_time
-     this.criticalTotalReceived = data.data[0].total_received
-     this.criticalTotalResponse = data.data[0].total_responses
-
-   }).catch((err) => {
-      //console.log('catch');
-   });
-}
-
-barChartCriticalOptions: any = {
-  scaleShowVerticalLines: false,
-  responsive: true,
-  scales: {
-    xAxes: [{
-      gridLines: {
-        display: false,
-      },
-    }],
-    yAxes: [{
-          scaleLabel : {
-            display : true,
-            labelString : "Number of Emails",
-            fontSize : 11
+        let Series: any = [];
+        for (let index in Y_Array) {
+          var series_val = {
+            name: Y_Array[index],
+            data: this.generateData(index, X_Array, Z_Array),
           }
-    }],
-  },
-};
+          Series.push(series_val);
+        }
+
+        this.chartHeatOptions = {
+          series: Series,
+          chart: {
+            height: 350,
+            type: "heatmap"
+          },
+          plotOptions: {
+            heatmap: {
+              shadeIntensity: 0.5,
+              colorScale: {
+                ranges: [
+                  {
+                    from: 0,
+                    to: 200,
+                    name: "0-200",
+                    color: "#7ef293"
+                  },
+                  {
+                    from: 200,
+                    to: 400,
+                    name: "200-400",
+                    color: "#64f57f"
+                  },
+                  {
+                    from: 400,
+                    to: 600,
+                    name: "400-600",
+                    color: "#51db6a"
+                  },
+                  {
+                    from: 600,
+                    to: 800,
+                    name: "600-800",
+                    color: "#33d651"
+                  }, {
+                    from: 800,
+                    to: 1200,
+                    name: "800-1200",
+                    color: "#00d427"
+                  }
+                ]
+              }
+            }
+          },
+          dataLabels: {
+            enabled: true,
+            style: {
+              colors: ["#000"]
+            }
+          }
+        };
+      });
+  }
+
+  public generateData(index, X_Array: any, Z_Array: any) {
+    var series_data = [];
+    for (let key in Z_Array[index]) {
+      series_data.push({
+        x: X_Array[key],
+        y: Z_Array[index][key]
+      });
+    }
+    return series_data;
+  }
+
+  //STACK BAR END//
+  //*****************************************ACTION EMAIL END******************************************************* */
+
+
+
+
+
+
+  //*****************************************CRITICAL EMAIL START******************************************************* */
+
+  //BAR CHART Critical START//
+  criticalEmailChange(value: any) {
+    this.critical_frequency = value;
+    this.emailReceiveBarChart();
+    this.emailReceiveLineChart();
+    this.criticalEmailCount();
+  }
+
+  criticalEmailCount() {
+    let body = {
+      "filters": {
+        "start_date": this.start_date + "T00:00:00.000000",
+        "end_date": this.end_date + "T00:00:00.000000",
+        "frequency": this.critical_frequency,
+      }
+    };
+    this.criticalEmail.criticalEmailCount(body)
+      .then((data) => {
+        data = data.replace("Total Received", 'total_received');
+        data = data.replace("Total Responses", 'total_responses');
+        data = data.replace("Response Time", 'response_time');
+        data = JSON.parse(data);
+        this.criticalResponseTime = data.data[0].response_time
+        this.criticalTotalReceived = data.data[0].total_received
+        this.criticalTotalResponse = data.data[0].total_responses
+
+      }).catch((err) => {
+        //console.log('catch');
+      });
+  }
+
+  barChartCriticalOptions: any = {
+    scaleShowVerticalLines: false,
+    responsive: true,
+    scales: {
+      xAxes: [{
+        gridLines: {
+          display: false,
+        },
+      }],
+      yAxes: [{
+        scaleLabel: {
+          display: true,
+          labelString: "Number of Emails",
+          fontSize: 11
+        }
+      }],
+    },
+  };
 
   barChartCriticalLabels: any[] = [];
   public barChartCriticalType = 'bar';
   public barChartCriticalLegend = true;
   public barChartCriticalData: any[] = [];
 
-  emailReceiveBarChart(){
+  emailReceiveBarChart() {
     let X_Array = [];
     let Y_Array = [];
     let text1_array = [];
     let text2_array = [];
-   
+
     let body = {
       "filters": {
-        "start_date": this.start_date+"T00:00:00.000000",
-        "end_date":   this.end_date+"T00:00:00.000000",
-        "frequency":  this.critical_frequency,
+        "start_date": this.start_date + "T00:00:00.000000",
+        "end_date": this.end_date + "T00:00:00.000000",
+        "frequency": this.critical_frequency,
       }
-    }; 
+    };
 
     this.criticalEmail.getEmailCount(body)
-    .then((data) => {
-      let X = "";
-      let Y = "";
-      let text1 = "";
-      let text2 = "";
-      if (data.data[0].hasOwnProperty("x")){
-           X = data.data[0].x;
-      }
-      if (data.data[0].hasOwnProperty("y")){
-           Y = data.data[0].y
-      }
-      if (data.data[0].hasOwnProperty("text")){
+      .then((data) => {
+        let X = "";
+        let Y = "";
+        let text1 = "";
+        let text2 = "";
+        if (data.data[0].hasOwnProperty("x")) {
+          X = data.data[0].x;
+        }
+        if (data.data[0].hasOwnProperty("y")) {
+          Y = data.data[0].y
+        }
+        if (data.data[0].hasOwnProperty("text")) {
           text1 = data.data[0].text;
-      }
-      if (data.data[1].hasOwnProperty("text")){
-        text2 = data.data[1].text;
-      }
+        }
+        if (data.data[1].hasOwnProperty("text")) {
+          text2 = data.data[1].text;
+        }
 
-      Object.keys(X).map((X_Index)=>{
-        var val = X[X_Index];
-        X_Array.push(val);
+        Object.keys(X).map((X_Index) => {
+          var val = X[X_Index];
+          X_Array.push(val);
+        });
+
+        Object.keys(text1).map((text1_Index) => {
+          var val = text1[text1_Index];
+          text1_array.push(val);
+        });
+
+        Object.keys(text2).map((text2_Index) => {
+          var val = text2[text2_Index];
+          text2_array.push(val);
+        });
+
+        this.barChartCriticalLabels = X_Array;
+        this.barChartCriticalData = [{
+          data: text1_array,
+          label: 'Received',
+          backgroundColor: '#435eeb',
+          borderColor: '#435eeb',
+          hoverBackgroundColor: '#435eeb',
+          barThickness: 15,
+
+        },
+        {
+          data: text2_array,
+          label: 'Responded',
+          backgroundColor: '#435eab',
+          borderColor: '#435eab',
+          hoverBackgroundColor: '#435eab',
+          barThickness: 15,
+        }]
       });
-     
-      Object.keys(text1).map((text1_Index)=>{
-        var val = text1[text1_Index];
-        text1_array.push(val);
-      });
+  }
+  //BAR CHART Critical END//
 
-      Object.keys(text2).map((text2_Index)=>{
-        var val = text2[text2_Index];
-        text2_array.push(val);
-      });
-
-     this.barChartCriticalLabels = X_Array;
-     this.barChartCriticalData = [{
-        data: text1_array,
-        label: 'Received',
-        backgroundColor: '#435eeb',
-        borderColor: '#435eeb',
-        hoverBackgroundColor:'#435eeb',
-        barThickness: 15,
-    
-      },
-      { 
-        data: text2_array,
-        label: 'Responded',
-        backgroundColor: '#435eab',
-        borderColor: '#435eab',
-        hoverBackgroundColor:'#435eab',
-        barThickness: 15,
-      }]
-   });
-}
- //BAR CHART Critical END//
-
-//LINE CHART START//
+  //LINE CHART START//
   public lineChart2Data: Array<any> = [];
   public lineChart2Labels: Array<any> = [];
   public lineChart2Options: any = {
@@ -511,7 +514,7 @@ barChartCriticalOptions: any = {
 
       }],
       yAxes: [{
-        
+
       }],
     },
     elements: {
@@ -529,208 +532,208 @@ barChartCriticalOptions: any = {
       display: false
     }
   };
-  public lineChart2Colours: Array<any> = [{ 
-        borderColor: 'rgba(7, 11, 230,.55)'
+  public lineChart2Colours: Array<any> = [{
+    borderColor: 'rgba(7, 11, 230,.55)'
   }];
   public lineChart2Legend = false;
   public lineChart2Type = 'line';
 
-  emailReceiveLineChart(){
+  emailReceiveLineChart() {
     let X_Array = [];
     let Y_Array = [];
     let body = {
       "filters": {
-        "start_date": this.start_date+"T00:00:00.000000",
-        "end_date":   this.end_date+"T00:00:00.000000",
-        "frequency":  this.critical_frequency,
+        "start_date": this.start_date + "T00:00:00.000000",
+        "end_date": this.end_date + "T00:00:00.000000",
+        "frequency": this.critical_frequency,
       }
     };
 
     this.criticalEmail.getEmailResponse(body)
-    .then((data) => {
-      let X = "";
-      let Y = "";
-      if (data.data[0].hasOwnProperty("x")){
-           X = data.data[0].x;
-      }
-      if (data.data[0].hasOwnProperty("y")){
-           Y = data.data[0].y
-      }
+      .then((data) => {
+        let X = "";
+        let Y = "";
+        if (data.data[0].hasOwnProperty("x")) {
+          X = data.data[0].x;
+        }
+        if (data.data[0].hasOwnProperty("y")) {
+          Y = data.data[0].y
+        }
 
-     Object.keys(X).map((X_Index)=>{
-       var val = X[X_Index];
-       X_Array.push(val);
-     });
+        Object.keys(X).map((X_Index) => {
+          var val = X[X_Index];
+          X_Array.push(val);
+        });
 
-     Object.keys(Y).map((Y_Index)=>{
-      var val = Y[Y_Index];
-      Y_Array.push(val);
-     });
-     
-      this.lineChart2Labels = X_Array;
-      this.lineChart2Data = [{
-        data: Y_Array
-      }];
-    });
+        Object.keys(Y).map((Y_Index) => {
+          var val = Y[Y_Index];
+          Y_Array.push(val);
+        });
+
+        this.lineChart2Labels = X_Array;
+        this.lineChart2Data = [{
+          data: Y_Array
+        }];
+      });
   }
 
-  getActionEmailsTable(){
+  getActionEmailsTable() {
     let body = {
       "filters": {
-        "start_date": this.start_date+"T00:00:00.000000",
-        "end_date":   this.end_date+"T00:00:00.000000",
-        "frequency":  this.action_frequency,
+        "start_date": this.start_date + "T00:00:00.000000",
+        "end_date": this.end_date + "T00:00:00.000000",
+        "frequency": this.action_frequency,
       }
-    }; 
-  
+    };
+
     this.criticalEmail.getActionEmailsTable(body)
-       .then((data) => {
-          data = data.data[0];
-          var val =  data['DateTime_Received'];
-           Object.keys(val).map((val_Index)=>{
-             this.criticalEmails.push({
-               'DateTime_Received':data['DateTime_Received'][val_Index],
-               'Sender_Name'      :data['Sender_Name'][val_Index],
-               'Subject'          :data['Subject'][val_Index],
-               'To'               :data['To'][val_Index],
-               'Cc'               :data['Cc'][val_Index]
-              })
-           })
-    });
+      .then((data) => {
+        data = data.data[0];
+        var val = data['DateTime_Received'];
+        Object.keys(val).map((val_Index) => {
+          this.criticalEmails.push({
+            'DateTime_Received': data['DateTime_Received'][val_Index],
+            'Sender_Name': data['Sender_Name'][val_Index],
+            'Subject': data['Subject'][val_Index],
+            'To': data['To'][val_Index],
+            'Cc': data['Cc'][val_Index]
+          })
+        })
+      });
   }
   //LINE CHART END//
 
-//*****************************************CRITICAL EMAIL END******************************************************* */
+  //*****************************************CRITICAL EMAIL END******************************************************* */
 
-//*****************************************ESCALATED EMAIL START********************************************************* */
-escalatedEmailChange(value:any){
-  this.escalated_frequency  = value;
-  this.emailReceiveBarChartEscalated();
-  this.escalatedEmailCount();
-  this.escalatedUserWorkload();
-}
+  //*****************************************ESCALATED EMAIL START********************************************************* */
+  escalatedEmailChange(value: any) {
+    this.escalated_frequency = value;
+    this.emailReceiveBarChartEscalated();
+    this.escalatedEmailCount();
+    this.escalatedUserWorkload();
+  }
 
-escalatedEmailCount(){
-  let body = {
-    "filters": {
-      "start_date": this.start_date+"T00:00:00.000000",
-      "end_date":   this.end_date+"T00:00:00.000000",
-      "frequency":  this.escalated_frequency,
-    }
-  }; 
-  this.escalatedEmail.escalatedEmailCount(body)
-  .then((data) => {
-      data = data.replace("Total Received",'total_received');
-      data = data.replace("Total Responses",'total_responses');
-      data = data.replace("Response Time",'response_time');
-      data = JSON.parse(data);
-     this.escalatedResponseTime  = data.data[0].response_time
-     this.escalatedTotalReceived = data.data[0].total_received
-     this.escalatedTotalResponse = data.data[0].total_responses
+  escalatedEmailCount() {
+    let body = {
+      "filters": {
+        "start_date": this.start_date + "T00:00:00.000000",
+        "end_date": this.end_date + "T00:00:00.000000",
+        "frequency": this.escalated_frequency,
+      }
+    };
+    this.escalatedEmail.escalatedEmailCount(body)
+      .then((data) => {
+        data = data.replace("Total Received", 'total_received');
+        data = data.replace("Total Responses", 'total_responses');
+        data = data.replace("Response Time", 'response_time');
+        data = JSON.parse(data);
+        this.escalatedResponseTime = data.data[0].response_time
+        this.escalatedTotalReceived = data.data[0].total_received
+        this.escalatedTotalResponse = data.data[0].total_responses
 
-   }).catch((err) => {
-      //console.log('catch');
-   });
-}
-//BAR CHART ESCALATED START//
-barChartEscalatedOptions: any = {
-  scaleShowVerticalLines: false,
-  responsive: true,
-  legend:{
-    display:false
-  },
-  scales: {
-    xAxes: [{
-      scaleLabel : {
-        display : true,
-        labelString : "Top Keywords in Chasers",
-        fontSize : 11,
-      },
-      gridLines: {
-        display: false,
-      },
-    }],
-    yAxes: [{
-          scaleLabel : {
-            display : true,
-            labelString : "Number of Emails",
-            fontSize : 11
-          },
-          
-    }],
-  },
-};
+      }).catch((err) => {
+        //console.log('catch');
+      });
+  }
+  //BAR CHART ESCALATED START//
+  barChartEscalatedOptions: any = {
+    scaleShowVerticalLines: false,
+    responsive: true,
+    legend: {
+      display: false
+    },
+    scales: {
+      xAxes: [{
+        scaleLabel: {
+          display: true,
+          labelString: "Top Keywords in Chasers",
+          fontSize: 11,
+        },
+        gridLines: {
+          display: false,
+        },
+      }],
+      yAxes: [{
+        scaleLabel: {
+          display: true,
+          labelString: "Number of Emails",
+          fontSize: 11
+        },
 
-barChartEscalatedLabels: any[] = [];
-public barChartEscalatedType = 'bar';
-public barChartEscalatedLegend = true;
-public barChartEscalatedData: any[] = [];
+      }],
+    },
+  };
 
-emailReceiveBarChartEscalated(){
-  let X_Array = [];
-  let Y_Array = [];
-  let text1_array = [];
-  let text2_array = [];
-  this.barChartEscalatedLabels = [];
-  let body = {
-    "filters": {
-      "start_date": this.start_date+"T00:00:00.000000",
-      "end_date":   this.end_date+"T00:00:00.000000",
-      "frequency":  this.escalated_frequency,
-    }
-  }; 
+  barChartEscalatedLabels: any[] = [];
+  public barChartEscalatedType = 'bar';
+  public barChartEscalatedLegend = true;
+  public barChartEscalatedData: any[] = [];
 
-  this.escalatedEmail.getEscalatedKeywords(body)
-  .then((data) => {
-    
-    let X = "";
-    let Y = "";
-    if (data.data[0].data[0].hasOwnProperty("x")){
-         X = data.data[0].data[0].x;
-    }
-    if (data.data[0].data[0].hasOwnProperty("y")){
-         Y = data.data[0].data[0].y
-    }
-  
-    let text1 = "";
-    if (data.data[0].hasOwnProperty("text")){
-        text1 = data.data[0].data[0].text;
-    }
+  emailReceiveBarChartEscalated() {
+    let X_Array = [];
+    let Y_Array = [];
+    let text1_array = [];
+    let text2_array = [];
+    this.barChartEscalatedLabels = [];
+    let body = {
+      "filters": {
+        "start_date": this.start_date + "T00:00:00.000000",
+        "end_date": this.end_date + "T00:00:00.000000",
+        "frequency": this.escalated_frequency,
+      }
+    };
 
-    let text2 = Y;
-     
-   Object.keys(X).map((X_Index)=>{
-     var val = X[X_Index];
-     X_Array.push(val);
-   });
-   
-   Object.keys(text1).map((text1_Index)=>{
-     var val = text1[text1_Index];
-     text1_array.push(val);
-   });
+    this.escalatedEmail.getEscalatedKeywords(body)
+      .then((data) => {
 
-   Object.keys(text2).map((text2_Index)=>{
-     var val = text2[text2_Index];
-     text2_array.push(val);
-   });
+        let X = "";
+        let Y = "";
+        if (data.data[0].data[0].hasOwnProperty("x")) {
+          X = data.data[0].data[0].x;
+        }
+        if (data.data[0].data[0].hasOwnProperty("y")) {
+          Y = data.data[0].data[0].y
+        }
 
-   this.barChartEscalatedLabels = X_Array;
-   this.barChartEscalatedData = [{ 
-      data: text2_array,
-      label: 'Responded',
-      backgroundColor: '#435eab',
-      borderColor: '#435eab',
-      hoverBackgroundColor:'#435eab',
-      barThickness: 15,
-      
-    }]
- });
-}
+        let text1 = "";
+        if (data.data[0].hasOwnProperty("text")) {
+          text1 = data.data[0].data[0].text;
+        }
+
+        let text2 = Y;
+
+        Object.keys(X).map((X_Index) => {
+          var val = X[X_Index];
+          X_Array.push(val);
+        });
+
+        Object.keys(text1).map((text1_Index) => {
+          var val = text1[text1_Index];
+          text1_array.push(val);
+        });
+
+        Object.keys(text2).map((text2_Index) => {
+          var val = text2[text2_Index];
+          text2_array.push(val);
+        });
+
+        this.barChartEscalatedLabels = X_Array;
+        this.barChartEscalatedData = [{
+          data: text2_array,
+          label: 'Responded',
+          backgroundColor: '#435eab',
+          borderColor: '#435eab',
+          hoverBackgroundColor: '#435eab',
+          barThickness: 15,
+
+        }]
+      });
+  }
 
   //heatmap
   public chartHeatOptions2: Partial<ChartHeatOptions>;
-  
-  escalatedUserWorkload(){
+
+  escalatedUserWorkload() {
     let X_Array = [];
     let Y_Array = [];
     let Z_Array = [];
@@ -739,144 +742,231 @@ emailReceiveBarChartEscalated(){
     let Z = "";
     let body = {
       "filters": {
-        "start_date": this.start_date+"T00:00:00.000000",
-        "end_date":   this.end_date+"T00:00:00.000000",
-        "frequency":  this.action_frequency,
+        "start_date": this.start_date + "T00:00:00.000000",
+        "end_date": this.end_date + "T00:00:00.000000",
+        "frequency": this.action_frequency,
       }
-    }; 
-  
+    };
+
     this.escalatedEmail.escalatedUserWorkload(body)
-    .then((data) => {
-          if (data.data[0].hasOwnProperty("x")){
-            X = data.data[0].x;
-          }
-  
-          if (data.data[0].hasOwnProperty("y")){
-              Y = data.data[0].y;
-          }
-  
-          if (data.data[0].hasOwnProperty("z")){
-              Z = data.data[0].z;
-          }
-  
-          Object.keys(X).map((X_Index)=>{
-              var val = X[X_Index];
-              X_Array.push(val);
-          });
-  
-          Object.keys(Y).map((Y_Index)=>{
-              var val = Y[Y_Index];
-              Y_Array.push(val);
-          });
-  
-          Object.keys(Z).map((Z_Index)=>{
-              var val = Z[Z_Index];
-              Z_Array.push(val);
-          });
-  
-          let Series:any = [];
-          for(let index in Y_Array){
-             var series_val = {
-                  name: Y_Array[index],
-                  data: this.generateData(index,X_Array,Z_Array),
-                }
-                Series.push(series_val);
-          }
+      .then((data) => {
+        if (data.data[0].hasOwnProperty("x")) {
+          X = data.data[0].x;
+        }
 
-           this.chartHeatOptions2 = {  
-            series: Series,
-            chart: {
-              height: 350,
-              type: "heatmap"
-            },
-            plotOptions: {
-              heatmap: {
-                shadeIntensity: 0.5,
-                colorScale: {
-                  ranges: [
-                    {
-                      from: 0,
-                      to: 200,
-                      name: "0-200",
-                      color: "#7ef293"
-                    },
-                    {
-                      from: 200,
-                      to: 400,
-                      name: "200-400",
-                      color: "#64f57f"
-                    },
-                    {
-                      from: 400,
-                      to: 600,
-                      name: "400-600",
-                      color: "#51db6a"
-                    },
-                    {
-                      from: 600,
-                      to: 800,
-                      name: "600-800",
-                      color: "#33d651"
-                    },              {
-                    from: 800,
-                      to: 1200,
-                      name: "800-1200",
-                      color: "#00d427"
-                    }
-                  ]
-                }
-              }
-            },
-            dataLabels: {
-              enabled: true,
-              style: {
-                colors: ["#000"]
-              }    
-            }
-          }; 
+        if (data.data[0].hasOwnProperty("y")) {
+          Y = data.data[0].y;
+        }
+
+        if (data.data[0].hasOwnProperty("z")) {
+          Z = data.data[0].z;
+        }
+
+        Object.keys(X).map((X_Index) => {
+          var val = X[X_Index];
+          X_Array.push(val);
         });
-    }
-//BAR CHART ESCALATED END//
-    
-//HEATMAP END//
-getEscalatedEmailsTable(){
-  let body = {
-    "filters": {
-      "start_date": this.start_date+"T00:00:00.000000",
-      "end_date":   this.end_date+"T00:00:00.000000",
-      "frequency":  this.action_frequency,
-    }
-  }; 
 
-  this.escalatedEmail.getEscalatedEmailsTable(body)
-     .then((data) => {
-        data = data.data[0];
-        var val =  data['DateTime_Received'];
-         Object.keys(val).map((val_Index)=>{
-           this.escalatedEmails.push({
-             'DateTime_Received':data['DateTime_Received'][val_Index],
-             'Sender_Name'      :data['Sender_Name'][val_Index],
-             'Subject'          :data['Subject'][val_Index],
-             'To'               :data['To'][val_Index],
-             'Cc'               :data['Cc'][val_Index]
-            })
-         })
-    });
+        Object.keys(Y).map((Y_Index) => {
+          var val = Y[Y_Index];
+          Y_Array.push(val);
+        });
+
+        Object.keys(Z).map((Z_Index) => {
+          var val = Z[Z_Index];
+          Z_Array.push(val);
+        });
+
+        let Series: any = [];
+        for (let index in Y_Array) {
+          var series_val = {
+            name: Y_Array[index],
+            data: this.generateData(index, X_Array, Z_Array),
+          }
+          Series.push(series_val);
+        }
+
+        this.chartHeatOptions2 = {
+          series: Series,
+          chart: {
+            height: 350,
+            type: "heatmap"
+          },
+          plotOptions: {
+            heatmap: {
+              shadeIntensity: 0.5,
+              colorScale: {
+                ranges: [
+                  {
+                    from: 0,
+                    to: 200,
+                    name: "0-200",
+                    color: "#7ef293"
+                  },
+                  {
+                    from: 200,
+                    to: 400,
+                    name: "200-400",
+                    color: "#64f57f"
+                  },
+                  {
+                    from: 400,
+                    to: 600,
+                    name: "400-600",
+                    color: "#51db6a"
+                  },
+                  {
+                    from: 600,
+                    to: 800,
+                    name: "600-800",
+                    color: "#33d651"
+                  }, {
+                    from: 800,
+                    to: 1200,
+                    name: "800-1200",
+                    color: "#00d427"
+                  }
+                ]
+              }
+            }
+          },
+          dataLabels: {
+            enabled: true,
+            style: {
+              colors: ["#000"]
+            }
+          }
+        };
+      });
   }
-//*****************************************ESCALATED EMAIL END********************************************************* */
+  //BAR CHART ESCALATED END//
 
- // events
- public chartClicked(e: any): void {
-  //console.log(e);
-}
+  //HEATMAP END//
+  escalatedEmailsListTotalItems = 10;
+  escalatedEmailsListCurrentPage:any =1;
+  setPage(pageNo: any): void {
+    this.escalatedEmailsListCurrentPage = pageNo.page;
+    this.getEscalatedEmailsTable();
+  }
+  getEscalatedEmailsTable() {
+    this.escalatedEmailsList = [];
+    let body = {
+      "filters": {
+        "start_date": this.start_date + "T00:00:00.000000",
+        "end_date": this.end_date + "T00:00:00.000000",
+        "frequency": this.action_frequency,
+        "page_size": 10,
+        "page_num": this.escalatedEmailsListCurrentPage
+      }
+    };
+    this.escalatedEmail.getEscalatedEmailsTable(body)
+      .then((data) => {
+        this.escalatedEmailsListTotalItems =  data.data[0].Total_Records;
+        data = data.data[0];
+        var val = data['DateTime_Received'];
+        Object.keys(val).map((val_Index) => {
+          this.escalatedEmailsList.push({
+            'DateTime_Received': data['DateTime_Received'][val_Index],
+            'Sender_Name': data['Sender_Name'][val_Index],
+            'Subject': data['Subject'][val_Index],
+            'To': data['To'][val_Index],
+            'Cc': data['Cc'][val_Index]
+          })
+        })
+      });
+  }
+  
+  criticalEmailsList =[];
+  criticalEmailsListTotalItems = 10;
+  criticalEmailsListCurrentPage:any =1;
+  setPageCriticalEmailsList(pageNo: any): void {
+    this.criticalEmailsListCurrentPage = pageNo.page;
+    this.getCriticalEmailssTable();
+  }
+  getCriticalEmailssTable() {
+    this.criticalEmailsList = [];
+    let body = {
+      "filters": {
+        "start_date": this.start_date + "T00:00:00.000000",
+        "end_date": this.end_date + "T00:00:00.000000",
+        "frequency": this.action_frequency,
+        "page_size": 10,
+        "page_num": this.criticalEmailsListCurrentPage
+      }
+    };
+    this.escalatedEmail.getCriticalEmailsTable(body)
+      .then((data) => {
+        this.criticalEmailsListTotalItems =  data.data[0].Total_Records;
+        data = data.data[0];
+        var val = data['DateTime_Received'];
+        Object.keys(val).map((val_Index) => {
+          this.criticalEmailsList.push({
+            'DateTime_Received': data['DateTime_Received'][val_Index],
+            'Sender_Name': data['Sender_Name'][val_Index],
+            'Subject': data['Subject'][val_Index],
+            'To': data['To'][val_Index],
+            'Cc': data['Cc'][val_Index]
+          })
+        })
+      });
+  }
 
-public chartHovered(e: any): void {
-  //console.log(e);
-}
+  actionEmailList =[];
+  actionEmailListTotalItems = 10;
+  actionEmailListCurrentPage:any =1;
+  setPageActionEmailList(pageNo: any): void {
+    this.actionEmailListCurrentPage = pageNo.page;
+    this.getActionEmailTable();
+  }
+  getActionEmailTable() {
+    this.actionEmailList = [];
+    let body = {
+      "filters": {
+        "start_date": this.start_date + "T00:00:00.000000",
+        "end_date": this.end_date + "T00:00:00.000000",
+        "frequency": this.action_frequency,
+        "page_size": 10,
+        "page_num": this.actionEmailListCurrentPage
+      }
+    };
+    this.escalatedEmail.getActionEmailTable(body)
+      .then((data) => {
+        this.actionEmailListTotalItems =  data.data[0].Total_Records;
+        data = data.data[0];
+        var val = data['DateTime_Received'];
+        Object.keys(val).map((val_Index) => {
+          this.actionEmailList.push({
+            'DateTime_Received': data['DateTime_Received'][val_Index],
+            'Sender_Name': data['Sender_Name'][val_Index],
+            'Subject': data['Subject'][val_Index],
+            'To': data['To'][val_Index],
+            'Cc': data['Cc'][val_Index]
+          })
+        })
+      });
+  }
+  //*****************************************ESCALATED EMAIL END********************************************************* */
 
+  // events
+  public chartClicked(e: any): void {
+    //console.log(e);
+  }
 
-//HEATMAP STARTED//
-  ngOnInit(){
+  public chartHovered(e: any): void {
+    //console.log(e);
+  }
+  bindData($bindData) {
+    console.log($bindData)
+  }
+  columnDefs = [
+    { headerName: 'DateTime Received', field: 'DateTime_Received' },
+    { headerName: 'Sender Name', field: 'Sender_Name' },
+    { headerName: 'Subject', field: 'Subject' },
+    { headerName: 'To', field: 'To' },
+    { headerName: 'Cc', field: 'Cc' },
+  ];
+
+  ngAfterContentInit() {
     this.emailUserStackBar();
     this.emailReceiveBarChart();
     this.emailReceiveLineChart();
@@ -887,109 +977,14 @@ public chartHovered(e: any): void {
     this.getEmailsTable();
     this.getActionEmailsTable();
     this.getEscalatedEmailsTable();
+    this.getCriticalEmailssTable();
+    this.getActionEmailTable();
     this.userWorkload();
     this.escalatedUserWorkload();
-}
-
-//TABLE//
-gridApi: GridApi;
-gridOptions: GridOptions = {
-  pagination: true,
-  rowModelType: 'infinite',
-  cacheBlockSize: 3,
-  paginationPageSize: 3,
-  infiniteInitialRowCount: 2,
-  columnDefs: [
-    {
-      headerName: "Date Time Received",
-      // width: 50,
-      // valueGetter: "node.id",
-      // cellRenderer: "loadingCellRenderer",
-      field: "DateTime_Received"
-    },
-    {
-      headerName: "Sender Name",
-      field: "Sender_Name"
-    },
-    {
-      headerName: "Subject",
-      field: "Subject"
-    },
-    {
-      headerName: "To",
-      field: "To"
-    },
-    {
-      headerName: "Cc",
-      field: "Cc"
-    }
-  ],
-  components: {
-    loadingCellRenderer: (params) =>{
-      if (params.value !== undefined) {
-        return params.value;
-      }else{
-        return 'x';
-      }
-    }
-  },
-  
-};
-
-dataSource: IDatasource = {
-  rowCount: null,
-  getRows: (params: IGetRowsParams) => {
-    let body = {
-      "filters": {
-        "start_date": this.start_date+"T00:00:00.000000",
-        "end_date":   this.end_date+"T00:00:00.000000",
-        "frequency":  this.action_frequency,
-      }
-    }; 
-
-    this.actionEmail.getEmailsTable(body)
-    .then((data) => {
-       data = data.data[0];
-       var val =  data['DateTime_Received'];
-        Object.keys(val).map((val_Index)=>{
-          this.actionEmails.push({
-            'DateTime_Received':data['DateTime_Received'][val_Index],
-            'Sender_Name'      :data['Sender_Name'][val_Index],
-            'Subject'          :data['Subject'][val_Index],
-            'To'               :data['To'][val_Index],
-            'Cc'               :data['Cc'][val_Index]
-           })
-        })
-        console.log(this.actionEmails);
-        setTimeout(() => {
-            console.log(params.startRow);
-            console.log(params.endRow);
-            let rowsThisPage = this.actionEmails.slice(params.startRow, params.endRow);
-            console.log(rowsThisPage);
-            let lastRow = -1;
-            if (data.length <= params.endRow) {
-              lastRow = data.length;
-            }
-            params.successCallback(
-              rowsThisPage, lastRow
-            );
-      }, 500);
-    });
-    // this.apiService().subscribe(data => {
-    //   console.log(data);
-    //   // console.log(params.startRow);
-    //   // console.log(params.endRow);
-
-    // });
   }
-}
+  //HEATMAP STARTED//
+  ngOnInit() {
 
-onGridReady(params) {
-  console.log('99999');
-  console.log(this.dataSource);
-  this.gridApi = params.api;
-  this.gridApi.sizeColumnsToFit();
-  this.gridApi.setDatasource(this.dataSource);
-}
-
+  }
+  
 }

@@ -3,6 +3,8 @@ import { ChartsModule } from 'ng2-charts';
 
 import { DashboardComponent } from './dashboard.component';
 import { DashboardRoutingModule } from './dashboard-routing.module';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { FormsModule } from '@angular/forms';
 
 // Tabs Component
 import { TabsModule } from 'ngx-bootstrap/tabs';
@@ -18,7 +20,9 @@ import { AgGridModule } from 'ag-grid-angular';
     CommonModule,
     TabsModule,
     NgApexchartsModule,
+    FormsModule,
     AgGridModule.withComponents([]),
+    PaginationModule.forRoot()
   ],
   declarations: [ DashboardComponent,TabsComponent ]
 })
