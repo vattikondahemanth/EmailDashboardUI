@@ -102,26 +102,9 @@
             </div>
           </div>
           <div class="card">
-            <!-- <div class="card-header">
-              Line Chart
-              <div class="card-header-actions">
-                <a href="http://www.chartjs.org">
-                  <small class="text-muted">docs</small>
-                </a>
-              </div>
-            </div> -->
             <div class="card-body">
               <div class="chart-wrapper">
                 <h6 style="text-align:center">Workload by user(bar) </h6>
-                  <!-- <div id="chart">
-                    <apx-chart
-                      [series]="chartOptions.series"
-                      [chart]="chartOptions.chart"
-                      [dataLabels]="chartOptions.dataLabels"
-                      [plotOptions]="chartOptions.plotOptions"
-                      [title]="chartOptions.title"
-                    ></apx-chart>
-                  </div> -->
                     <apx-chart
                       [series]="chartHeatOptions.series"
                       [chart]="chartHeatOptions.chart"
@@ -145,7 +128,12 @@
              Escalated Emails
           </div>
           <div class="card-body">
-            <table class="table table-bordered">
+            <ag-grid-angular
+              [gridOptions]="gridOptions"
+              (gridReady)="onGridReady($event)"
+            >
+            </ag-grid-angular>
+            <!-- <table class="table table-bordered">
               <thead>
                 <tr>
                   <th>Date Time Received</th>
@@ -164,8 +152,8 @@
                   <td>{{ actionData.Cc }}</td>
                 </tr>  
               </tbody>
-            </table>
-            <ul class="pagination">
+            </table> -->
+            <!-- <ul class="pagination">
               <li class="page-item"><a href="#" class="page-link">Prev</a></li>
               <li class="page-item active">
                 <a href="#" class="page-link">1</a>
@@ -174,7 +162,7 @@
               <li class="page-item"><a href="#" class="page-link">3</a></li>
               <li class="page-item"><a href="#" class="page-link">4</a></li>
               <li class="page-item"><a href="#" class="page-link">Next</a></li>
-            </ul>
+            </ul> -->
           </div>
         </div>
         <!-- table code end -->
@@ -242,14 +230,6 @@
         <div class="card-columns cols-2">
           
           <div class="card">
-            <!-- <div class="card-header">
-              Bar Chart
-              <div class="card-header-actions">
-                <a href="http://www.chartjs.org">
-                  <small class="text-muted">docs</small>
-                </a>
-              </div>
-            </div> -->
             <div class="card-body">
               <div class="chart-wrapper">
                 <h6 style="text-align: center;">Emails Receive/Response by Week</h6>
@@ -267,14 +247,6 @@
           
          
           <div class="card">
-            <!-- <div class="card-header">
-              Line Chart
-              <div class="card-header-actions">
-                <a href="http://www.chartjs.org">
-                  <small class="text-muted">docs</small>
-                </a>
-              </div>
-            </div> -->
             <div class="card-body">
               <div class="chart-wrapper">
                 <h6 style="text-align: center;">Emails Receive/Response by Week</h6>
@@ -286,15 +258,6 @@
                     [legend]="lineChart2Legend"
                     [chartType]="lineChart2Type">
                     </canvas>
-                <!-- <canvas baseChart class="chart"
-                [datasets]="lineChartData"
-                [labels]="lineChartLabels"
-                [options]="lineChartOptions"
-                [colors]="lineChartColours"
-                [legend]="lineChartLegend"
-                [chartType]="lineChartType"
-                (chartHover)="chartHovered($event)"
-                (chartClick)="chartClicked($event)"></canvas> -->
               </div>
             </div>
           </div>
@@ -433,81 +396,19 @@
           
           
           <div class="card">
-            <!-- <div class="card-header">
-              Line Chart
-               <div class="card-header-actions">
-                <a href="http://www.chartjs.org">
-                  <small class="text-muted">docs</small>
-                </a>
-              </div> 
-            </div> -->
             <div class="card-body">
               <div class="chart-wrapper">
                 <h6 style="text-align:center">Workload by user(bar) </h6>
                     <apx-chart
-                      [series]="chartHeatOptions.series"
-                      [chart]="chartHeatOptions.chart"
-                      [dataLabels]="chartHeatOptions.dataLabels"
-                      [plotOptions]="chartHeatOptions.plotOptions"
-                      [title]="chartHeatOptions.title"
+                      [series]="chartHeatOptions2.series"
+                      [chart]="chartHeatOptions2.chart"
+                      [dataLabels]="chartHeatOptions2.dataLabels"
+                      [plotOptions]="chartHeatOptions2.plotOptions"
+                      [title]="chartHeatOptions2.title"
                     ></apx-chart>
               </div>
             </div>
-            <!-- <div class="card-body">
-              <div class="chart-wrapper">
-                <canvas baseChart class="chart"
-                [datasets]="lineChartData"
-                [labels]="lineChartLabels"
-                [options]="lineChartOptions"
-                [colors]="lineChartColours"
-                [legend]="lineChartLegend"
-                [chartType]="lineChartType"
-                (chartHover)="chartHovered($event)"
-                (chartClick)="chartClicked($event)"></canvas>
-              </div>
-            </div> -->
           </div>
-          <!-- <div class="card">
-            <div class="card-header">
-              Pie Chart
-              <div class="card-header-actions">
-                <a href="http://www.chartjs.org">
-                  <small class="text-muted">docs</small>
-                </a>
-              </div>
-            </div>
-            <div class="card-body">
-              <div class="chart-wrapper">
-                <canvas baseChart class="chart"
-                [data]="pieChartData"
-                [labels]="pieChartLabels"
-                [chartType]="pieChartType"
-                (chartHover)="chartHovered($event)"
-                (chartClick)="chartClicked($event)"></canvas>
-              </div>
-            </div>
-          </div> -->
-          <!-- <div class="card">
-            <div class="card-header">
-              Polar Area Chart
-              <div class="card-header-actions">
-                <a href="http://www.chartjs.org">
-                  <small class="text-muted">docs</small>
-                </a>
-              </div>
-            </div>
-            <div class="card-body">
-              <div class="chart-wrapper">
-                <canvas baseChart class="chart"
-                [data]="polarAreaChartData"
-                [labels]="polarAreaChartLabels"
-                [legend]="polarAreaLegend"
-                [chartType]="polarAreaChartType"
-                (chartHover)="chartHovered($event)"
-                (chartClick)="chartClicked($event)"></canvas>
-              </div>
-            </div>
-          </div> -->
         </div>
         <!-- chart code end -->
 

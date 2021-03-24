@@ -6,3 +6,27 @@
 
 // If you want to add something do it here
 @import "custom";
+
+@import "~ag-grid-community/dist/styles/ag-grid.css";
+@import "~ag-grid-community/dist/styles/ag-theme-balham.css";
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
+}
+
+html {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0;
+  overflow: auto;
+}
+
+body {
+  padding: 1rem;
+  overflow: auto;
+}

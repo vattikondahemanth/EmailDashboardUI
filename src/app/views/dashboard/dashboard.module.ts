@@ -9,6 +9,7 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 import { TabsComponent } from '../base/tabs.component';
 import { NgApexchartsModule } from "ng-apexcharts";
 import { CommonModule } from '@angular/common';
+import { AgGridModule } from 'ag-grid-angular';
 
 @NgModule({
   imports: [
@@ -16,7 +17,8 @@ import { CommonModule } from '@angular/common';
     ChartsModule,
     CommonModule,
     TabsModule,
-    NgApexchartsModule
+    NgApexchartsModule,
+    AgGridModule.withComponents([]),
   ],
   declarations: [ DashboardComponent,TabsComponent ]
 })

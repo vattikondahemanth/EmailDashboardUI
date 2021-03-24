@@ -407,15 +407,11 @@ export class InsightsComponent {
               
           }]
       },
-      
-
     };
-    //public barChartLabels: string[] = ['2005', '2007', '2008', '2009', '2010', '2011', '2012'];
+
     public horizontalBarChartLabels: string[] = [];
     public horizontalBarChartType = 'horizontalBar';
-    //public horizontalBarChartLegend = true;
     public horizontalBarLabel = 'Number of Emails';
-  
     public horizontalBarChartData: any[] = [];
 
 
@@ -514,18 +510,10 @@ export class InsightsComponent {
             Z_Array.push(val);
         });
 
-        // console.log(X_Array);
-        // console.log(Y_Array);
-        //console.log(Z_Array);
-
         let Series:any = [];
         for(let index in Y_Array){
            var series_val = {
                 name: Y_Array[index],
-                // data: this.generateData(20, {
-                //   min: 0,
-                //   max: 1017
-                // }),
                 data: this.generateData(index,X_Array,Z_Array),
               }
           Series.push(series_val);
@@ -547,34 +535,29 @@ export class InsightsComponent {
                     to: 200,
                     name: "0-200",
                     color: "#7ef293"
-                    // color: "#00A100"
                   },
                   {
                     from: 200,
                     to: 400,
                     name: "200-400",
                     color: "#64f57f"
-                    // color: "#128FD9"
                   },
                   {
                     from: 400,
                     to: 600,
                     name: "400-600",
                     color: "#51db6a"
-                    // color: "#FFB200"
                   },
                   {
                     from: 600,
                     to: 800,
                     name: "600-800",
                     color: "#33d651"
-                    // color: "#FF0000"
                   },              {
                   from: 800,
                     to: 1200,
                     name: "800-1200",
                     color: "#00d427"
-                    // color: "#FF0000"
                   }
                 ]
               }
@@ -586,20 +569,12 @@ export class InsightsComponent {
               colors: ["#000"]
             }    
           }
-          // title: {
-          //   text: "HeatMap Chart"
-          // }
         }; 
       });
   }
 
   public generateData(index,X_Array:any,Z_Array:any){
-    // console.log(X_Array);
     console.log(Z_Array[index]);
-    // console.log(Z_Array.length);
-    // console.log(Z_Array);
-
-    // for(let i=0;i<X_Array.length;i++){
       var series_data = [];
       for(let key in Z_Array[index]){
           series_data.push({
@@ -608,36 +583,8 @@ export class InsightsComponent {
           });
       }
       console.log(series_data);
-    // }
-
-    
-    // var i = 0;
-    // var series_data = [];
-    // while (i < count) {
-    //   var x = "W" + (i + 1).toString();
-    //   var y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
-      
-    //   // console.log(x);
-    //   // console.log(y);
-
-    //   series_data.push({
-    //     x: x,
-    //     y: y
-    //   });
-    //   i++;
-    // }
     return series_data;
   }
-
-
-
-
-
-
-
-
-
-
 
   // events
   public chartClicked(e: any): void {
@@ -660,16 +607,4 @@ export class InsightsComponent {
 
 
   }
-
-
-
-
-
-
-
-
-
-
-
-
 }

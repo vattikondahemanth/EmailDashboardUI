@@ -7,6 +7,8 @@ import { ActionableEmailService } from '../../services/actionable-email.service'
 import { CriticalClientEmailService } from '../../services/critical-client-email.service';
 import { EscalatedEmailService } from '../../services/escalated-email.service';
 import { DatePipe } from '@angular/common';
+import { from } from 'rxjs';
+import { IDatasource, IGetRowsParams, GridOptions, GridApi } from 'ag-grid-community';
 
 
 import {ChartComponent,
@@ -17,7 +19,6 @@ import {ChartComponent,
   ApexPlotOptions
 } from "ng-apexcharts";
 
-import { from } from 'rxjs';
 
 export type ChartHeatOptions = {
   series: ApexAxisChartSeries;
@@ -32,13 +33,7 @@ export type ChartHeatOptions = {
   styleUrls: ['./dashboard.component.css'],
   providers: [DatePipe]
 })
-export class DashboardComponent implements OnInit {
-  // start_date :any  =  new Date();
-  // year             = this.start_date.getFullYear();
-  // month            = this.start_date.getMonth();
-  // day              =   this.start_date.getDate();
-  // end_date :any    = new Date(this.year - 1, this.month, this.day);
-
+export class DashboardComponent implements OnInit{
   end_date :any  =  new Date();
   end_date_n = new Date().toISOString().slice(0,16);
   year             = this.end_date.getFullYear();
@@ -47,17 +42,6 @@ export class DashboardComponent implements OnInit {
   start_date :any    = new Date(this.year - 1, this.month, this.day);
   start_date_n = new Date(this.year - 1, this.month, this.day).toISOString().slice(0, 16);
 
-  // constructor( 
-  //   public actionEmail:ActionableEmailService,
-  //   public criticalEmail:CriticalClientEmailService,
-  //   public escalatedEmail:EscalatedEmailService,
-  //   public datePipe: DatePipe
-  //   ){
-  //     this.start_date  = this.datePipe.transform(this.start_date ,'yyyy-MM-dd');
-  //     this.end_date     = this.datePipe.transform(this.end_date ,'yyyy-MM-dd');
-  //     console.log(this.start_date);
-  //     console.log(this.end_date);
-  //   }
   constructor( 
     public actionEmail:ActionableEmailService,
     public criticalEmail:CriticalClientEmailService,
@@ -66,13 +50,8 @@ export class DashboardComponent implements OnInit {
     ){
       this.start_date  = this.datePipe.transform(this.start_date ,'yyyy-MM-dd');
       this.end_date     = this.datePipe.transform(this.end_date ,'yyyy-MM-dd');
-      console.log(this.start_date);
-      console.log(this.end_date);
     }
 
-
-// start_date_n = this.start_date
-// end_date_n   = this.end_date
 action_frequency    = 'W-MON';
 critical_frequency  = 'W-MON';
 escalated_frequency = 'W-MON';
@@ -81,7 +60,8 @@ escalated_frequency = 'W-MON';
 actionResponseTime:any  = '';
 actionTotalReceived:any = '';
 actionTotalResponse:any = '';
-actionEmails:any = [];
+actionEmails:Array<any> = [];
+Series:any = [];
 
 //Critical
 criticalResponseTime:any  = '';
@@ -94,6 +74,7 @@ escalatedResponseTime:any  = '';
 escalatedTotalReceived:any = '';
 escalatedTotalResponse:any = '';
 escalatedEmails:any = [];
+
 
 startDateChange(event){
   this.start_date = event.target.value;
@@ -108,6 +89,8 @@ endDateChange(event){
   this.actionEmailCount();
   this.criticalEmailCount();
   this.escalatedEmailCount();
+  this.userWorkload();
+  this.escalatedUserWorkload();
   
 }
   
@@ -117,6 +100,7 @@ endDateChange(event){
     this.action_frequency  = value;
     this.actionEmailCount();
     this.emailUserStackBar();
+    this.userWorkload();
   }
 
   actionEmailCount(){
@@ -138,7 +122,7 @@ endDateChange(event){
        this.actionTotalResponse = data.data[0].total_responses
 
      }).catch((err) => {
-        console.log('catch');
+        //console.log('catch');
      });
   }
 
@@ -175,7 +159,7 @@ barChartOptions: ChartOptions = {
         "frequency":  this.action_frequency,
       }
     }; 
-    console.log(body);
+   
     this.actionEmail.getUserEmails(body)
        .then((data) => {
         let X = "";
@@ -228,7 +212,7 @@ barChartOptions: ChartOptions = {
        }];
 
     }).catch((err) => {
-       console.log('catch');
+       //console.log('catch');
     });
   }
 
@@ -256,6 +240,128 @@ barChartOptions: ChartOptions = {
            })
     });
   }
+
+  //heatmap
+  @ViewChild("chart") chart: ChartComponent;
+  public chartHeatOptions: Partial<ChartHeatOptions>;
+  
+  userWorkload(){
+    let X_Array = [];
+    let Y_Array = [];
+    let Z_Array = [];
+    let X = "";
+    let Y = "";
+    let Z = "";
+    let body = {
+      "filters": {
+        "start_date": this.start_date+"T00:00:00.000000",
+        "end_date":   this.end_date+"T00:00:00.000000",
+        "frequency":  this.action_frequency,
+      }
+    }; 
+  
+    this.actionEmail.userWorkload(body)
+    .then((data) => {
+          if (data.data[0].hasOwnProperty("x")){
+            X = data.data[0].x;
+          }
+  
+          if (data.data[0].hasOwnProperty("y")){
+              Y = data.data[0].y;
+          }
+  
+          if (data.data[0].hasOwnProperty("z")){
+              Z = data.data[0].z;
+          }
+  
+          Object.keys(X).map((X_Index)=>{
+              var val = X[X_Index];
+              X_Array.push(val);
+          });
+  
+          Object.keys(Y).map((Y_Index)=>{
+              var val = Y[Y_Index];
+              Y_Array.push(val);
+          });
+  
+          Object.keys(Z).map((Z_Index)=>{
+              var val = Z[Z_Index];
+              Z_Array.push(val);
+          });
+  
+          let Series:any = [];
+          for(let index in Y_Array){
+             var series_val = {
+                  name: Y_Array[index],
+                  data: this.generateData(index,X_Array,Z_Array),
+                }
+                Series.push(series_val);
+          }
+
+           this.chartHeatOptions = { 
+            series: Series,
+            chart: {
+              height: 350,
+              type: "heatmap"
+            },
+            plotOptions: {
+              heatmap: {
+                shadeIntensity: 0.5,
+                colorScale: {
+                  ranges: [
+                    {
+                      from: 0,
+                      to: 200,
+                      name: "0-200",
+                      color: "#7ef293"
+                    },
+                    {
+                      from: 200,
+                      to: 400,
+                      name: "200-400",
+                      color: "#64f57f"
+                    },
+                    {
+                      from: 400,
+                      to: 600,
+                      name: "400-600",
+                      color: "#51db6a"
+                    },
+                    {
+                      from: 600,
+                      to: 800,
+                      name: "600-800",
+                      color: "#33d651"
+                    },              {
+                    from: 800,
+                      to: 1200,
+                      name: "800-1200",
+                      color: "#00d427"
+                    }
+                  ]
+                }
+              }
+            },
+            dataLabels: {
+              enabled: true,
+              style: {
+                colors: ["#000"]
+              }    
+            }
+          }; 
+        });
+    }
+  
+    public generateData(index,X_Array:any,Z_Array:any){
+        var series_data = [];
+        for(let key in Z_Array[index]){
+            series_data.push({
+                x: X_Array[key],
+                y: Z_Array[index][key]
+            });
+        }
+      return series_data;
+    }
 
 //STACK BAR END//
 //*****************************************ACTION EMAIL END******************************************************* */
@@ -285,7 +391,6 @@ criticalEmailCount(){
   }; 
   this.criticalEmail.criticalEmailCount(body)
   .then((data) => {
-      console.log(data);
       data = data.replace("Total Received",'total_received');
       data = data.replace("Total Responses",'total_responses');
       data = data.replace("Response Time",'response_time');
@@ -295,7 +400,7 @@ criticalEmailCount(){
      this.criticalTotalResponse = data.data[0].total_responses
 
    }).catch((err) => {
-      console.log('catch');
+      //console.log('catch');
    });
 }
 
@@ -491,7 +596,6 @@ barChartCriticalOptions: any = {
                'Cc'               :data['Cc'][val_Index]
               })
            })
-           console.log(this.criticalEmails);
     });
   }
   //LINE CHART END//
@@ -503,6 +607,7 @@ escalatedEmailChange(value:any){
   this.escalated_frequency  = value;
   this.emailReceiveBarChartEscalated();
   this.escalatedEmailCount();
+  this.escalatedUserWorkload();
 }
 
 escalatedEmailCount(){
@@ -524,7 +629,7 @@ escalatedEmailCount(){
      this.escalatedTotalResponse = data.data[0].total_responses
 
    }).catch((err) => {
-      console.log('catch');
+      //console.log('catch');
    });
 }
 //BAR CHART ESCALATED START//
@@ -577,7 +682,6 @@ emailReceiveBarChartEscalated(){
 
   this.escalatedEmail.getEscalatedKeywords(body)
   .then((data) => {
-    console.log(data);
     
     let X = "";
     let Y = "";
@@ -611,17 +715,7 @@ emailReceiveBarChartEscalated(){
    });
 
    this.barChartEscalatedLabels = X_Array;
-   this.barChartEscalatedData = [
-    //  {
-    //   data: text1_array,
-    //   // label: 'Received',
-    //   backgroundColor: '#435eeb',
-    //   borderColor: '#435eeb',
-    //   hoverBackgroundColor:'#435eeb',
-    //   barThickness: 15,
-  
-    // },
-    { 
+   this.barChartEscalatedData = [{ 
       data: text2_array,
       label: 'Responded',
       backgroundColor: '#435eab',
@@ -632,173 +726,119 @@ emailReceiveBarChartEscalated(){
     }]
  });
 }
-//BAR CHART ESCALATED END//
 
-
-//*****************************************ESCALATED EMAIL END********************************************************* */
-
- // events
- public chartClicked(e: any): void {
-  console.log(e);
-}
-
-public chartHovered(e: any): void {
-  console.log(e);
-}
-
-
-//HEATMAP STARTED//
-@ViewChild("chart") chart: ChartComponent;
-public chartHeatOptions: Partial<ChartHeatOptions>;
-  ngOnInit(){
-    this.emailUserStackBar();
-    this.emailReceiveBarChart();
-    this.emailReceiveLineChart();
-    this.emailReceiveBarChartEscalated();
-    this.actionEmailCount();
-    this.criticalEmailCount();
-    this.escalatedEmailCount();
-    this.getEmailsTable();
-    this.getActionEmailsTable();
-    this.getEscalatedEmailsTable();
-    
-    this.chartHeatOptions = {
-      series: [
-        {
-          name: "Jan",
-          data: this.generateData(20, {
-            min: -30,
-            max: 55
-          })
-        },
-        {
-          name: "Feb",
-          data: this.generateData(20, {
-            min: -30,
-            max: 55
-          })
-        },
-        {
-          name: "Mar",
-          data: this.generateData(20, {
-            min: -30,
-            max: 55
-          })
-        },
-        {
-          name: "Apr",
-          data: this.generateData(20, {
-            min: -30,
-            max: 55
-          })
-        },
-        {
-          name: "May",
-          data: this.generateData(20, {
-            min: -30,
-            max: 55
-          })
-        },
-        {
-          name: "Jun",
-          data: this.generateData(20, {
-            min: -30,
-            max: 55
-          })
-        },
-        // {
-        //   name: "Jul",
-        //   data: this.generateData(20, {
-        //     min: -30,
-        //     max: 55
-        //   })
-        // },
-        // {
-        //   name: "Aug",
-        //   data: this.generateData(20, {
-        //     min: -30,
-        //     max: 55
-        //   })
-        // },
-        // {
-        //   name: "Sep",
-        //   data: this.generateData(20, {
-        //     min: -30,
-        //     max: 55
-        //   })
-        // }
-      ],
-      chart: {
-        // height: 350,
-        height: 200,
-        type: "heatmap"
-      },
-      plotOptions: {
-        heatmap: {
-          shadeIntensity: 0.5,
-          colorScale: {
-            ranges: [
-              {
-                from: -30,
-                to: 5,
-                name: "low",
-                color: "#c5ebc9"
-                // color: "#00A100"
-              },
-              {
-                from: 6,
-                to: 20,
-                name: "medium",
-                color: "#7fd488"
-                // color: "#128FD9"
-              },
-              {
-                from: 21,
-                to: 45,
-                name: "high",
-                color: "#43a84e"
-                // color: "#FFB200"
-              },
-              {
-                from: 46,
-                to: 55,
-                name: "extreme",
-                color: "#05b018"
-                // color: "#FF0000"
-              }
-            ]
+  //heatmap
+  public chartHeatOptions2: Partial<ChartHeatOptions>;
+  
+  escalatedUserWorkload(){
+    let X_Array = [];
+    let Y_Array = [];
+    let Z_Array = [];
+    let X = "";
+    let Y = "";
+    let Z = "";
+    let body = {
+      "filters": {
+        "start_date": this.start_date+"T00:00:00.000000",
+        "end_date":   this.end_date+"T00:00:00.000000",
+        "frequency":  this.action_frequency,
+      }
+    }; 
+  
+    this.escalatedEmail.escalatedUserWorkload(body)
+    .then((data) => {
+          if (data.data[0].hasOwnProperty("x")){
+            X = data.data[0].x;
           }
-        }
-      },
-      dataLabels: {
-        enabled: true
-      },
-      // title: {
-      //   text: "HeatMap Chart"
-      // }
-    };
-  }
+  
+          if (data.data[0].hasOwnProperty("y")){
+              Y = data.data[0].y;
+          }
+  
+          if (data.data[0].hasOwnProperty("z")){
+              Z = data.data[0].z;
+          }
+  
+          Object.keys(X).map((X_Index)=>{
+              var val = X[X_Index];
+              X_Array.push(val);
+          });
+  
+          Object.keys(Y).map((Y_Index)=>{
+              var val = Y[Y_Index];
+              Y_Array.push(val);
+          });
+  
+          Object.keys(Z).map((Z_Index)=>{
+              var val = Z[Z_Index];
+              Z_Array.push(val);
+          });
+  
+          let Series:any = [];
+          for(let index in Y_Array){
+             var series_val = {
+                  name: Y_Array[index],
+                  data: this.generateData(index,X_Array,Z_Array),
+                }
+                Series.push(series_val);
+          }
 
-  public generateData(count, yrange) {
-    var i = 0;
-    var series = [];
-    // while (i < count) {
-      while (i < 10) {
-      var x = "W" + (i + 1).toString();
-      var y =
-        Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
-
-      series.push({
-        x: x,
-        y: y
-      });
-      i++;
+           this.chartHeatOptions2 = {  
+            series: Series,
+            chart: {
+              height: 350,
+              type: "heatmap"
+            },
+            plotOptions: {
+              heatmap: {
+                shadeIntensity: 0.5,
+                colorScale: {
+                  ranges: [
+                    {
+                      from: 0,
+                      to: 200,
+                      name: "0-200",
+                      color: "#7ef293"
+                    },
+                    {
+                      from: 200,
+                      to: 400,
+                      name: "200-400",
+                      color: "#64f57f"
+                    },
+                    {
+                      from: 400,
+                      to: 600,
+                      name: "400-600",
+                      color: "#51db6a"
+                    },
+                    {
+                      from: 600,
+                      to: 800,
+                      name: "600-800",
+                      color: "#33d651"
+                    },              {
+                    from: 800,
+                      to: 1200,
+                      name: "800-1200",
+                      color: "#00d427"
+                    }
+                  ]
+                }
+              }
+            },
+            dataLabels: {
+              enabled: true,
+              style: {
+                colors: ["#000"]
+              }    
+            }
+          }; 
+        });
     }
-    return series;
-  }
-
+//BAR CHART ESCALATED END//
+    
 //HEATMAP END//
-
 getEscalatedEmailsTable(){
   let body = {
     "filters": {
@@ -821,10 +861,135 @@ getEscalatedEmailsTable(){
              'Cc'               :data['Cc'][val_Index]
             })
          })
-         console.log(this.escalatedEmails);
-  });
+    });
+  }
+//*****************************************ESCALATED EMAIL END********************************************************* */
+
+ // events
+ public chartClicked(e: any): void {
+  //console.log(e);
+}
+
+public chartHovered(e: any): void {
+  //console.log(e);
 }
 
 
+//HEATMAP STARTED//
+  ngOnInit(){
+    this.emailUserStackBar();
+    this.emailReceiveBarChart();
+    this.emailReceiveLineChart();
+    this.emailReceiveBarChartEscalated();
+    this.actionEmailCount();
+    this.criticalEmailCount();
+    this.escalatedEmailCount();
+    this.getEmailsTable();
+    this.getActionEmailsTable();
+    this.getEscalatedEmailsTable();
+    this.userWorkload();
+    this.escalatedUserWorkload();
+}
+
+//TABLE//
+gridApi: GridApi;
+gridOptions: GridOptions = {
+  pagination: true,
+  rowModelType: 'infinite',
+  cacheBlockSize: 3,
+  paginationPageSize: 3,
+  infiniteInitialRowCount: 2,
+  columnDefs: [
+    {
+      headerName: "Date Time Received",
+      // width: 50,
+      // valueGetter: "node.id",
+      // cellRenderer: "loadingCellRenderer",
+      field: "DateTime_Received"
+    },
+    {
+      headerName: "Sender Name",
+      field: "Sender_Name"
+    },
+    {
+      headerName: "Subject",
+      field: "Subject"
+    },
+    {
+      headerName: "To",
+      field: "To"
+    },
+    {
+      headerName: "Cc",
+      field: "Cc"
+    }
+  ],
+  components: {
+    loadingCellRenderer: (params) =>{
+      if (params.value !== undefined) {
+        return params.value;
+      }else{
+        return 'x';
+      }
+    }
+  },
+  
+};
+
+dataSource: IDatasource = {
+  rowCount: null,
+  getRows: (params: IGetRowsParams) => {
+    let body = {
+      "filters": {
+        "start_date": this.start_date+"T00:00:00.000000",
+        "end_date":   this.end_date+"T00:00:00.000000",
+        "frequency":  this.action_frequency,
+      }
+    }; 
+
+    this.actionEmail.getEmailsTable(body)
+    .then((data) => {
+       data = data.data[0];
+       var val =  data['DateTime_Received'];
+        Object.keys(val).map((val_Index)=>{
+          this.actionEmails.push({
+            'DateTime_Received':data['DateTime_Received'][val_Index],
+            'Sender_Name'      :data['Sender_Name'][val_Index],
+            'Subject'          :data['Subject'][val_Index],
+            'To'               :data['To'][val_Index],
+            'Cc'               :data['Cc'][val_Index]
+           })
+        })
+        console.log(this.actionEmails);
+        setTimeout(() => {
+            console.log(params.startRow);
+            console.log(params.endRow);
+            let rowsThisPage = this.actionEmails.slice(params.startRow, params.endRow);
+            console.log(rowsThisPage);
+            let lastRow = -1;
+            if (data.length <= params.endRow) {
+              lastRow = data.length;
+            }
+            params.successCallback(
+              rowsThisPage, lastRow
+            );
+      }, 500);
+    });
+    // this.apiService().subscribe(data => {
+    //   console.log(data);
+    //   // console.log(params.startRow);
+    //   // console.log(params.endRow);
+
+    // });
+  }
+}
+
+onGridReady(params) {
+  console.log('99999');
+  console.log(this.dataSource);
+  this.gridApi = params.api;
+  this.gridApi.sizeColumnsToFit();
+  this.gridApi.setDatasource(this.dataSource);
+}
 
 }

@@ -96,5 +96,18 @@ export class EscalatedEmailService {
     });
   }
 
+  escalatedUserWorkload(dt):any {
+    return new Promise((resolve, reject) => {
+      this.http.post(CommonURL.escalatedUserWorkload, dt)
+          .subscribe(
+              (data) => {
+                  resolve(data);
+              },
+              (error) => {
+                  console.log(error);
+                  reject(error);
+          });
+      });
+  }
 
 }

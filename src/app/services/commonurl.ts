@@ -17,4 +17,6 @@ export const CommonURL = {
     actionEmailTable    : environment.baseURL + 'api/actionable/emails_table',
     criticalEmailTable  : environment.baseURL + 'api/critical/emails_table',
     escalatedEmailTable : environment.baseURL + 'api/escalated/emails_table',
+    userWorkload        : environment.baseURL + 'api/actionable/userworkload',
+    escalatedUserWorkload : environment.baseURL + 'api/escalated/workload',
 }
