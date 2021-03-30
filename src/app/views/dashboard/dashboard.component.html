@@ -11,6 +11,10 @@
       (change)="endDateChange($event);">
     <!-- <span class="help-block">Please enter a valid date</span> -->
   </div>
+   <div class="col-md-2">
+     <label style="visibility:hidden;">Button</label>
+     <button class="btn btn-block btn-primary" (click)="dateFilter();" type="button">Search</button>
+   </div>
 </div>
 
 <div class="animated fadeIn">
@@ -90,7 +94,7 @@
               </div>
             </div> -->
           <div class="card-body">
-            <div class="chart-wrapper">
+            <div class="chart-wrapper" style="margin-top: 10px;margin-bottom: 119px;">
               <h6 style="text-align: center;">Emails by user (Bar)</h6>
               <canvas baseChart class="chart" [datasets]="barChartData" [labels]="barChartLabels"
                 [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType"
@@ -361,7 +365,7 @@
               </div>
             </div> -->
           <div class="card-body">
-            <div class="chart-wrapper">
+            <div class="chart-wrapper" style="margin-bottom: 120px;margin-top: 10px;">
               <h6 style="text-align: center;">Top keywords in chaser</h6>
               <canvas baseChart class="chart" [datasets]="barChartEscalatedData" [labels]="barChartEscalatedLabels"
                 [options]="barChartEscalatedOptions" [legend]="barChartEscalatedLegend"

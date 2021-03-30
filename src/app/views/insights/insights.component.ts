@@ -23,11 +23,13 @@ export type ChartOptions = {
   providers: [DatePipe]
 })
 export class InsightsComponent {
-  start_date :any  = new Date();
-  year             = this.start_date.getFullYear();
-  month            = this.start_date.getMonth();
-  day              = this.start_date.getDate();
-  end_date :any    = new Date(this.year - 1, this.month, this.day);
+  end_date: any = new Date();
+  end_date_n = new Date().toISOString().slice(0, 16);
+  year = this.end_date.getFullYear();
+  month = this.end_date.getMonth();
+  day = this.end_date.getDate();
+  start_date: any = new Date(this.year - 1, this.month, this.day);
+  start_date_n = new Date(this.year - 1, this.month, this.day).toISOString().slice(0, 16);
   frequency        = 'W-MON';
 
   constructor(
@@ -35,14 +37,13 @@ export class InsightsComponent {
     public datePipe: DatePipe){
     this.start_date  = this.datePipe.transform(this.start_date ,'yyyy-MM-dd');
     this.end_date    = this.datePipe.transform(this.end_date ,'yyyy-MM-dd');
+    console.log(this.start_date);
+    console.log(this.end_date);
   }
 
 
 
   //******************PIE CHART 1 START**********************//
-  // For percentage show use like below
-  //https://stackoverflow.com/questions/52044013/chartjs-datalabels-show-percentage-value-in-pie-piece
-  // https://jsfiddle.net/a1Lvn4eb/55/
   public pieChartLabels: any[] = [];
   public pieChartData: any[] = [];
   public pieChartType = 'pie';
@@ -201,7 +202,6 @@ export class InsightsComponent {
       if (data.data[0].hasOwnProperty("y")){
           Y = data.data[0].y;
       }
-      console.log(data);
 
       Object.keys(X).map((X_Index)=>{
           var val = X[X_Index];
@@ -300,7 +300,6 @@ export class InsightsComponent {
         if (data.data[0].hasOwnProperty("y")){
             Y = data.data[0].y;
         }
-        console.log(data);
 
         Object.keys(X).map((X_Index)=>{
             var val = X[X_Index];
@@ -324,44 +323,6 @@ export class InsightsComponent {
   }
 
 //*************************BAR CHART DAY END*************************/
-
-
-  // // lineChart
-  // public lineChartData: Array<any> = []; 
-  // public lineChartLabels: Array<any> = [];
-  // public lineChartOptions: any = {
-  //   animation: false,
-  //   responsive: true
-  // };
-
-  // public lineChartColours: Array<any> = [
-  //   { // grey
-  //     backgroundColor: 'rgba(148,159,177,0.2)',
-  //     borderColor: 'rgba(148,159,177,1)',
-  //     pointBackgroundColor: 'rgba(148,159,177,1)',
-  //     pointBorderColor: '#fff',
-  //     pointHoverBackgroundColor: '#fff',
-  //     pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-  //   },
-  //   { // dark grey
-  //     backgroundColor: 'rgba(77,83,96,0.2)',
-  //     borderColor: 'rgba(77,83,96,1)',
-  //     pointBackgroundColor: 'rgba(77,83,96,1)',
-  //     pointBorderColor: '#fff',
-  //     pointHoverBackgroundColor: '#fff',
-  //     pointHoverBorderColor: 'rgba(77,83,96,1)'
-  //   },
-  //   { // grey
-  //     backgroundColor: 'rgba(148,159,177,0.2)',
-  //     borderColor: 'rgba(148,159,177,1)',
-  //     pointBackgroundColor: 'rgba(148,159,177,1)',
-  //     pointBorderColor: '#fff',
-  //     pointHoverBackgroundColor: '#fff',
-  //     pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-  //   }
-  // ];
-  // public lineChartLegend = true;
-  // public lineChartType = 'line';
 
     //horizontal bar
     public horizontalBarChartOptions: any = {
@@ -574,7 +535,6 @@ export class InsightsComponent {
   }
 
   public generateData(index,X_Array:any,Z_Array:any){
-    console.log(Z_Array[index]);
       var series_data = [];
       for(let key in Z_Array[index]){
           series_data.push({
@@ -582,7 +542,6 @@ export class InsightsComponent {
               y: Z_Array[index][key]
           });
       }
-      console.log(series_data);
     return series_data;
   }
 

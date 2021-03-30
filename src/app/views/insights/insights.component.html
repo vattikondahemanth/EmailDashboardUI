@@ -118,7 +118,7 @@
                 Top 10 External Senders
               </div> -->
               <div class="card-body">
-                <div class="chart-wrapper">
+                <div class="chart-wrapper" *ngIf="chartOptions && chartOptions.series">
                   <h6 style="text-align:center"> Top 10 External Senders </h6>
                   <div id="chart">
                     <apx-chart

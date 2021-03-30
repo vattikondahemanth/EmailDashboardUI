@@ -84,16 +84,18 @@ export class DashboardComponent implements OnInit, AfterContentInit {
 
   endDateChange(event) {
     this.end_date = event.target.value;
+  }
+
+  dateFilter(){
     this.emailUserStackBar();
+    this.userWorkload();
+    this.actionEmailCount();
     this.emailReceiveBarChart();
     this.emailReceiveLineChart();
     this.emailReceiveBarChartEscalated();
-    this.actionEmailCount();
     this.criticalEmailCount();
     this.escalatedEmailCount();
-    this.userWorkload();
     this.escalatedUserWorkload();
-
   }
 
 
@@ -764,6 +766,7 @@ export class DashboardComponent implements OnInit, AfterContentInit {
 
         Object.keys(X).map((X_Index) => {
           var val = X[X_Index];
+          val = val.replace("T00:00:00.000000000",'');    
           X_Array.push(val);
         });
 
@@ -968,10 +971,11 @@ export class DashboardComponent implements OnInit, AfterContentInit {
 
   ngAfterContentInit() {
     this.emailUserStackBar();
+    this.userWorkload();
+    this.actionEmailCount();
     this.emailReceiveBarChart();
     this.emailReceiveLineChart();
     this.emailReceiveBarChartEscalated();
-    this.actionEmailCount();
     this.criticalEmailCount();
     this.escalatedEmailCount();
     this.getEmailsTable();
@@ -979,7 +983,6 @@ export class DashboardComponent implements OnInit, AfterContentInit {
     this.getEscalatedEmailsTable();
     this.getCriticalEmailssTable();
     this.getActionEmailTable();
-    this.userWorkload();
     this.escalatedUserWorkload();
   }
   //HEATMAP STARTED//
