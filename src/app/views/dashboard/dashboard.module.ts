@@ -12,6 +12,7 @@ import { TabsComponent } from '../base/tabs.component';
 import { NgApexchartsModule } from "ng-apexcharts";
 import { CommonModule } from '@angular/common';
 import { AgGridModule } from 'ag-grid-angular';
+import { NgxSpinnerModule } from "ngx-spinner";
 
 @NgModule({
   imports: [
@@ -22,7 +23,8 @@ import { AgGridModule } from 'ag-grid-angular';
     NgApexchartsModule,
     FormsModule,
     AgGridModule.withComponents([]),
-    PaginationModule.forRoot()
+    PaginationModule.forRoot(),
+    NgxSpinnerModule
   ],
   declarations: [ DashboardComponent,TabsComponent ]
 })

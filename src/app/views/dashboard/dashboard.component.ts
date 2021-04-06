@@ -9,6 +9,7 @@ import { EscalatedEmailService } from '../../services/escalated-email.service';
 import { DatePipe } from '@angular/common';
 import { from } from 'rxjs';
 import { IDatasource, IGetRowsParams, GridOptions, GridApi } from 'ag-grid-community';
+import { NgxSpinnerService } from "ngx-spinner";
 
 
 import {
@@ -48,7 +49,8 @@ export class DashboardComponent implements OnInit, AfterContentInit {
     public actionEmail: ActionableEmailService,
     public criticalEmail: CriticalClientEmailService,
     public escalatedEmail: EscalatedEmailService,
-    public datePipe: DatePipe
+    public datePipe: DatePipe,
+    private SpinnerService: NgxSpinnerService
   ) {
     this.start_date = this.datePipe.transform(this.start_date, 'yyyy-MM-dd');
     this.end_date = this.datePipe.transform(this.end_date, 'yyyy-MM-dd');
@@ -970,6 +972,7 @@ export class DashboardComponent implements OnInit, AfterContentInit {
   ];
 
   ngAfterContentInit() {
+    this.SpinnerService.show();
     this.emailUserStackBar();
     this.userWorkload();
     this.actionEmailCount();
@@ -984,6 +987,10 @@ export class DashboardComponent implements OnInit, AfterContentInit {
     this.getCriticalEmailssTable();
     this.getActionEmailTable();
     this.escalatedUserWorkload();
+    setTimeout(() => {
+      this.SpinnerService.hide();
+    }, 3000);
+
   }
   //HEATMAP STARTED//
   ngOnInit() {

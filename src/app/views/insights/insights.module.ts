@@ -10,6 +10,7 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 import { TabsComponent } from '../base/tabs.component';
 import { NgApexchartsModule } from "ng-apexcharts";
 import { CommonModule } from '@angular/common';
+import { NgxSpinnerModule } from "ngx-spinner";
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { CommonModule } from '@angular/common';
     ChartsModule,
     TabsModule,
     NgApexchartsModule,
-    CommonModule
+    CommonModule,
+    NgxSpinnerModule
   ],
   declarations: [ InsightsComponent,TabsComponent ]
 })

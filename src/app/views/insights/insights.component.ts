@@ -1,6 +1,7 @@
 import { Component, VERSION ,ViewChild,OnInit } from '@angular/core';
 import { InsightsService } from '../../services/insights.service';
 import { DatePipe } from '@angular/common';
+import { NgxSpinnerService } from "ngx-spinner";
 
 import {ChartComponent,
   ApexAxisChartSeries,
@@ -34,6 +35,7 @@ export class InsightsComponent {
 
   constructor(
     public insights:InsightsService,
+    private SpinnerService: NgxSpinnerService,
     public datePipe: DatePipe){
     this.start_date  = this.datePipe.transform(this.start_date ,'yyyy-MM-dd');
     this.end_date    = this.datePipe.transform(this.end_date ,'yyyy-MM-dd');
@@ -557,13 +559,15 @@ export class InsightsComponent {
  
 
   ngOnInit(){
+    this.SpinnerService.show();
     this.getUserEmail();
     this.getChaserEmail();
     this.getEmailByUser();
     this.getVolumeDay();
     this.TopSenders();
     this.peakHours();
-
-
+    setTimeout(() => {
+      this.SpinnerService.hide();
+    }, 3000);
   }
 }

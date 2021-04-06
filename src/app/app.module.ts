@@ -64,7 +64,7 @@ import { ChartsModule } from 'ng2-charts';
     IconSetModule.forRoot(),
     HttpClientModule,
     CommonModule,
-    AgGridModule.withComponents([]),
+    AgGridModule.withComponents([])
   ],
   declarations: [
     AppComponent,
