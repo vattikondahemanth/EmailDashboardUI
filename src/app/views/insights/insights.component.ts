@@ -2,7 +2,10 @@ import { Component, VERSION ,ViewChild,OnInit } from '@angular/core';
 import { InsightsService } from '../../services/insights.service';
 import { DatePipe } from '@angular/common';
 import { NgxSpinnerService } from "ngx-spinner";
+import { ChartOptions, ChartType, Chart } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
+Chart.plugins.register(ChartDataLabels);
 import {ChartComponent,
   ApexAxisChartSeries,
   ApexTitleSubtitle,
@@ -11,7 +14,7 @@ import {ChartComponent,
   ApexPlotOptions
 } from "ng-apexcharts";
 
-export type ChartOptions = {
+export type ChartOptionsHeat = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
   dataLabels: ApexDataLabels;
@@ -23,6 +26,7 @@ export type ChartOptions = {
   templateUrl: 'insights.component.html',
   providers: [DatePipe]
 })
+
 export class InsightsComponent {
   end_date: any = new Date();
   end_date_n = new Date().toISOString().slice(0, 16);
@@ -52,6 +56,49 @@ export class InsightsComponent {
   public pieChartColors = [{
       backgroundColor: ['rgba(30, 105, 148,0.8)', 'rgba(242, 110, 10,0.8)'],
     }];
+  public pieChartOptions: ChartOptions = {
+      responsive: true,
+      legend: {
+        position: 'top',
+      },
+      tooltips: {
+        enabled: true,
+        mode: 'single'
+      },
+      plugins: { 
+        datalabels: {
+         color: "white",
+         formatter: (value, ctx) => {
+          const label = ctx.chart.data.labels[ctx.value];
+          return label;
+         },
+        },
+       },
+    };
+  // public pieChartOptions: ChartOptions = {
+  //   responsive: true,
+  //   tooltips: {
+  //    enabled: true,
+  //    callbacks: {
+  //     label: function (tooltipItem, data) {
+  //      let label = data.labels[tooltipItem.index];
+  //      let count = data
+  //                  .datasets[tooltipItem.datasetIndex]
+  //                  .data[tooltipItem.index];
+  //      return label + "Reads Count : " + count;
+  //     },
+  //    },
+  //   },
+  //   plugins: {
+  //    datalabels: {
+  //     color: "white",
+  //     formatter: (value, ctx) => {
+  //      var perc = ((value * 100) / 50).toFixed(0) + "%";
+  //      return perc;
+  //     },
+  //    },
+  //   },
+  //  };
   
   getUserEmail(){
     let Labels_Array = [];
@@ -101,12 +148,30 @@ export class InsightsComponent {
     public pieChartChaserLabels: any[] = [];
     public pieChartChaserData: any[] = [];
     public pieChartChaserType = 'pie';
+    public pieChartOptions2: ChartOptions = {
+      responsive: true,
+      legend: {
+        position: 'top',
+      },
+      tooltips: {
+        enabled: true,
+        mode: 'single'
+      },
+      plugins: {
+        datalabels: {
+         color: "white",
+         formatter: (value, ctx) => {
+          const label = ctx.chart.data.labels[ctx.value];
+          return label;
+         },
+        },
+       },
+    };
     public pieChartChaserColors = [
       {
         backgroundColor: ['rgba(30, 105, 148,0.8)', 'rgba(242, 110, 10,0.8)'],
       },
     ];
-
     getChaserEmail(){
       let Labels_Array = [];
       let Values_Array = [];
@@ -427,7 +492,7 @@ export class InsightsComponent {
 
   //heatmap
   @ViewChild("chart") chart: ChartComponent;
-  public chartOptions: Partial<ChartOptions>;
+  public chartOptions: Partial<ChartOptionsHeat>;
 
   peakHours(){
   let X_Array = [];
