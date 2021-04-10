@@ -419,6 +419,11 @@ export class DashboardComponent implements OnInit, AfterContentInit {
   barChartCriticalOptions: any = {
     scaleShowVerticalLines: false,
     responsive: true,
+    plugins: {
+      datalabels: {
+        display: false
+      }
+    },
     scales: {
       xAxes: [{
         gridLines: {
@@ -525,6 +530,11 @@ export class DashboardComponent implements OnInit, AfterContentInit {
       yAxes: [{
 
       }],
+    },
+    plugins: {
+      datalabels: {
+        display: false
+      }
     },
     elements: {
       line: {
@@ -650,6 +660,11 @@ export class DashboardComponent implements OnInit, AfterContentInit {
     responsive: true,
     legend: {
       display: false
+    },
+    plugins: {
+      datalabels: {
+        display: false
+      }
     },
     scales: {
       xAxes: [{
