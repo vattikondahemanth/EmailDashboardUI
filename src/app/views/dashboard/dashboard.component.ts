@@ -134,6 +134,11 @@ export class DashboardComponent implements OnInit, AfterContentInit {
 
   barChartOptions: ChartOptions = {
     responsive: true,
+    plugins: {
+      datalabels: {
+        display: false
+      }
+    },
     scales: {
       xAxes: [{
         ticks: { stepSize: 5 },

@@ -223,6 +223,32 @@ export class InsightsComponent {
     legend:{
       display:false
     },
+    plugins: {
+      datalabels: {
+        display: false
+      }
+    },
+    animation: {
+      "duration": 1,
+      "onComplete": function() {
+            let chartInstance = this.chart,
+              ctx = chartInstance.ctx;
+              // referance link below
+              //https://bramantox.wordpress.com/2019/10/06/how-to-show-values-on-top-of-bars-in-chart-js/
+            //ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+            // ctx.fillStyle = 'white';
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'bottom';
+
+              this.data.datasets.forEach(function(dataset, i) {
+                let meta = chartInstance.controller.getDatasetMeta(i);
+                meta.data.forEach(function(bar, index) {
+                  let data = dataset.data[index];
+                  ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                });
+              });
+      }
+    },
     scales: {
       xAxes: [{
           gridLines: {
@@ -302,6 +328,11 @@ export class InsightsComponent {
     hover: {
       "animationDuration": 0
     },
+      plugins: {
+        datalabels: {
+          display: false
+        }
+      },
     animation: {
       "duration": 1,
       "onComplete": function() {
@@ -400,6 +431,11 @@ export class InsightsComponent {
       },
       hover: {
         "animationDuration": 0
+      },
+      plugins: {
+        datalabels: {
+          display: false
+        }
       },
       animation: { //animation code is for numbers show only
         "duration": 1,
