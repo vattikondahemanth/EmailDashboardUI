@@ -45,6 +45,7 @@ import { AppRoutingModule } from './app.routing';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ChartsModule } from 'ng2-charts';
+import { SMMdashbordComponent } from './views/smmdashbord/smmdashbord.component';
 
 @NgModule({
   imports: [

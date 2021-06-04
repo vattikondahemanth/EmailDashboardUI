@@ -20,5 +20,10 @@ export const navItems: INavData[] = [
     url: '/insights',
     icon: 'icon-pie-chart'
   },
+  {
+    name: 'SMM Dashboard',
+    url: '/smm_dashboard',
+    icon: 'icon-pie-chart'
+  },
   
 ];

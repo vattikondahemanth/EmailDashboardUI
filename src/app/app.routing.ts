@@ -58,10 +58,10 @@ export const routes: Routes = [
         path: 'insights',
         loadChildren: () => import('./views/insights/insights.module').then(m => m.InsightsModule)
       },
-      // {
-      //   path: 'base',
-      //   loadChildren: () => import('./views/base/base.module').then(m => m.BaseModule)
-      // },
+      {
+        path: 'smm_dashboard',
+        loadChildren: () => import('./views/smmdashbord/smmdashbord.module').then(m => m.SMMdashbordModule)
+      },
       // {
       //   path: 'buttons',
       //   loadChildren: () => import('./views/buttons/buttons.module').then(m => m.ButtonsModule)
