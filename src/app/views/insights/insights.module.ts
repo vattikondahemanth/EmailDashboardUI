@@ -3,6 +3,7 @@ import { ChartsModule } from 'ng2-charts';
 
 import { InsightsComponent } from './insights.component';
 import { InsightsRoutingModule } from './insights-routing.module';
+import { DecimalPipe } from '@angular/common';
 // import { BrowserModule } from '@angular/platform-browser';
 
 // Tabs Component
@@ -21,6 +22,7 @@ import { NgxSpinnerModule } from "ngx-spinner";
     CommonModule,
     NgxSpinnerModule
   ],
-  declarations: [ InsightsComponent,TabsComponent ]
+  declarations: [ InsightsComponent,TabsComponent ],
+  providers: [DecimalPipe],
 })
 export class InsightsModule { }

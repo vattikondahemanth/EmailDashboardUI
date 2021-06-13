@@ -12,7 +12,7 @@ import { RegisterComponent } from './views/register/register.component';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'dashboard/warehouse_lending',
     pathMatch: 'full',
   },
   {
@@ -51,15 +51,15 @@ export const routes: Routes = [
     },
     children: [
       {
-        path: 'dashboard',
+        path: 'dashboard/:profile',
         loadChildren: () => import('./views/dashboard/dashboard.module').then(m => m.DashboardModule)
       },
       {
-        path: 'insights',
+        path: 'insights/:profile',
         loadChildren: () => import('./views/insights/insights.module').then(m => m.InsightsModule)
       },
       {
-        path: 'smm_dashboard',
+        path: 'smm_dashboard/:profile',
         loadChildren: () => import('./views/smmdashbord/smmdashbord.module').then(m => m.SMMdashbordModule)
       },
       // {

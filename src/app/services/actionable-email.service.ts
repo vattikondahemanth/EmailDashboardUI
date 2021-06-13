@@ -157,11 +157,10 @@ export class ActionableEmailService {
 
   getUserEmails(dt):any {
       return new Promise((resolve, reject) => {
-        resolve(this.emails_data);
           this.http.post(CommonURL.useremail, dt)
               .subscribe(
                   (data) => {
-                      resolve(this.emails_data);
+                      resolve(data);
                   },
                   (error) => {
                       console.log(error);
@@ -190,8 +189,8 @@ export class ActionableEmailService {
         this.http.post(CommonURL.actionEmailTable, dt)
             .subscribe(
                 (data) => {
-                    //resolve(data);
-                    resolve(this.emails_data);
+                    resolve(data);
+                    //resolve(this.emails_data);
                 },
                 (error) => {
                     console.log(error);

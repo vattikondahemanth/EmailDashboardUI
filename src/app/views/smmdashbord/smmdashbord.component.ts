@@ -45,6 +45,32 @@ export class SMMdashbordComponent implements OnInit {
   start_date = '';
   end_date   = '';
   action_frequency = '';
+  isCollapsed: boolean = false;
+  isCollapsed2:boolean = false;
+
+
+  Gtitle = 'Browser market shares at a specific website, 2014';
+  Gtype = 'PieChart';
+  Gdata = [
+     ['Firefox', 45.0],
+     ['IE', 26.8],
+     ['Chrome', 12.8],
+     ['Safari', 8.5],
+     ['Opera', 6.2],
+     ['Others', 0.7] 
+  ];
+  GcolumnNames = ['Browser', 'Percentage'];
+  Goptions = {    
+     is3D:true
+  };
+  Gwidth = 550;
+  Gheight = 400;
+
+collapsed(event: any): void {
+}
+
+expanded(event: any): void {
+}
 
 
 pieChart(){
@@ -85,12 +111,13 @@ pieChart(){
           data: [
               ['Chrome', 45.0],
               ['IE', 26.8],
-              {
-                  name: 'Firefox',
-                  y: 12.8,
-                  sliced: true,
-                  selected: true
-              },
+              ['Firefox',12.8],
+              // {
+              //     name: 'Firefox',
+              //     y: 12.8,
+              //     sliced: true,
+              //     selected: true
+              // },
               ['Safari', 8.5],
               ['Opera', 6.2],
               ['Others', 0.7]
@@ -143,12 +170,13 @@ pieChart2(){
         data: [
             ['Chrome', 45.0],
             ['IE', 26.8],
-            {
-                name: 'Firefox',
-                y: 12.8,
-                sliced: true,
-                selected: true
-            },
+            // {
+            //     name: 'Firefox',
+            //     y: 12.8,
+            //     sliced: true,
+            //     selected: true
+            // },
+            ['Firefox',12.8],
             ['Safari', 8.5],
             ['Opera', 6.2],
             ['Others', 0.7]
@@ -168,6 +196,17 @@ barChartPlugins = [];
 barChartData: ChartDataSets[] = [];
 barChartOptions: ChartOptions = {
   legend: { display: true, labels: { fontColor: 'black' }}
+//   scales : {
+//   yAxes: [{
+//      display:true,
+//      ticks: {
+//       beginAtZero: true,
+//       stepSize: 10,
+//       sampleSize: 5,
+//       max: 100
+//   }
+//   }]
+// }
 }
 // arbarChartOptions: any = { legend: { display: true, labels: { fontColor: 'black' } }
 

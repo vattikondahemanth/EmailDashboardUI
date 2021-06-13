@@ -4,6 +4,8 @@ import { DatePipe } from '@angular/common';
 import { NgxSpinnerService } from "ngx-spinner";
 import { ChartOptions, ChartType, Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { DecimalPipe } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 
 Chart.plugins.register(ChartDataLabels);
 import {ChartComponent,
@@ -40,7 +42,10 @@ export class InsightsComponent {
   constructor(
     public insights:InsightsService,
     private SpinnerService: NgxSpinnerService,
-    public datePipe: DatePipe){
+    public datePipe: DatePipe,
+    public decimalPipe: DecimalPipe,
+    private route: ActivatedRoute
+    ){
     this.start_date  = this.datePipe.transform(this.start_date ,'yyyy-MM-dd');
     this.end_date    = this.datePipe.transform(this.end_date ,'yyyy-MM-dd');
     console.log(this.start_date);
@@ -50,6 +55,8 @@ export class InsightsComponent {
 
 
   //******************PIE CHART 1 START**********************//
+  pieChart1:any[] = [];
+  format = '2.0-2';
   public pieChartLabels: any[] = [];
   public pieChartData: any[] = [];
   public pieChartType = 'pie';
@@ -66,40 +73,21 @@ export class InsightsComponent {
         mode: 'single'
       },
       plugins: { 
+        labels: {
+          render: 'percentage',
+          precision: 2,
+          arc: true,
+        },
         datalabels: {
          color: "white",
          formatter: (value, ctx) => {
-          const label = ctx.chart.data.labels[ctx.value];
-          return label;
+            var perc = value+ "%";
+            return perc;
          },
         },
        },
     };
-  // public pieChartOptions: ChartOptions = {
-  //   responsive: true,
-  //   tooltips: {
-  //    enabled: true,
-  //    callbacks: {
-  //     label: function (tooltipItem, data) {
-  //      let label = data.labels[tooltipItem.index];
-  //      let count = data
-  //                  .datasets[tooltipItem.datasetIndex]
-  //                  .data[tooltipItem.index];
-  //      return label + "Reads Count : " + count;
-  //     },
-  //    },
-  //   },
-  //   plugins: {
-  //    datalabels: {
-  //     color: "white",
-  //     formatter: (value, ctx) => {
-  //      var perc = ((value * 100) / 50).toFixed(0) + "%";
-  //      return perc;
-  //     },
-  //    },
-  //   },
-  //  };
-  
+
   getUserEmail(){
     let Labels_Array = [];
     let Values_Array = [];
@@ -135,16 +123,33 @@ export class InsightsComponent {
       });
 
       this.pieChartLabels = Labels_Array;
-      this.pieChartData   = Values_Array;
+      this.getPercentage1(Values_Array);
+      this.pieChartData   = this.pieChart1;
 
      }).catch((err) => {
         console.log('catch');
      });
   }
+
+  getPercentage1(dataArr){
+    let total = 0;
+    let pVal:any = 0;
+    for(let val of dataArr){
+      total += val;
+    }
+    for(let valP of dataArr){
+       pVal = (valP * 100)/total;
+       pVal = this.decimalPipe.transform(pVal, this.format);
+       this.pieChart1.push(pVal);
+    }
+   
+    console.log(this.pieChart1);
+  }
 //************************PIE CHART 1 END*********************//
 
 
 //******************PIE CHART 2 START**********************//
+    public pieChart2:any[] = []
     public pieChartChaserLabels: any[] = [];
     public pieChartChaserData: any[] = [];
     public pieChartChaserType = 'pie';
@@ -159,12 +164,12 @@ export class InsightsComponent {
       },
       plugins: {
         datalabels: {
-         color: "white",
-         formatter: (value, ctx) => {
-          const label = ctx.chart.data.labels[ctx.value];
-          return label;
+          color: "white",
+          formatter: (value, ctx) => {
+             var perc = value+ "%";
+             return perc;
+          },
          },
-        },
        },
     };
     public pieChartChaserColors = [
@@ -207,11 +212,25 @@ export class InsightsComponent {
         });
   
         this.pieChartChaserLabels = Labels_Array;
-        this.pieChartChaserData   = Values_Array;
+        this.getPercentage2(Values_Array);
+        this.pieChartChaserData = this.pieChart2;
   
        }).catch((err) => {
           console.log('catch');
        });
+    }
+
+    getPercentage2(dataArr){
+      let total = 0;
+      let pVal:any = 0;
+      for(let val of dataArr){
+        total += val;
+      }
+      for(let valP of dataArr){
+         pVal = (valP * 100)/total;
+         pVal = this.decimalPipe.transform(pVal, this.format);
+         this.pieChart2.push(pVal);
+      }
     }
 //************************PIE CHART 2 END*********************//
 
@@ -660,6 +679,8 @@ export class InsightsComponent {
  
 
   ngOnInit(){
+    console.log(this.route.snapshot.params.profile);
+
     this.SpinnerService.show();
     this.getUserEmail();
     this.getChaserEmail();

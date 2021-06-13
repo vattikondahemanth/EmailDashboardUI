@@ -45,6 +45,7 @@
     "@coreui/icons-angular": "1.0.0-alpha.3",
     "ag-grid-angular": "^25.1.0",
     "ag-grid-community": "^25.1.0",
+    "angular-google-charts": "^2.2.1",
     "angular-highcharts": "^11.3.0",
     "apexcharts": "^3.25.0",
     "bootstrap": "^4.6.0",
