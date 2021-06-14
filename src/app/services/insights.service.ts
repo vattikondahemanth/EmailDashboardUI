@@ -7,33 +7,8 @@ import { CommonURL }  from './commonurl';
 })
 export class InsightsService {
   constructor(private http: HttpClient) { }
-  email_data = {
-    "success": true,
-    "message": "Success",
-    "data": [
-      {
-        "title": "Emails directed to users",
-        "barmode": "relative",
-        "hovermode": "closest",
-        "labels": [
-          "Internal",
-          "External"
-        ],
-        "values": [
-          6286,
-          4180
-        ],
-        "hoverinfo": "label+value",
-        "textinfo": "percent"
-      }
-    ],
-    "total": 1,
-    "status_code": 200
-  }
-
   getUserEmail(dt):any {
     return new Promise((resolve, reject) => {
-      resolve(this.email_data);
       this.http.post(CommonURL.insightsUserEmail, dt)
           .subscribe(
               (data) => {
@@ -47,7 +22,6 @@ export class InsightsService {
 
   getChaserEmail(dt):any {
     return new Promise((resolve, reject) => {
-      resolve(this.email_data);
       this.http.post(CommonURL.insightsChaserEmail, dt)
           .subscribe(
               (data) => {
